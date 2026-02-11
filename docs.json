@@ -1,0 +1,129 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "almond",
+  "name": "Max API",
+  "colors": {
+    "primary": "#6366F1",
+    "light": "#818CF8",
+    "dark": "#4F46E5"
+  },
+  "favicon": "/favicon.svg",
+  "api": {
+    "mdx": {
+      "auth": {
+        "method": "bearer"
+      }
+    }
+  },
+  "navigation": {
+    "languages": [
+      {
+        "language": "en",
+        "default": true,
+        "tabs": [
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "api-reference/introduction",
+                  "api-reference/authentication"
+                ]
+              },
+              {
+                "group": "Task API",
+                "pages": [
+                  "api-reference/submit-task",
+                  "api-reference/query-task",
+                  "api-reference/cancel-task",
+                  "api-reference/webhook"
+                ]
+              },
+              {
+                "group": "Jimeng Image",
+                "pages": [
+                  "api-reference/jimeng-image/text-to-image",
+                  "api-reference/jimeng-image/image-to-image"
+                ]
+              },
+              {
+                "group": "Jimeng Video / Seedance",
+                "pages": [
+                  "api-reference/jimeng-video/text-to-video",
+                  "api-reference/jimeng-video/image-to-video"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "cn",
+        "tabs": [
+          {
+            "tab": "API 参考",
+            "groups": [
+              {
+                "group": "概览",
+                "pages": [
+                  "cn/api-reference/introduction",
+                  "cn/api-reference/authentication"
+                ]
+              },
+              {
+                "group": "任务 API",
+                "pages": [
+                  "cn/api-reference/submit-task",
+                  "cn/api-reference/query-task",
+                  "cn/api-reference/cancel-task",
+                  "cn/api-reference/webhook"
+                ]
+              },
+              {
+                "group": "即梦图片",
+                "pages": [
+                  "cn/api-reference/jimeng-image/text-to-image",
+                  "cn/api-reference/jimeng-image/image-to-image"
+                ]
+              },
+              {
+                "group": "即梦视频 / Seedance",
+                "pages": [
+                  "cn/api-reference/jimeng-video/text-to-video",
+                  "cn/api-reference/jimeng-video/image-to-video"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {}
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://api.maxapi.io/dashboard"
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "cursor"
+    ]
+  },
+  "footer": {
+    "socials": {
+      "website": "https://maxapi.io"
+    }
+  }
+}

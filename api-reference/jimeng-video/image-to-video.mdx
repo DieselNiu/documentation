@@ -1,0 +1,150 @@
+---
+title: "Image to Video"
+api: "POST /api/v1/task/submit"
+description: "Jimeng / Seedance Image-to-Video — Generate videos based on reference images"
+---
+
+By passing `imageUrls`, different generation modes are automatically selected based on the number of images. Applicable to all `seedance-*` and `jimeng-video-*` models.
+
+<ParamField body="model" type="string" required>
+  Model name, e.g. `seedance-2.0-pro`, `jimeng-video-3.5-pro`.
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      Prompt. In multi-image mode, use `@1`, `@2`, `@3` to reference the corresponding images by position.
+    </ParamField>
+    <ParamField body="imageUrls" type="string[]" required>
+      List of reference image URLs. The number of images determines the generation mode (see below).
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      Video aspect ratio. Options: `1:1`, `4:3`, `3:4`, `16:9`, `9:16`.
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      Video resolution. Options: `480p`, `720p`, `1080p`.
+    </ParamField>
+    <ParamField body="duration" type="integer">
+      Video duration in seconds. Options: `5`, `10`, `15`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "seedance-2.0-pro",
+  "input": {
+    "prompt": "Blow out candles",
+    "imageUrls": ["https://example.com/photo.jpg"]
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## Generation Modes
+
+Different modes are automatically selected based on the number of images in `imageUrls`:
+
+### 1 Image — First Frame Mode
+
+The image is used as the first frame of the video, and subsequent animation is generated based on the prompt.
+
+```json
+{
+  "model": "seedance-2.0-pro",
+  "input": {
+    "prompt": "吹灭蜡烛",
+    "imageUrls": ["https://assets.movart.ai/landingpage/dog.webp"]
+  }
+}
+```
+
+### 2 Images — First & Last Frame Mode
+
+The first image serves as the video's first frame, the second image as the last frame, and the AI automatically generates the transition animation in between.
+
+```json
+{
+  "model": "seedance-2.0-pro",
+  "input": {
+    "prompt": "变身",
+    "imageUrls": [
+      "https://assets.movart.ai/3D-Cartoon.jpg",
+      "https://assets.movart.ai/landingpage/dog.webp"
+    ]
+  }
+}
+```
+
+### 3+ Images — Multi-Image Reference Mode
+
+Use `@1`, `@2`, `@3` in the prompt to reference the corresponding images by position.
+
+```json
+{
+  "model": "seedance-2.0",
+  "input": {
+    "prompt": "@1 和 @2 在聊天，@3 在旁边看",
+    "imageUrls": [
+      "https://assets.movart.ai/3D-Cartoon.jpg",
+      "https://assets.movart.ai/landingpage/dog.webp",
+      "https://assets.movart.ai/landingpage/dog.webp"
+    ]
+  }
+}
+```
+
+---
+
+## Query Result
+
+Retrieve the generation result via the [Query Task](/api-reference/query-task) endpoint or Webhook:
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "SUCCESS",
+    "input": {
+      "model": "seedance-2.0-pro",
+      "prompt": "吹灭蜡烛",
+      "imageUrls": [
+        "https://assets.movart.ai/landingpage/dog.webp"
+      ]
+    },
+    "result": {
+      "type": "video",
+      "urls": [
+        "https://v9-dreamnia.jimeng.com/video/tos/cn/video_example.mp4"
+      ]
+    },
+    "created_at": "2026-02-10T23:00:00.000000Z",
+    "updated_at": "2026-02-10T23:03:25.000000Z"
+  }
+}
+```

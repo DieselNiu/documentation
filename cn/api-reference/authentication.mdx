@@ -1,0 +1,36 @@
+---
+title: "Authentication"
+description: "API 认证方式"
+---
+
+## Bearer Token
+
+所有 `/api/v1/*` 接口需要 Bearer Token 认证：
+
+```bash
+Authorization: Bearer YOUR_API_SECRET
+```
+
+<Note>
+  你可以在 [API Dashboard](https://api.maxapi.io/dashboard) 中获取你的 API Key。
+</Note>
+
+## 示例
+
+```bash
+curl -X POST https://api.maxapi.io/api/v1/task/submit \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_SECRET" \
+  -d '{"model": "jimeng-4.5", "input": {"prompt": "hello"}}'
+```
+
+## 错误响应
+
+如果认证失败，API 将返回：
+
+```json
+{
+  "code": 401,
+  "msg": "unauthorized"
+}
+```

@@ -1,0 +1,109 @@
+---
+title: "Query Task"
+api: "GET /api/v1/task/{taskId}"
+description: "Query task status and results"
+---
+
+Query the current status and generation results of a task by `taskId`.
+
+<ParamField path="taskId" type="string" required>
+  The task ID returned when the task was submitted.
+</ParamField>
+
+### Response Fields
+
+<ResponseField name="code" type="integer">
+  Status code. `0` indicates success.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  <Expandable title="properties">
+    <ResponseField name="taskId" type="string">
+      Task ID.
+    </ResponseField>
+    <ResponseField name="status" type="string">
+      Task status: `PENDING`, `PROCESSING`, `SUBMITTED`, `SUCCESS`, `FAILURE`, `TIMEOUT`, `CANCELLED`.
+    </ResponseField>
+    <ResponseField name="input" type="object">
+      The complete input parameters submitted with the task (including model).
+    </ResponseField>
+    <ResponseField name="result" type="object">
+      Task result. Only has a value when status is `SUCCESS`; for other terminal states it is `null`.
+      <Expandable title="properties">
+        <ResponseField name="type" type="string">
+          Result type: `image` or `video`.
+        </ResponseField>
+        <ResponseField name="urls" type="string[]">
+          List of URLs for the generated resources. Images may have multiple URLs; videos typically have 1.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="created_at" type="string">
+      Task creation time (ISO 8601).
+    </ResponseField>
+    <ResponseField name="updated_at" type="string">
+      Task last updated time (ISO 8601).
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl --request GET \
+  --url https://api.maxapi.io/api/v1/task/9db7d1ed-d1e5-4d11-9f3a-61f653b905ad \
+  --header 'Authorization: Bearer <token>'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 SUCCESS
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad",
+    "status": "SUCCESS",
+    "input": {
+      "model": "jimeng-4.5",
+      "prompt": "赛博朋克风格的东京街景",
+      "ratio": "16:9",
+      "resolution": "2k"
+    },
+    "result": {
+      "type": "image",
+      "urls": [
+        "https://p3-dreamina-sign.byteimg.com/image1.png",
+        "https://p3-dreamina-sign.byteimg.com/image2.png"
+      ]
+    },
+    "created_at": "2026-02-10T21:54:46.686768Z",
+    "updated_at": "2026-02-10T21:55:04.039815Z"
+  }
+}
+```
+
+```json 200 PROCESSING
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad",
+    "status": "PROCESSING",
+    "input": {
+      "model": "jimeng-4.5",
+      "prompt": "赛博朋克风格的东京街景"
+    },
+    "result": null,
+    "created_at": "2026-02-10T21:54:46.686768Z",
+    "updated_at": "2026-02-10T21:54:48.000000Z"
+  }
+}
+```
+
+```json 404
+{
+  "code": 404,
+  "msg": "task not found"
+}
+```
+</ResponseExample>

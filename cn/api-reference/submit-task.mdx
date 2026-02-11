@@ -1,0 +1,70 @@
+---
+title: "Submit Task"
+api: "POST /api/v1/task/submit"
+description: "提交 AI 生成任务，立即返回 taskId"
+---
+
+提交一个异步生成任务。所有模型（图片、视频）共享此接口，通过 `model` 参数区分。
+
+<ParamField body="model" type="string" required>
+  模型名称。如 `jimeng-4.5`、`seedance-2.0-pro` 等。详见各模型文档。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  模型输入参数，包含 prompt 和模型特定参数。
+
+  <Expandable title="properties">
+    <ParamField body="prompt" type="string" required>
+      提示词，描述你想生成的内容。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调地址。任务到达终态后，系统会向此地址发送 POST 请求。不支持 localhost。
+</ParamField>
+
+<ParamField body="user_id" type="string">
+  调用方的用户标识，用于链路追踪。
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "jimeng-4.5",
+  "input": {
+    "prompt": "赛博朋克风格的东京街景"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad"
+  }
+}
+```
+
+```json 400
+{
+  "code": 400,
+  "msg": "model is required"
+}
+```
+
+```json 401
+{
+  "code": 401,
+  "msg": "unauthorized"
+}
+```
+</ResponseExample>

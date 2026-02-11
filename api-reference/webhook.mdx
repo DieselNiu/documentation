@@ -1,0 +1,60 @@
+---
+title: "Webhook"
+description: "Callback notifications upon task completion"
+---
+
+When a task reaches a terminal state (`SUCCESS` / `FAILURE` / `TIMEOUT` / `CANCELLED`), if a `callBackUrl` was specified at submission time, the system will send a POST request to that URL.
+
+## Callback Format
+
+```
+POST <callBackUrl>
+Content-Type: application/json
+```
+
+The callback `data` field is identical in format to the query endpoint response:
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "SUCCESS",
+    "input": {
+      "model": "jimeng-4.5",
+      "prompt": "一只在星空下奔跑的柴犬",
+      "ratio": "16:9",
+      "resolution": "2k"
+    },
+    "result": {
+      "type": "image",
+      "urls": ["https://cdn.example.com/image1.jpg"]
+    },
+    "created_at": "2026-02-11T10:00:00Z",
+    "updated_at": "2026-02-11T10:01:30Z"
+  }
+}
+```
+
+## result Field Structure
+
+**On SUCCESS:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `type` | string | Result type: `image` or `video` |
+| `urls` | string[] | List of resource URLs. Images may have multiple entries; videos typically have 1 |
+
+**On FAILURE / TIMEOUT / CANCELLED:**
+
+`result` is `null`.
+
+## Important Notes
+
+<Warning>
+  - Webhook timeout is 5 seconds; it is sent asynchronously and does not block the main workflow
+  - Failed deliveries are logged only and **will not be retried**
+  - `callBackUrl` does not support localhost / 127.0.0.1 or other internal addresses (SSRF protection)
+  - The outer `code` is always `0`; use `data.status` to determine success or failure
+</Warning>

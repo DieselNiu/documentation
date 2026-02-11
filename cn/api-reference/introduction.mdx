@@ -1,0 +1,100 @@
+---
+title: "Introduction"
+description: "Max API 统一接口概览 — 提交、查询、取消、Webhook"
+---
+
+## Base URL
+
+```
+https://api.maxapi.io
+```
+
+## 工作流程
+
+所有 AI 生成任务遵循相同的异步流程：
+
+<Steps>
+  <Step title="提交任务">
+    调用 `POST /api/v1/task/submit`，指定模型和参数，立即返回 `taskId`。
+  </Step>
+  <Step title="等待结果">
+    通过 **轮询** `GET /api/v1/task/:taskId` 或设置 **Webhook 回调** 获取结果。
+  </Step>
+  <Step title="获取产物">
+    任务成功后，`result.urls` 中包含生成的图片或视频 URL。
+  </Step>
+</Steps>
+
+## 通用响应格式
+
+**成功：**
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": { ... }
+}
+```
+
+**失败：**
+
+```json
+{
+  "code": 400,
+  "msg": "错误描述"
+}
+```
+
+## 任务状态
+
+| status | 说明 |
+|--------|------|
+| `PENDING` | 排队中，等待处理 |
+| `PROCESSING` | Worker 已接收，准备中 |
+| `SUBMITTED` | 已提交至上游 AI 接口，等待返回 |
+| `SUCCESS` | 任务成功，`result` 包含结果 |
+| `FAILURE` | 任务失败 |
+| `TIMEOUT` | 任务超时 |
+| `CANCELLED` | 任务已取消 |
+
+**状态流转：**
+
+```
+PENDING → PROCESSING → SUBMITTED → SUCCESS
+                                  → FAILURE
+                                  → TIMEOUT
+          (任意非终态)             → CANCELLED
+```
+
+## 支持的模型
+
+<Tabs>
+  <Tab title="Jimeng 图片">
+    | model | 说明 |
+    |-------|------|
+    | `jimeng-5.0-preview` | 即梦 5.0 预览版（最新） |
+    | `jimeng-4.6` | 即梦 4.6 |
+    | `jimeng-4.5` | 即梦 4.5 |
+    | `jimeng-4.1` | 即梦 4.1 |
+    | `jimeng-4.0` | 即梦 4.0 |
+    | `jimeng-3.1` | 即梦 3.1 |
+    | `jimeng-3.0` | 即梦 3.0 |
+    | `jimeng-2.1` | 即梦 2.1 |
+    | `jimeng-2.0-pro` | 即梦 2.0 Pro |
+    | `jimeng-2.0` | 即梦 2.0 |
+    | `jimeng-1.4` | 即梦 1.4 |
+    | `jimeng-xl-pro` | 即梦 XL Pro |
+  </Tab>
+  <Tab title="Jimeng / Seedance 视频">
+    | model | 说明 |
+    |-------|------|
+    | `jimeng-video-3.5-pro` | 即梦视频 3.5 Pro（最新） |
+    | `jimeng-video-3.0-pro` | 即梦视频 3.0 Pro |
+    | `jimeng-video-3.0` | 即梦视频 3.0 |
+    | `jimeng-video-2.0-pro` | 即梦视频 2.0 Pro |
+    | `jimeng-video-2.0` | 即梦视频 2.0 |
+    | `seedance-2.0` | Seedance 2.0 |
+    | `seedance-2.0-pro` | Seedance 2.0 Pro |
+  </Tab>
+</Tabs>

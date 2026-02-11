@@ -1,0 +1,36 @@
+---
+title: "Authentication"
+description: "API Authentication Method"
+---
+
+## Bearer Token
+
+All `/api/v1/*` endpoints require Bearer Token authentication:
+
+```bash
+Authorization: Bearer YOUR_API_SECRET
+```
+
+<Note>
+  You can obtain your API Key from the [API Dashboard](https://api.maxapi.io/dashboard).
+</Note>
+
+## Example
+
+```bash
+curl -X POST https://api.maxapi.io/api/v1/task/submit \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_SECRET" \
+  -d '{"model": "jimeng-4.5", "input": {"prompt": "hello"}}'
+```
+
+## Error Response
+
+If authentication fails, the API will return:
+
+```json
+{
+  "code": 401,
+  "msg": "unauthorized"
+}
+```

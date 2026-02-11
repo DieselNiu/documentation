@@ -1,0 +1,50 @@
+---
+title: "Max API"
+description: "AI Image & Video Generation API — Unified Interface, Async Tasks, Webhook Callbacks"
+---
+
+## Quick Start
+
+Call multiple AI generation models through a unified RESTful API, supporting image generation, video generation, and more.
+
+<Card
+  title="API Reference"
+  icon="bolt"
+  href="/api-reference/introduction"
+  horizontal
+>
+  View the full API documentation and get started quickly.
+</Card>
+
+## Supported Models
+
+<Columns cols={2}>
+  <Card
+    title="Jimeng Image Generation"
+    icon="image"
+    href="/api-reference/jimeng-image/text-to-image"
+  >
+    Supports 12 model versions including jimeng-5.0-preview, jimeng-4.6, jimeng-4.5, and more. Text-to-image & image-to-image.
+  </Card>
+  <Card
+    title="Jimeng / Seedance Video Generation"
+    icon="video"
+    href="/api-reference/jimeng-video/text-to-video"
+  >
+    Supports 7 model versions including seedance-2.0-pro, jimeng-video-3.5-pro, and more. Text-to-video & image-to-video.
+  </Card>
+</Columns>
+
+## Core Features
+
+<Columns cols={3}>
+  <Card title="Unified Interface" icon="plug">
+    All models share the same submit / query / cancel endpoints. Switching models only requires changing the model parameter.
+  </Card>
+  <Card title="Async Tasks" icon="clock">
+    Returns a taskId immediately after submission. Get results via polling or Webhook.
+  </Card>
+  <Card title="Webhook Callbacks" icon="webhook">
+    Automatically pushes results to your server when a task completes — no polling required.
+  </Card>
+</Columns>

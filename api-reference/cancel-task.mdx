@@ -1,0 +1,42 @@
+---
+title: "Cancel Task"
+api: "POST /api/v1/task/{taskId}/cancel"
+description: "Cancel a task that is in progress"
+---
+
+Cancel a task that has not yet reached a terminal state. A task can only be cancelled when its status is `PENDING`, `PROCESSING`, or `SUBMITTED`.
+
+<ParamField path="taskId" type="string" required>
+  The ID of the task to cancel.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/9db7d1ed-d1e5-4d11-9f3a-61f653b905ad/cancel \
+  --header 'Authorization: Bearer <token>'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "code": 0,
+  "msg": "ok"
+}
+```
+
+```json 400
+{
+  "code": 400,
+  "msg": "task already in terminal state"
+}
+```
+
+```json 404
+{
+  "code": 404,
+  "msg": "task not found"
+}
+```
+</ResponseExample>

@@ -1,0 +1,100 @@
+---
+title: "Introduction"
+description: "Max API Unified Interface Overview — Submit, Query, Cancel, Webhook"
+---
+
+## Base URL
+
+```
+https://api.maxapi.io
+```
+
+## Workflow
+
+All AI generation tasks follow the same asynchronous workflow:
+
+<Steps>
+  <Step title="Submit a Task">
+    Call `POST /api/v1/task/submit`, specify the model and parameters, and receive a `taskId` immediately.
+  </Step>
+  <Step title="Wait for Results">
+    Retrieve results by **polling** `GET /api/v1/task/:taskId` or by setting up a **Webhook callback**.
+  </Step>
+  <Step title="Get Output">
+    Once the task succeeds, `result.urls` contains the generated image or video URLs.
+  </Step>
+</Steps>
+
+## Common Response Format
+
+**Success:**
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": { ... }
+}
+```
+
+**Failure:**
+
+```json
+{
+  "code": 400,
+  "msg": "错误描述"
+}
+```
+
+## Task Status
+
+| status | Description |
+|--------|-------------|
+| `PENDING` | Queued, waiting to be processed |
+| `PROCESSING` | Received by worker, preparing |
+| `SUBMITTED` | Submitted to upstream AI service, waiting for response |
+| `SUCCESS` | Task succeeded, `result` contains the output |
+| `FAILURE` | Task failed |
+| `TIMEOUT` | Task timed out |
+| `CANCELLED` | Task was cancelled |
+
+**Status Transitions:**
+
+```
+PENDING → PROCESSING → SUBMITTED → SUCCESS
+                                  → FAILURE
+                                  → TIMEOUT
+          (any non-terminal state) → CANCELLED
+```
+
+## Supported Models
+
+<Tabs>
+  <Tab title="Jimeng Image">
+    | model | Description |
+    |-------|-------------|
+    | `jimeng-5.0-preview` | Jimeng 5.0 Preview (Latest) |
+    | `jimeng-4.6` | Jimeng 4.6 |
+    | `jimeng-4.5` | Jimeng 4.5 |
+    | `jimeng-4.1` | Jimeng 4.1 |
+    | `jimeng-4.0` | Jimeng 4.0 |
+    | `jimeng-3.1` | Jimeng 3.1 |
+    | `jimeng-3.0` | Jimeng 3.0 |
+    | `jimeng-2.1` | Jimeng 2.1 |
+    | `jimeng-2.0-pro` | Jimeng 2.0 Pro |
+    | `jimeng-2.0` | Jimeng 2.0 |
+    | `jimeng-1.4` | Jimeng 1.4 |
+    | `jimeng-xl-pro` | Jimeng XL Pro |
+  </Tab>
+  <Tab title="Jimeng / Seedance Video">
+    | model | Description |
+    |-------|-------------|
+    | `jimeng-video-3.5-pro` | Jimeng Video 3.5 Pro (Latest) |
+    | `jimeng-video-3.0-pro` | Jimeng Video 3.0 Pro |
+    | `jimeng-video-3.0` | Jimeng Video 3.0 |
+    | `jimeng-video-2.0-pro` | Jimeng Video 2.0 Pro |
+    | `jimeng-video-2.0` | Jimeng Video 2.0 |
+    | `seedance-2.0` | Seedance 2.0 |
+    | `seedance-2.0-pro` | Seedance 2.0 Pro |
+  </Tab>
+</Tabs>

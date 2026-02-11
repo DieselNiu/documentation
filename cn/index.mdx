@@ -1,0 +1,50 @@
+---
+title: "Max API"
+description: "AI 图片与视频生成 API — 统一接口，异步任务，Webhook 回调"
+---
+
+## 快速开始
+
+通过统一的 RESTful API 调用多种 AI 生成模型，支持图片生成、视频生成等能力。
+
+<Card
+  title="API Reference"
+  icon="bolt"
+  href="/api-reference/introduction"
+  horizontal
+>
+  查看完整 API 文档，快速接入。
+</Card>
+
+## 支持的模型
+
+<Columns cols={2}>
+  <Card
+    title="Jimeng 图片生成"
+    icon="image"
+    href="/api-reference/jimeng-image/text-to-image"
+  >
+    支持 jimeng-5.0-preview、jimeng-4.6、jimeng-4.5 等 12 个模型版本。文生图 & 图生图。
+  </Card>
+  <Card
+    title="Jimeng / Seedance 视频生成"
+    icon="video"
+    href="/api-reference/jimeng-video/text-to-video"
+  >
+    支持 seedance-2.0-pro、jimeng-video-3.5-pro 等 7 个模型版本。文生视频 & 图生视频。
+  </Card>
+</Columns>
+
+## 核心特性
+
+<Columns cols={3}>
+  <Card title="统一接口" icon="plug">
+    所有模型共享相同的提交 / 查询 / 取消接口，切换模型只需更改 model 参数。
+  </Card>
+  <Card title="异步任务" icon="clock">
+    提交后立即返回 taskId，通过轮询或 Webhook 获取结果。
+  </Card>
+  <Card title="Webhook 回调" icon="webhook">
+    任务完成后自动推送结果到你的服务器，无需轮询。
+  </Card>
+</Columns>

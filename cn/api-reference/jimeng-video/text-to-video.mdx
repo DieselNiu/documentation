@@ -1,0 +1,100 @@
+---
+title: "Text to Video"
+api: "POST /api/v1/task/submit"
+description: "Jimeng / Seedance 文生视频 — 通过文字描述生成视频"
+---
+
+使用 Jimeng Video 或 Seedance 模型，通过纯文字 prompt 生成视频。不传 `imageUrls` 即为纯文生视频模式。
+
+### 可用模型
+
+`jimeng-video-3.5-pro` · `jimeng-video-3.0-pro` · `jimeng-video-3.0` · `jimeng-video-2.0-pro` · `jimeng-video-2.0` · `seedance-2.0` · `seedance-2.0-pro`
+
+<ParamField body="model" type="string" required>
+  模型名称，如 `seedance-2.0-pro`、`jimeng-video-3.5-pro`。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调地址。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      提示词，描述你想生成的视频内容。
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      视频比例。可选值：`1:1`、`4:3`、`3:4`、`16:9`、`9:16`。
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      视频分辨率。可选值：`480p`、`720p`、`1080p`。
+    </ParamField>
+    <ParamField body="duration" type="integer">
+      视频时长（秒）。可选值：`5`、`10`、`15`。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "seedance-2.0-pro",
+  "input": {
+    "prompt": "一条河流穿过秋天的森林，航拍视角",
+    "ratio": "16:9",
+    "duration": 5
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "790758ee-3675-48fa-a9af-33d33cf84e71"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## 查询结果
+
+通过 [Query Task](/api-reference/query-task) 接口或 Webhook 获取生成结果：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "790758ee-3675-48fa-a9af-33d33cf84e71",
+    "status": "SUCCESS",
+    "input": {
+      "model": "seedance-2.0-pro",
+      "prompt": "一条河流穿过秋天的森林，航拍视角",
+      "ratio": "16:9",
+      "duration": 5
+    },
+    "result": {
+      "type": "video",
+      "urls": [
+        "https://v9-dreamnia.jimeng.com/video/tos/cn/video_example.mp4"
+      ]
+    },
+    "created_at": "2026-02-10T22:05:27.378310Z",
+    "updated_at": "2026-02-10T22:08:11.389509Z"
+  }
+}
+```
+
+<Note>
+  视频生成通常返回 1 个视频 URL。`result` 仅在 `status` 为 `SUCCESS` 时有值。
+</Note>

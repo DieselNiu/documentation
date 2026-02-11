@@ -1,0 +1,101 @@
+---
+title: "Image to Image"
+api: "POST /api/v1/task/submit"
+description: "Jimeng 图生图 — 基于参考图片生成新图片"
+---
+
+使用与文生图相同的模型。当 `input` 中包含 `images` 字段时，自动切换为图生图模式。
+
+<ParamField body="model" type="string" required>
+  模型名称，如 `jimeng-4.5`。与文生图使用相同的模型。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调地址。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      提示词，描述你想要的变换效果。
+    </ParamField>
+    <ParamField body="images" type="array" required>
+      参考图片列表，1~10 张。每项可以是 URL 字符串，或 `{"url": "https://..."}` 对象。
+    </ParamField>
+    <ParamField body="negative_prompt" type="string">
+      反向提示词。
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      图片比例。可选值：`1:1`、`4:3`、`3:4`、`16:9`、`9:16`、`3:2`、`2:3`、`21:9`。
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      分辨率。可选值：`1k`、`2k`、`4k`。
+    </ParamField>
+    <ParamField body="sample_strength" type="number">
+      采样强度。
+    </ParamField>
+    <ParamField body="intelligent_ratio" type="boolean">
+      是否启用智能比例。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "jimeng-4.5",
+  "input": {
+    "prompt": "将这张照片变成水彩画风格",
+    "images": ["https://example.com/photo.jpg"]
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "c3d4e5f6-a7b8-9012-cdef-234567890abc"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## 查询结果
+
+通过 [Query Task](/api-reference/query-task) 接口或 Webhook 获取生成结果：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "c3d4e5f6-a7b8-9012-cdef-234567890abc",
+    "status": "SUCCESS",
+    "input": {
+      "model": "jimeng-4.5",
+      "prompt": "将这张照片变成水彩画风格",
+      "images": ["https://example.com/photo.jpg"],
+      "resolution": "2k"
+    },
+    "result": {
+      "type": "image",
+      "urls": [
+        "https://p3-dreamina-sign.byteimg.com/result1.png",
+        "https://p3-dreamina-sign.byteimg.com/result2.png"
+      ]
+    },
+    "created_at": "2026-02-10T22:00:00.000000Z",
+    "updated_at": "2026-02-10T22:00:15.000000Z"
+  }
+}
+```

@@ -1,0 +1,150 @@
+---
+title: "Image to Video"
+api: "POST /api/v1/task/submit"
+description: "Jimeng / Seedance 图生视频 — 基于参考图片生成视频"
+---
+
+通过传入 `imageUrls`，根据图片数量自动选择不同的生成模式。适用于所有 `seedance-*` 和 `jimeng-video-*` 模型。
+
+<ParamField body="model" type="string" required>
+  模型名称，如 `seedance-2.0-pro`、`jimeng-video-3.5-pro`。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调地址。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      提示词。多图模式下可用 `@1`、`@2`、`@3` 引用对应位置的图片。
+    </ParamField>
+    <ParamField body="imageUrls" type="string[]" required>
+      参考图片 URL 列表。图片数量决定生成模式（见下方说明）。
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      视频比例。可选值：`1:1`、`4:3`、`3:4`、`16:9`、`9:16`。
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      视频分辨率。可选值：`480p`、`720p`、`1080p`。
+    </ParamField>
+    <ParamField body="duration" type="integer">
+      视频时长（秒）。可选值：`5`、`10`、`15`。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "seedance-2.0-pro",
+  "input": {
+    "prompt": "吹灭蜡烛",
+    "imageUrls": ["https://example.com/photo.jpg"]
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## 生成模式
+
+根据 `imageUrls` 中的图片数量，自动选择不同模式：
+
+### 1 张图 — 首帧模式
+
+以图片作为视频的第一帧，根据 prompt 生成后续动画。
+
+```json
+{
+  "model": "seedance-2.0-pro",
+  "input": {
+    "prompt": "吹灭蜡烛",
+    "imageUrls": ["https://assets.movart.ai/landingpage/dog.webp"]
+  }
+}
+```
+
+### 2 张图 — 首尾帧模式
+
+第一张图作为视频首帧，第二张图作为视频尾帧，AI 自动生成中间过渡动画。
+
+```json
+{
+  "model": "seedance-2.0-pro",
+  "input": {
+    "prompt": "变身",
+    "imageUrls": [
+      "https://assets.movart.ai/3D-Cartoon.jpg",
+      "https://assets.movart.ai/landingpage/dog.webp"
+    ]
+  }
+}
+```
+
+### 3+ 张图 — 多图参考模式
+
+prompt 中用 `@1`、`@2`、`@3` 引用对应位置的图片。
+
+```json
+{
+  "model": "seedance-2.0",
+  "input": {
+    "prompt": "@1 和 @2 在聊天，@3 在旁边看",
+    "imageUrls": [
+      "https://assets.movart.ai/3D-Cartoon.jpg",
+      "https://assets.movart.ai/landingpage/dog.webp",
+      "https://assets.movart.ai/landingpage/dog.webp"
+    ]
+  }
+}
+```
+
+---
+
+## 查询结果
+
+通过 [Query Task](/api-reference/query-task) 接口或 Webhook 获取生成结果：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "SUCCESS",
+    "input": {
+      "model": "seedance-2.0-pro",
+      "prompt": "吹灭蜡烛",
+      "imageUrls": [
+        "https://assets.movart.ai/landingpage/dog.webp"
+      ]
+    },
+    "result": {
+      "type": "video",
+      "urls": [
+        "https://v9-dreamnia.jimeng.com/video/tos/cn/video_example.mp4"
+      ]
+    },
+    "created_at": "2026-02-10T23:00:00.000000Z",
+    "updated_at": "2026-02-10T23:03:25.000000Z"
+  }
+}
+```
