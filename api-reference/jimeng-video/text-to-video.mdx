@@ -1,0 +1,100 @@
+---
+title: "Text to Video"
+api: "POST /api/v1/task/submit"
+description: "Jimeng / Seedance Text-to-Video — Generate videos from text descriptions"
+---
+
+Use Jimeng Video or Seedance models to generate videos from a text prompt. Omitting `imageUrls` activates pure text-to-video mode.
+
+### Available Models
+
+`jimeng-video-3.5-pro` · `jimeng-video-3.0-pro` · `jimeng-video-3.0` · `jimeng-video-2.0-pro` · `jimeng-video-2.0` · `seedance-2.0` · `seedance-2.0-pro`
+
+<ParamField body="model" type="string" required>
+  Model name, e.g. `seedance-2.0-pro`, `jimeng-video-3.5-pro`.
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      Prompt describing the video you want to generate.
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      Video aspect ratio. Options: `1:1`, `4:3`, `3:4`, `16:9`, `9:16`.
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      Video resolution. Options: `480p`, `720p`, `1080p`.
+    </ParamField>
+    <ParamField body="duration" type="integer">
+      Video duration in seconds. Options: `5`, `10`, `15`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "seedance-2.0-pro",
+  "input": {
+    "prompt": "A river flowing through autumn forest, aerial view",
+    "ratio": "16:9",
+    "duration": 5
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "790758ee-3675-48fa-a9af-33d33cf84e71"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## Query Result
+
+Retrieve the generation result via the [Query Task](/api-reference/query-task) endpoint or Webhook:
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "790758ee-3675-48fa-a9af-33d33cf84e71",
+    "status": "SUCCESS",
+    "input": {
+      "model": "seedance-2.0-pro",
+      "prompt": "一条河流穿过秋天的森林，航拍视角",
+      "ratio": "16:9",
+      "duration": 5
+    },
+    "result": {
+      "type": "video",
+      "urls": [
+        "https://v9-dreamnia.jimeng.com/video/tos/cn/video_example.mp4"
+      ]
+    },
+    "created_at": "2026-02-10T22:05:27.378310Z",
+    "updated_at": "2026-02-10T22:08:11.389509Z"
+  }
+}
+```
+
+<Note>
+  Video generation typically returns 1 video URL. `result` is only populated when `status` is `SUCCESS`.
+</Note>

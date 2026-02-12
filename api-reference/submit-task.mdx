@@ -1,0 +1,70 @@
+---
+title: "Submit Task"
+api: "POST /api/v1/task/submit"
+description: "Submit an AI generation task and immediately receive a taskId"
+---
+
+Submit an asynchronous generation task. All models (image, video) share this endpoint, distinguished by the `model` parameter.
+
+<ParamField body="model" type="string" required>
+  Model name. For example, `jimeng-4.5`, `seedance-2.0-pro`, etc. See individual model documentation for details.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  Model input parameters, including prompt and model-specific parameters.
+
+  <Expandable title="properties">
+    <ParamField body="prompt" type="string" required>
+      Prompt describing the content you want to generate.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL. When the task reaches a terminal state, the system will send a POST request to this URL. Localhost is not supported.
+</ParamField>
+
+<ParamField body="user_id" type="string">
+  Caller's user identifier, used for request tracing.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "jimeng-4.5",
+  "input": {
+    "prompt": "A cyberpunk Tokyo street"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad"
+  }
+}
+```
+
+```json 400
+{
+  "code": 400,
+  "msg": "model is required"
+}
+```
+
+```json 401
+{
+  "code": 401,
+  "msg": "unauthorized"
+}
+```
+</ResponseExample>

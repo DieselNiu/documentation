@@ -1,0 +1,109 @@
+---
+title: "Text to Image"
+api: "POST /api/v1/task/submit"
+description: "Jimeng Text-to-Image — Generate images from text descriptions"
+---
+
+Use Jimeng image models to generate images from a prompt. 12 model versions are supported.
+
+### Available Models
+
+`jimeng-5.0-preview` · `jimeng-4.6` · `jimeng-4.5` · `jimeng-4.1` · `jimeng-4.0` · `jimeng-3.1` · `jimeng-3.0` · `jimeng-2.1` · `jimeng-2.0-pro` · `jimeng-2.0` · `jimeng-1.4` · `jimeng-xl-pro`
+
+<ParamField body="model" type="string" required>
+  Model name, e.g. `jimeng-4.5`, `jimeng-5.0-preview`.
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      Prompt describing the image you want to generate.
+    </ParamField>
+    <ParamField body="negative_prompt" type="string">
+      Negative prompt describing content you do not want to appear.
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      Image aspect ratio. Options: `1:1`, `4:3`, `3:4`, `16:9`, `9:16`, `3:2`, `2:3`, `21:9`.
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      Resolution. Options: `1k`, `2k`, `4k`.
+    </ParamField>
+    <ParamField body="sample_strength" type="number">
+      Sampling strength.
+    </ParamField>
+    <ParamField body="intelligent_ratio" type="boolean">
+      Whether to enable intelligent aspect ratio.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "jimeng-4.5",
+  "input": {
+    "prompt": "Cyberpunk Tokyo street",
+    "ratio": "16:9",
+    "resolution": "2k"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## Query Result
+
+Retrieve the generation result via the [Query Task](/api-reference/query-task) endpoint or Webhook:
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad",
+    "status": "SUCCESS",
+    "input": {
+      "model": "jimeng-4.5",
+      "prompt": "赛博朋克风格的东京街景",
+      "ratio": "16:9",
+      "resolution": "2k"
+    },
+    "result": {
+      "type": "image",
+      "urls": [
+        "https://p3-dreamina-sign.byteimg.com/image1.png",
+        "https://p3-dreamina-sign.byteimg.com/image2.png",
+        "https://p3-dreamina-sign.byteimg.com/image3.png",
+        "https://p3-dreamina-sign.byteimg.com/image4.png"
+      ]
+    },
+    "created_at": "2026-02-10T21:54:46.686768Z",
+    "updated_at": "2026-02-10T21:55:04.039815Z"
+  }
+}
+```
+
+<Note>
+  Image generation typically returns multiple images. `result` is only populated when `status` is `SUCCESS`.
+</Note>

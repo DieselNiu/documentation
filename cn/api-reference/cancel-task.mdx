@@ -1,0 +1,42 @@
+---
+title: "Cancel Task"
+api: "POST /api/v1/task/{taskId}/cancel"
+description: "取消进行中的任务"
+---
+
+取消一个尚未到达终态的任务。仅当任务状态为 `PENDING`、`PROCESSING` 或 `SUBMITTED` 时可取消。
+
+<ParamField path="taskId" type="string" required>
+  要取消的任务 ID。
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/9db7d1ed-d1e5-4d11-9f3a-61f653b905ad/cancel \
+  --header 'Authorization: Bearer <token>'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200
+{
+  "code": 0,
+  "msg": "ok"
+}
+```
+
+```json 400
+{
+  "code": 400,
+  "msg": "task already in terminal state"
+}
+```
+
+```json 404
+{
+  "code": 404,
+  "msg": "task not found"
+}
+```
+</ResponseExample>

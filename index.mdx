@@ -1,97 +1,50 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Max API"
+description: "AI Image & Video Generation API — Unified Interface, Async Tasks, Webhook Callbacks"
 ---
 
-## Setting up
+## Quick Start
 
-Get your documentation site up and running in minutes.
+Call multiple AI generation models through a unified RESTful API, supporting image generation, video generation, and more.
 
 <Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
+  title="API Reference"
+  icon="bolt"
+  href="/api-reference/introduction"
   horizontal
 >
-  Follow our three step quickstart guide.
+  View the full API documentation and get started quickly.
 </Card>
 
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
+## Supported Models
 
 <Columns cols={2}>
   <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
-
-## Create beautiful pages
-
-Everything you need to create world-class documentation.
-
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
+    title="Jimeng Image Generation"
     icon="image"
-    href="/essentials/images"
+    href="/api-reference/jimeng-image/text-to-image"
   >
-    Display images and other media.
+    Supports 12 model versions including jimeng-5.0-preview, jimeng-4.6, jimeng-4.5, and more. Text-to-image & image-to-image.
   </Card>
   <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
+    title="Jimeng / Seedance Video Generation"
+    icon="video"
+    href="/api-reference/jimeng-video/text-to-video"
   >
-    Write once and reuse across your docs.
+    Supports 7 model versions including seedance-2.0-pro, jimeng-video-3.5-pro, and more. Text-to-video & image-to-video.
   </Card>
 </Columns>
 
-## Need inspiration?
+## Core Features
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+<Columns cols={3}>
+  <Card title="Unified Interface" icon="plug">
+    All models share the same submit / query / cancel endpoints. Switching models only requires changing the model parameter.
+  </Card>
+  <Card title="Async Tasks" icon="clock">
+    Returns a taskId immediately after submission. Get results via polling or Webhook.
+  </Card>
+  <Card title="Webhook Callbacks" icon="webhook">
+    Automatically pushes results to your server when a task completes — no polling required.
+  </Card>
+</Columns>

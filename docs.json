@@ -1,122 +1,129 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "theme": "almond",
+  "name": "Max API",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#6366F1",
+    "light": "#818CF8",
+    "dark": "#4F46E5"
   },
   "favicon": "/favicon.svg",
+  "api": {
+    "mdx": {
+      "auth": {
+        "method": "bearer"
+      }
+    }
+  },
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "Guides",
-        "groups": [
+        "language": "en",
+        "default": true,
+        "tabs": [
           {
-            "group": "Getting started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
-          },
-          {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "api-reference/introduction",
+                  "api-reference/authentication"
+                ]
+              },
+              {
+                "group": "Task API",
+                "pages": [
+                  "api-reference/submit-task",
+                  "api-reference/query-task",
+                  "api-reference/cancel-task",
+                  "api-reference/webhook"
+                ]
+              },
+              {
+                "group": "Jimeng Image",
+                "pages": [
+                  "api-reference/jimeng-image/text-to-image",
+                  "api-reference/jimeng-image/image-to-image"
+                ]
+              },
+              {
+                "group": "Jimeng Video / Seedance",
+                "pages": [
+                  "api-reference/jimeng-video/text-to-video",
+                  "api-reference/jimeng-video/image-to-video"
+                ]
+              }
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
-        "groups": [
+        "language": "cn",
+        "tabs": [
           {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+            "tab": "API 参考",
+            "groups": [
+              {
+                "group": "概览",
+                "pages": [
+                  "cn/api-reference/introduction",
+                  "cn/api-reference/authentication"
+                ]
+              },
+              {
+                "group": "任务 API",
+                "pages": [
+                  "cn/api-reference/submit-task",
+                  "cn/api-reference/query-task",
+                  "cn/api-reference/cancel-task",
+                  "cn/api-reference/webhook"
+                ]
+              },
+              {
+                "group": "即梦图片",
+                "pages": [
+                  "cn/api-reference/jimeng-image/text-to-image",
+                  "cn/api-reference/jimeng-image/image-to-image"
+                ]
+              },
+              {
+                "group": "即梦视频 / Seedance",
+                "pages": [
+                  "cn/api-reference/jimeng-video/text-to-video",
+                  "cn/api-reference/jimeng-video/image-to-video"
+                ]
+              }
             ]
           }
         ]
       }
     ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    "global": {}
   },
   "logo": {
     "light": "/logo/light.svg",
     "dark": "/logo/dark.svg"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "href": "https://api.maxapi.io/dashboard"
     }
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "cursor"
+    ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "website": "https://maxapi.io"
     }
   }
 }
