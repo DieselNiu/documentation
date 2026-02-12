@@ -1,0 +1,119 @@
+---
+title: "图片转换图片"
+api: "POST /api/v1/task/submit"
+description: "Nano Banana 图片转换图片 — 使用 AI 转换现有图片"
+---
+
+使用 Nano Banana 基于文本提示词转换现有图片。支持风格迁移、修改或创意编辑。
+
+### 可用模型
+
+`nano-banana` · `nano-banana-pro`
+
+<ParamField body="model" type="string" required>
+  模型名称，如 `nano-banana`、`nano-banana-pro`。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调地址。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      描述想要应用的转换效果的提示词。
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      输出图片宽高比。可选值：`16:9`、`9:16`、`1:1`、`4:3`、`3:4`。默认值：`16:9`。
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      输出分辨率。可选值：`1k`、`2k`、`4k`。默认值：`1k`（仅 `nano-banana-pro` 支持 2K/4K）。
+    </ParamField>
+    <ParamField body="imageUrls" type="array" required>
+      包含**恰好 1 张输入图片 URL** 的数组。必须是公网可访问的 HTTPS 地址。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash 风格迁移
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "nano-banana-pro",
+  "input": {
+    "prompt": "将这张图片转换为油画风格",
+    "ratio": "16:9",
+    "resolution": "2k",
+    "imageUrls": ["https://example.com/input.jpg"]
+  }
+}'
+```
+
+```bash 图片修改
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "nano-banana-pro",
+  "input": {
+    "prompt": "将背景改为日落海滩场景",
+    "ratio": "1:1",
+    "imageUrls": ["https://example.com/portrait.jpg"]
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "c3d4e5f6-a7b8-9012-cdef-234567890abc"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## 查询结果
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "c3d4e5f6-a7b8-9012-cdef-234567890abc",
+    "status": "SUCCESS",
+    "input": {
+      "model": "nano-banana-pro",
+      "prompt": "将这张图片转换为油画风格",
+      "ratio": "16:9",
+      "resolution": "2k",
+      "imageUrls": ["https://example.com/input.jpg"]
+    },
+    "result": {
+      "type": "image",
+      "urls": [
+        "https://flow.dieselniu.im/output/image-c3d4e5f6.png"
+      ]
+    },
+    "created_at": "2026-02-12T12:00:00.000000Z",
+    "updated_at": "2026-02-12T12:00:18.000000Z"
+  }
+}
+```
+
+<Warning>
+  **输入图片要求：**
+  - 格式：JPEG、PNG、WebP
+  - 必须是公网可访问的 HTTPS 地址
+  - 建议大小：< 10MB
+  - 输出宽高比和分辨率与输入图片无关
+</Warning>

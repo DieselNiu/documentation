@@ -1,0 +1,134 @@
+---
+title: "文本生成图片"
+api: "POST /api/v1/task/submit"
+description: "Nano Banana 文本生成图片 — 从文本提示词生成图片"
+---
+
+使用 Gemini 驱动的 Nano Banana 模型从文本描述生成高质量图片。可在快速生成和高质量输出之间选择。
+
+### 可用模型
+
+`nano-banana` · `nano-banana-pro`
+
+### 模型对比
+
+<AccordionGroup>
+  <Accordion title="nano-banana — Gemini 2.5 Flash">
+    **快速 & 高性价比**
+    - 引擎：Gemini 2.5 Flash
+    - 支持比例：`16:9`、`9:16`
+    - 分辨率：1K（固定）
+    - 适用场景：快速迭代、原型设计
+  </Accordion>
+  <Accordion title="nano-banana-pro — Gemini 3.0 Pro">
+    **高质量**
+    - 引擎：Gemini 3.0 Pro
+    - 支持比例：`16:9`、`9:16`、`1:1`、`4:3`、`3:4`
+    - 支持分辨率：`1k`、`2k`、`4k`
+    - 适用场景：最终产出、高质量需求
+  </Accordion>
+</AccordionGroup>
+
+<ParamField body="model" type="string" required>
+  模型名称，如 `nano-banana`、`nano-banana-pro`。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调地址。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      描述想要生成的图片内容的提示词。
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      图片宽高比。可选值：`16:9`、`9:16`、`1:1`、`4:3`、`3:4`。默认值：`16:9`。
+
+      **注意**：`nano-banana` 仅支持 `16:9` 和 `9:16`。其他比例需使用 `nano-banana-pro`。
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      图片分辨率。可选值：`1k`、`2k`、`4k`。默认值：`1k`。
+
+      **注意**：`nano-banana` 忽略此参数（固定 1K）。仅 `nano-banana-pro` 支持 2K 和 4K。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash nano-banana（快速）
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "nano-banana",
+  "input": {
+    "prompt": "一只在星空下奔跑的柴犬",
+    "ratio": "16:9"
+  }
+}'
+```
+
+```bash nano-banana-pro（高质量）
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "nano-banana-pro",
+  "input": {
+    "prompt": "一只在星空下奔跑的柴犬",
+    "ratio": "16:9",
+    "resolution": "2k"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## 查询结果
+
+通过[查询任务](/cn/api-reference/query-task)接口或 Webhook 获取生成结果：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "SUCCESS",
+    "input": {
+      "model": "nano-banana-pro",
+      "prompt": "一只在星空下奔跑的柴犬",
+      "ratio": "16:9",
+      "resolution": "2k"
+    },
+    "result": {
+      "type": "image",
+      "urls": [
+        "https://flow.dieselniu.im/output/image-a1b2c3d4.png"
+      ]
+    },
+    "created_at": "2026-02-12T10:00:00.000000Z",
+    "updated_at": "2026-02-12T10:00:15.000000Z"
+  }
+}
+```
+
+<Note>
+  Nano Banana 每次生成返回 1 张图片。平均生成时长：10-30 秒。
+</Note>

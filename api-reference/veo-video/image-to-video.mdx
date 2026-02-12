@@ -1,0 +1,138 @@
+---
+title: "Image to Video (I2V)"
+api: "POST /api/v1/task/submit"
+description: "Veo 3 Image-to-Video — Animate images or create videos from image references"
+---
+
+Use Google Veo 3.1 to create videos from images. Supports three modes based on the number of input images.
+
+### Available Models
+
+`veo3` · `veo3_fast` · `veo3_relaxed`
+
+### Generation Modes
+
+<AccordionGroup>
+  <Accordion title="Single Image (I2V) — 1 image">
+    Animate a single image as the first frame. The video starts from this image and extends the motion.
+  </Accordion>
+  <Accordion title="First + Last Frame (I2V-FL) — 2 images">
+    Create a smooth transition video between a start frame and an end frame.
+  </Accordion>
+  <Accordion title="Reference Images (R2V) — 3 images">
+    Generate a video using 3 reference images for style transfer or scene blending.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  No need to specify `mode` — the system automatically infers it based on the number of images in `imageUrls`.
+</Note>
+
+<ParamField body="model" type="string" required>
+  Model name, e.g. `veo3`, `veo3_fast`, `veo3_relaxed`.
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      Prompt describing the video motion or transition effect.
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      Video aspect ratio. Options: `16:9`, `9:16`. Default: `16:9`.
+    </ParamField>
+    <ParamField body="imageUrls" type="array" required>
+      Array of image URLs. Must contain **exactly 1, 2, or 3 images**:
+      - **1 image**: Single image animation (I2V)
+      - **2 images**: First + last frame transition (I2V-FL)
+      - **3 images**: Reference-based video generation (R2V)
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash Single Image (I2V)
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "veo3",
+  "input": {
+    "prompt": "The waves gently move and the sun slowly sets",
+    "ratio": "16:9",
+    "imageUrls": ["https://example.com/beach.jpg"]
+  }
+}'
+```
+
+```bash First + Last Frame (I2V-FL)
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "veo3",
+  "input": {
+    "prompt": "Smooth transition from daytime to nighttime",
+    "ratio": "16:9",
+    "imageUrls": [
+      "https://example.com/day.jpg",
+      "https://example.com/night.jpg"
+    ]
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## Query Result
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    "status": "SUCCESS",
+    "input": {
+      "model": "veo3",
+      "prompt": "The waves gently move and the sun slowly sets",
+      "ratio": "16:9",
+      "imageUrls": ["https://example.com/beach.jpg"]
+    },
+    "result": {
+      "type": "video",
+      "urls": [
+        "https://flow.dieselniu.im/output/video-b2c3d4e5.mp4"
+      ]
+    },
+    "created_at": "2026-02-12T11:00:00.000000Z",
+    "updated_at": "2026-02-12T11:02:45.000000Z"
+  }
+}
+```
+
+<Warning>
+  **Image Requirements:**
+  - Formats: JPEG, PNG, WebP
+  - Must be publicly accessible HTTPS URLs
+  - Recommended size: < 10MB per image
+  - Aspect ratio should match the `ratio` parameter
+</Warning>

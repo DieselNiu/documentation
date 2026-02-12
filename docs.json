@@ -53,6 +53,20 @@
                   "api-reference/jimeng-video/text-to-video",
                   "api-reference/jimeng-video/image-to-video"
                 ]
+              },
+              {
+                "group": "Veo 3 Video",
+                "pages": [
+                  "api-reference/veo-video/text-to-video",
+                  "api-reference/veo-video/image-to-video"
+                ]
+              },
+              {
+                "group": "Nano Banana Image",
+                "pages": [
+                  "api-reference/nano-banana/text-to-image",
+                  "api-reference/nano-banana/image-to-image"
+                ]
               }
             ]
           }
@@ -92,6 +106,20 @@
                 "pages": [
                   "cn/api-reference/jimeng-video/text-to-video",
                   "cn/api-reference/jimeng-video/image-to-video"
+                ]
+              },
+              {
+                "group": "Veo 3 视频",
+                "pages": [
+                  "cn/api-reference/veo-video/text-to-video",
+                  "cn/api-reference/veo-video/image-to-video"
+                ]
+              },
+              {
+                "group": "Nano Banana 图片",
+                "pages": [
+                  "cn/api-reference/nano-banana/text-to-image",
+                  "cn/api-reference/nano-banana/image-to-image"
                 ]
               }
             ]

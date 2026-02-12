@@ -1,0 +1,120 @@
+---
+title: "文本生成视频（T2V）"
+api: "POST /api/v1/task/submit"
+description: "Veo 3 文本生成视频 — 从文本描述生成高质量视频"
+---
+
+使用 Google Veo 3.1 从文本描述生成高质量视频。支持三种速度模式，适应不同场景需求。
+
+### 可用模型
+
+`veo3` · `veo3_fast` · `veo3_relaxed`
+
+### 速度模式
+
+<AccordionGroup>
+  <Accordion title="veo3 — Quality 质量模式（默认）">
+    最佳生成质量。推荐大多数场景使用。
+  </Accordion>
+  <Accordion title="veo3_fast — Fast 快速模式">
+    速度优先。适合对时效性要求高的场景。
+  </Accordion>
+  <Accordion title="veo3_relaxed — Relaxed 排队模式">
+    价格最低，速度最慢。采用排队机制，适合预算有限的用户。
+  </Accordion>
+</AccordionGroup>
+
+<ParamField body="model" type="string" required>
+  模型名称，如 `veo3`、`veo3_fast`、`veo3_relaxed`。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调地址。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      描述想要生成的视频内容的提示词。
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      视频宽高比。可选值：`16:9`、`9:16`。默认值：`16:9`。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash 质量模式（默认）
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "veo3",
+  "input": {
+    "prompt": "黄金时刻，海浪拍打着岩石海岸",
+    "ratio": "16:9"
+  }
+}'
+```
+
+```bash 快速模式
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "veo3_fast",
+  "input": {
+    "prompt": "黄金时刻，海浪拍打着岩石海岸",
+    "ratio": "9:16"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## 查询结果
+
+通过[查询任务](/cn/api-reference/query-task)接口或 Webhook 获取生成结果：
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "SUCCESS",
+    "input": {
+      "model": "veo3",
+      "prompt": "黄金时刻，海浪拍打着岩石海岸",
+      "ratio": "16:9"
+    },
+    "result": {
+      "type": "video",
+      "urls": [
+        "https://flow.dieselniu.im/output/video-a1b2c3d4.mp4"
+      ]
+    },
+    "created_at": "2026-02-12T10:00:00.000000Z",
+    "updated_at": "2026-02-12T10:02:30.000000Z"
+  }
+}
+```
+
+<Note>
+  Veo 3 每次生成返回 1 个视频。视频时长通常为 5-8 秒。无需指定 `mode` 参数 — 系统会根据图片数量自动识别生成模式。
+</Note>

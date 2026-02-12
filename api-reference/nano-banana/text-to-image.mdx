@@ -1,0 +1,134 @@
+---
+title: "Text to Image"
+api: "POST /api/v1/task/submit"
+description: "Nano Banana Text-to-Image — Generate images from text prompts"
+---
+
+Use Gemini-powered Nano Banana models to generate high-quality images from text descriptions. Choose between fast generation and high-quality output.
+
+### Available Models
+
+`nano-banana` · `nano-banana-pro`
+
+### Model Comparison
+
+<AccordionGroup>
+  <Accordion title="nano-banana — Gemini 2.5 Flash">
+    **Fast & Cost-effective**
+    - Engine: Gemini 2.5 Flash
+    - Aspect Ratios: `16:9`, `9:16`
+    - Resolution: 1K (fixed)
+    - Best for: Quick iterations, prototyping
+  </Accordion>
+  <Accordion title="nano-banana-pro — Gemini 3.0 Pro">
+    **High Quality**
+    - Engine: Gemini 3.0 Pro
+    - Aspect Ratios: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`
+    - Resolutions: `1k`, `2k`, `4k`
+    - Best for: Final production, high-quality outputs
+  </Accordion>
+</AccordionGroup>
+
+<ParamField body="model" type="string" required>
+  Model name, e.g. `nano-banana`, `nano-banana-pro`.
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      Prompt describing the image you want to generate.
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      Image aspect ratio. Options: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`. Default: `16:9`.
+
+      **Note:** `nano-banana` only supports `16:9` and `9:16`. Other ratios require `nano-banana-pro`.
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      Image resolution. Options: `1k`, `2k`, `4k`. Default: `1k`.
+
+      **Note:** `nano-banana` ignores this parameter (always 1K). Only `nano-banana-pro` supports 2K and 4K.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash nano-banana (Fast)
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "nano-banana",
+  "input": {
+    "prompt": "A cute shiba inu running under a starry sky",
+    "ratio": "16:9"
+  }
+}'
+```
+
+```bash nano-banana-pro (High Quality)
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "nano-banana-pro",
+  "input": {
+    "prompt": "A cute shiba inu running under a starry sky",
+    "ratio": "16:9",
+    "resolution": "2k"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## Query Result
+
+Retrieve the generation result via the [Query Task](/api-reference/query-task) endpoint or Webhook:
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "SUCCESS",
+    "input": {
+      "model": "nano-banana-pro",
+      "prompt": "A cute shiba inu running under a starry sky",
+      "ratio": "16:9",
+      "resolution": "2k"
+    },
+    "result": {
+      "type": "image",
+      "urls": [
+        "https://flow.dieselniu.im/output/image-a1b2c3d4.png"
+      ]
+    },
+    "created_at": "2026-02-12T10:00:00.000000Z",
+    "updated_at": "2026-02-12T10:00:15.000000Z"
+  }
+}
+```
+
+<Note>
+  Nano Banana returns 1 image per generation. Average generation time: 10-30 seconds.
+</Note>
