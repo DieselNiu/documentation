@@ -136,3 +136,9 @@ curl --request POST \
   - 建议大小：单张图片 < 10MB
   - 宽高比应与 `ratio` 参数匹配
 </Warning>
+
+<Note>
+  **速度模式限制：**
+  - **R2V 模式（3 张图片）**：不支持 Quality 质量模式。如果使用 `veo3` 模型，将自动回退到 Fast 模式。建议明确使用 `veo3_fast` 或 `veo3_relaxed`。
+  - **I2V Fast 模式**：不可用。系统会在 I2V 请求 Fast 模式时自动使用 Relaxed 模式。
+</Note>

@@ -136,3 +136,9 @@ curl --request POST \
   - Recommended size: < 10MB per image
   - Aspect ratio should match the `ratio` parameter
 </Warning>
+
+<Note>
+  **Speed Mode Limitations:**
+  - **R2V mode (3 images)**: Does not support Quality mode. If you use `veo3` model, it will automatically fall back to Fast mode. We recommend explicitly using `veo3_fast` or `veo3_relaxed` for R2V.
+  - **I2V Fast mode**: Not available. The system automatically uses Relaxed mode when Fast is requested for I2V.
+</Note>
