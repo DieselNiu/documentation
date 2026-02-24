@@ -4,28 +4,43 @@ api: "POST /api/v1/task/submit"
 description: "Veo 3 Text-to-Video — Generate videos from text descriptions"
 ---
 
-Use Google Veo 3.1 to generate high-quality videos from text descriptions. Supports three speed modes for different scenarios.
+Use Google Veo 3.1 to generate high-quality videos from text descriptions. Supports multiple speed modes and two channel options.
 
 ### Available Models
 
-`veo3` · `veo3_fast` · `veo3_relaxed`
+`veo3` · `veo3_fast` · `veo3_relaxed` · `veo3-google` · `veo3-google-fast`
+
+### Channels
+
+<AccordionGroup>
+  <Accordion title="Flow Channel — veo3 / veo3_fast / veo3_relaxed">
+    Proxied through Flow API with automatic fallback. If Flow fails, the system automatically switches to Google Vertex AI.
+  </Accordion>
+  <Accordion title="Google Direct — veo3-google / veo3-google-fast">
+    Direct connection to Google Vertex AI official API, bypassing the Flow proxy.
+  </Accordion>
+</AccordionGroup>
 
 ### Speed Modes
 
 <AccordionGroup>
-  <Accordion title="veo3 — Quality Mode (Default)">
+  <Accordion title="Quality Mode (Default) — veo3 / veo3-google">
     Best generation quality. Recommended for most use cases.
   </Accordion>
-  <Accordion title="veo3_fast — Fast Mode">
+  <Accordion title="Fast Mode — veo3_fast / veo3-google-fast">
     Optimized for speed. Ideal for time-sensitive scenarios.
   </Accordion>
-  <Accordion title="veo3_relaxed — Relaxed Mode">
+  <Accordion title="Relaxed Mode — veo3_relaxed (Flow only)">
     Lowest price, slowest speed. Uses queueing mechanism for budget-conscious users.
   </Accordion>
 </AccordionGroup>
 
+<Note>
+  **I2V (single-image-to-video) Fast mode** will be automatically downgraded to Relaxed mode.
+</Note>
+
 <ParamField body="model" type="string" required>
-  Model name, e.g. `veo3`, `veo3_fast`, `veo3_relaxed`.
+  Model name, e.g. `veo3`, `veo3_fast`, `veo3_relaxed`, `veo3-google`, `veo3-google-fast`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">

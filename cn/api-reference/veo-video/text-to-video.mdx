@@ -4,28 +4,43 @@ api: "POST /api/v1/task/submit"
 description: "Veo 3 文本生成视频 — 从文本描述生成高质量视频"
 ---
 
-使用 Google Veo 3.1 从文本描述生成高质量视频。支持三种速度模式，适应不同场景需求。
+使用 Google Veo 3.1 从文本描述生成高质量视频。支持多种速度模式和两种渠道选择。
 
 ### 可用模型
 
-`veo3` · `veo3_fast` · `veo3_relaxed`
+`veo3` · `veo3_fast` · `veo3_relaxed` · `veo3-google` · `veo3-google-fast`
+
+### 渠道说明
+
+<AccordionGroup>
+  <Accordion title="Flow 渠道 — veo3 / veo3_fast / veo3_relaxed">
+    通过 Flow API 代理调用，配有兜底机制（Flow 失败后自动切换 Google API）。
+  </Accordion>
+  <Accordion title="Google 直连渠道 — veo3-google / veo3-google-fast">
+    直接调用 Google Vertex AI 官方 API，不经过 Flow 代理。
+  </Accordion>
+</AccordionGroup>
 
 ### 速度模式
 
 <AccordionGroup>
-  <Accordion title="veo3 — Quality 质量模式（默认）">
+  <Accordion title="Quality 质量模式（默认）— veo3 / veo3-google">
     最佳生成质量。推荐大多数场景使用。
   </Accordion>
-  <Accordion title="veo3_fast — Fast 快速模式">
+  <Accordion title="Fast 快速模式 — veo3_fast / veo3-google-fast">
     速度优先。适合对时效性要求高的场景。
   </Accordion>
-  <Accordion title="veo3_relaxed — Relaxed 排队模式">
+  <Accordion title="Relaxed 排队模式 — veo3_relaxed（仅 Flow 渠道）">
     价格最低，速度最慢。采用排队机制，适合预算有限的用户。
   </Accordion>
 </AccordionGroup>
 
+<Note>
+  **I2V（单图生视频）的 Fast 模式**会自动降级为 Relaxed 模式。
+</Note>
+
 <ParamField body="model" type="string" required>
-  模型名称，如 `veo3`、`veo3_fast`、`veo3_relaxed`。
+  模型名称，如 `veo3`、`veo3_fast`、`veo3_relaxed`、`veo3-google`、`veo3-google-fast`。
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">

@@ -4,11 +4,22 @@ api: "POST /api/v1/task/submit"
 description: "Veo 3 Image-to-Video — Animate images or create videos from image references"
 ---
 
-Use Google Veo 3.1 to create videos from images. Supports three modes based on the number of input images.
+Use Google Veo 3.1 to create videos from images. Supports three modes based on the number of input images, with two channel options.
 
 ### Available Models
 
-`veo3` · `veo3_fast` · `veo3_relaxed`
+`veo3` · `veo3_fast` · `veo3_relaxed` · `veo3-google` · `veo3-google-fast`
+
+### Channels
+
+<AccordionGroup>
+  <Accordion title="Flow Channel — veo3 / veo3_fast / veo3_relaxed">
+    Proxied through Flow API with automatic fallback. If Flow fails, the system automatically switches to Google Vertex AI.
+  </Accordion>
+  <Accordion title="Google Direct — veo3-google / veo3-google-fast">
+    Direct connection to Google Vertex AI official API, bypassing the Flow proxy.
+  </Accordion>
+</AccordionGroup>
 
 ### Generation Modes
 
@@ -29,7 +40,7 @@ Use Google Veo 3.1 to create videos from images. Supports three modes based on t
 </Note>
 
 <ParamField body="model" type="string" required>
-  Model name, e.g. `veo3`, `veo3_fast`, `veo3_relaxed`.
+  Model name, e.g. `veo3`, `veo3_fast`, `veo3_relaxed`, `veo3-google`, `veo3-google-fast`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">

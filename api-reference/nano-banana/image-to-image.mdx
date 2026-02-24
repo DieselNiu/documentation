@@ -4,14 +4,25 @@ api: "POST /api/v1/task/submit"
 description: "Nano Banana Image-to-Image — Transform existing images with AI"
 ---
 
-Use Nano Banana to transform existing images based on text prompts. Apply style transfer, modifications, or creative edits.
+Use Nano Banana to transform existing images based on text prompts. Apply style transfer, modifications, or creative edits. Available through Flow API or Google Direct channel.
 
 ### Available Models
 
-`nano-banana` · `nano-banana-pro`
+`nano-banana` · `nano-banana-pro` · `nano-banana-google` · `nano-banana-pro-google`
+
+### Channels
+
+<AccordionGroup>
+  <Accordion title="Flow Channel — nano-banana / nano-banana-pro">
+    Proxied through Flow API with automatic fallback. If Flow fails, the system automatically switches to Google Vertex AI.
+  </Accordion>
+  <Accordion title="Google Direct — nano-banana-google / nano-banana-pro-google">
+    Direct connection to Google Vertex AI official API, bypassing the Flow proxy. The `input` parameters are identical — just change the `model` value to switch channels.
+  </Accordion>
+</AccordionGroup>
 
 <ParamField body="model" type="string" required>
-  Model name, e.g. `nano-banana`, `nano-banana-pro`.
+  Model name, e.g. `nano-banana`, `nano-banana-pro`, `nano-banana-google`, `nano-banana-pro-google`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
