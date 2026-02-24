@@ -4,23 +4,34 @@ api: "POST /api/v1/task/submit"
 description: "Nano Banana 文本生成图片 — 从文本提示词生成图片"
 ---
 
-使用 Gemini 驱动的 Nano Banana 模型从文本描述生成高质量图片。可在快速生成和高质量输出之间选择。
+使用 Gemini 驱动的 Nano Banana 模型从文本描述生成高质量图片。可在快速生成和高质量输出之间选择，提供两种渠道选择。
 
 ### 可用模型
 
-`nano-banana` · `nano-banana-pro`
+`nano-banana` · `nano-banana-pro` · `nano-banana-google` · `nano-banana-pro-google`
+
+### 渠道说明
+
+<AccordionGroup>
+  <Accordion title="Flow 渠道 — nano-banana / nano-banana-pro">
+    通过 Flow API 代理调用，配有兜底机制（Flow 失败后自动切换 Google API）。
+  </Accordion>
+  <Accordion title="Google 直连渠道 — nano-banana-google / nano-banana-pro-google">
+    直接调用 Google Vertex AI 官方 API，不经过 Flow 代理。`input` 参数格式完全一致，只需更换 `model` 值即可切换渠道。
+  </Accordion>
+</AccordionGroup>
 
 ### 模型对比
 
 <AccordionGroup>
-  <Accordion title="nano-banana — Gemini 2.5 Flash">
+  <Accordion title="nano-banana / nano-banana-google — Gemini 2.5 Flash">
     **快速 & 高性价比**
     - 引擎：Gemini 2.5 Flash
     - 支持比例：`16:9`、`9:16`
     - 分辨率：1K（固定）
     - 适用场景：快速迭代、原型设计
   </Accordion>
-  <Accordion title="nano-banana-pro — Gemini 3.0 Pro">
+  <Accordion title="nano-banana-pro / nano-banana-pro-google — Gemini 3.0 Pro">
     **高质量**
     - 引擎：Gemini 3.0 Pro
     - 支持比例：`16:9`、`9:16`、`1:1`、`4:3`、`3:4`
@@ -30,7 +41,7 @@ description: "Nano Banana 文本生成图片 — 从文本提示词生成图片"
 </AccordionGroup>
 
 <ParamField body="model" type="string" required>
-  模型名称，如 `nano-banana`、`nano-banana-pro`。
+  模型名称，如 `nano-banana`、`nano-banana-pro`、`nano-banana-google`、`nano-banana-pro-google`。
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">

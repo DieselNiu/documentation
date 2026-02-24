@@ -98,4 +98,21 @@ PENDING → PROCESSING → SUBMITTED → SUCCESS
     | `seedance-2.0-pro` | Seedance 2.0 Pro |
     | `seedance-2.0-fast` | Seedance 2.0 Fast（更快生成） |
   </Tab>
+  <Tab title="Veo 3 视频">
+    | model | 底层引擎 | 说明 |
+    |-------|---------|------|
+    | `veo3` | Veo 3.1 (Flow API) | Quality 质量模式（默认）— 最佳生成质量 |
+    | `veo3_fast` | Veo 3.1 (Flow API) | Fast 快速模式 — 速度优先 |
+    | `veo3_relaxed` | Veo 3.1 (Flow API) | Relaxed 排队模式 — 价格低，速度最慢 |
+    | `veo3-google` | Veo 3.1 (Google Vertex AI) | Quality 质量模式 — 直连 Google API |
+    | `veo3-google-fast` | Veo 3.1 (Google Vertex AI) | Fast 快速模式 — 直连 Google API |
+  </Tab>
+  <Tab title="Nano Banana 图片">
+    | model | 底层引擎 | 说明 |
+    |-------|---------|------|
+    | `nano-banana` | Gemini 2.5 Flash (Flow API) | 快速生成（~10-20 秒） |
+    | `nano-banana-pro` | Gemini 3.0 Pro (Flow API) | 高质量生成（~30-60 秒） |
+    | `nano-banana-google` | Gemini 2.5 Flash (Google Vertex AI) | 快速生成 — 直连 Google API |
+    | `nano-banana-pro-google` | Gemini 3.0 Pro (Google Vertex AI) | 高质量生成 — 直连 Google API |
+  </Tab>
 </Tabs>

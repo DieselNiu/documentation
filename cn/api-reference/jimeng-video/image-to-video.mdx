@@ -1,10 +1,10 @@
 ---
 title: "Image to Video"
 api: "POST /api/v1/task/submit"
-description: "Jimeng / Seedance 图生视频 — 基于参考图片生成视频"
+description: "Jimeng / Seedance 图生视频 — 基于参考图片、视频、音频生成视频"
 ---
 
-通过传入 `imageUrls`，根据图片数量自动选择不同的生成模式。适用于所有 `seedance-*` 和 `jimeng-video-*` 模型。
+通过传入 `mediaUrls`（或纯图片场景使用 `imageUrls`），根据素材数量和类型自动选择不同的生成模式。适用于所有 `seedance-*` 和 `jimeng-video-*` 模型。
 
 <ParamField body="model" type="string" required>
   模型名称，如 `seedance-2.0-pro`、`seedance-2.0-fast`、`jimeng-video-3.5-pro`。
@@ -17,10 +17,13 @@ description: "Jimeng / Seedance 图生视频 — 基于参考图片生成视频"
 <ParamField body="input" type="object" required>
   <Expandable title="properties" defaultOpen>
     <ParamField body="prompt" type="string" required>
-      提示词。多图模式下可用 `@1`、`@2`、`@3` 引用对应位置的图片。
+      提示词。多素材模式下可用 `@1`、`@2`、`@3` 引用对应位置的素材。
     </ParamField>
-    <ParamField body="imageUrls" type="string[]" required>
-      参考图片 URL 列表。图片数量决定生成模式（见下方说明）。
+    <ParamField body="mediaUrls" type="string[]">
+      素材 URL 列表，支持图片/视频/音频混合。素材类型通过 URL 扩展名自动检测。数量和类型决定生成模式（见下方说明）。
+    </ParamField>
+    <ParamField body="imageUrls" type="string[]">
+      参考图片 URL 列表（向后兼容，等同于仅含图片的 `mediaUrls`）。如果同时提供 `mediaUrls` 和 `imageUrls`，以 `mediaUrls` 为准。
     </ParamField>
     <ParamField body="ratio" type="string">
       视频比例。可选值：`1:1`、`4:3`、`3:4`、`16:9`、`9:16`。
@@ -34,8 +37,20 @@ description: "Jimeng / Seedance 图生视频 — 基于参考图片生成视频"
   </Expandable>
 </ParamField>
 
+<Note>
+  `mediaUrls` 和 `imageUrls` 二选一。新开发推荐使用 `mediaUrls`；如果两者都提供，以 `mediaUrls` 为准。
+</Note>
+
+### 支持的素材类型
+
+| 类型 | 支持格式 | 说明 |
+|------|---------|------|
+| 图片 | `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.bmp` | 用于首尾帧或参考图 |
+| 视频 | `.mp4`, `.mov`, `.m4v` | 用于多模态参考 |
+| 音频 | `.mp3`, `.wav` | 用于多模态参考 |
+
 <RequestExample>
-```bash cURL
+```bash 首帧模式（1 张图片）
 curl --request POST \
   --url https://api.maxapi.io/api/v1/task/submit \
   --header 'Authorization: Bearer <token>' \
@@ -44,7 +59,24 @@ curl --request POST \
   "model": "seedance-2.0-pro",
   "input": {
     "prompt": "吹灭蜡烛",
-    "imageUrls": ["https://example.com/photo.jpg"]
+    "mediaUrls": ["https://example.com/photo.jpg"]
+  }
+}'
+```
+
+```bash 多模态（图片 + 音频）
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "seedance-2.0",
+  "input": {
+    "prompt": "使用 @1 角色和 @2 背景音乐生成视频",
+    "mediaUrls": [
+      "https://example.com/character.jpg",
+      "https://example.com/bgm.mp3"
+    ]
   }
 }'
 ```
@@ -66,7 +98,13 @@ curl --request POST \
 
 ## 生成模式
 
-根据 `imageUrls` 中的图片数量，自动选择不同模式：
+根据素材数量和类型，自动选择不同模式：
+
+| 条件 | 模式 | 说明 |
+|------|------|------|
+| 0 个素材 | 文生视频 | 纯文本生成 |
+| 1-2 个纯图片 | 首尾帧 | 第 1 张为首帧，第 2 张为尾帧 |
+| 3+ 个素材，或包含视频/音频 | 多模态参考 | 图片/视频/音频混合参考 |
 
 ### 1 张图 — 首帧模式
 
@@ -77,7 +115,7 @@ curl --request POST \
   "model": "seedance-2.0-pro",
   "input": {
     "prompt": "吹灭蜡烛",
-    "imageUrls": ["https://assets.movart.ai/landingpage/dog.webp"]
+    "mediaUrls": ["https://assets.movart.ai/landingpage/dog.webp"]
   }
 }
 ```
@@ -91,7 +129,7 @@ curl --request POST \
   "model": "seedance-2.0-pro",
   "input": {
     "prompt": "变身",
-    "imageUrls": [
+    "mediaUrls": [
       "https://assets.movart.ai/3D-Cartoon.jpg",
       "https://assets.movart.ai/landingpage/dog.webp"
     ]
@@ -101,14 +139,14 @@ curl --request POST \
 
 ### 3+ 张图 — 多图参考模式
 
-prompt 中用 `@1`、`@2`、`@3` 引用对应位置的图片。
+prompt 中用 `@1`、`@2`、`@3` 引用对应位置的素材。
 
 ```json
 {
   "model": "seedance-2.0",
   "input": {
     "prompt": "@1 和 @2 在聊天，@3 在旁边看",
-    "imageUrls": [
+    "mediaUrls": [
       "https://assets.movart.ai/3D-Cartoon.jpg",
       "https://assets.movart.ai/landingpage/dog.webp",
       "https://assets.movart.ai/landingpage/dog.webp"
@@ -117,11 +155,32 @@ prompt 中用 `@1`、`@2`、`@3` 引用对应位置的图片。
 }
 ```
 
+### 多模态参考（图片 + 视频 / 音频混合）
+
+Seedance 2.0 支持图片、视频、音频混合上传，素材类型通过 URL 扩展名自动检测。
+
+```json
+{
+  "model": "seedance-2.0",
+  "input": {
+    "prompt": "使用 @1 角色和 @2 背景音乐生成视频",
+    "mediaUrls": [
+      "https://example.com/character.jpg",
+      "https://example.com/bgm.mp3"
+    ]
+  }
+}
+```
+
+<Note>
+  以上模式适用于所有 `seedance-*` 和 `jimeng-video-*` 系列模型。`imageUrls` 仍可用于纯图片场景（向后兼容），新开发推荐使用 `mediaUrls`。
+</Note>
+
 ---
 
 ## 查询结果
 
-通过 [Query Task](/api-reference/query-task) 接口或 Webhook 获取生成结果：
+通过[查询任务](/cn/api-reference/query-task)接口或 Webhook 获取生成结果：
 
 ```json
 {
@@ -133,7 +192,7 @@ prompt 中用 `@1`、`@2`、`@3` 引用对应位置的图片。
     "input": {
       "model": "seedance-2.0-pro",
       "prompt": "吹灭蜡烛",
-      "imageUrls": [
+      "mediaUrls": [
         "https://assets.movart.ai/landingpage/dog.webp"
       ]
     },

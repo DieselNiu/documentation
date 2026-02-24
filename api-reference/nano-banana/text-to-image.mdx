@@ -4,23 +4,34 @@ api: "POST /api/v1/task/submit"
 description: "Nano Banana Text-to-Image — Generate images from text prompts"
 ---
 
-Use Gemini-powered Nano Banana models to generate high-quality images from text descriptions. Choose between fast generation and high-quality output.
+Use Gemini-powered Nano Banana models to generate high-quality images from text descriptions. Choose between fast generation and high-quality output, with two channel options.
 
 ### Available Models
 
-`nano-banana` · `nano-banana-pro`
+`nano-banana` · `nano-banana-pro` · `nano-banana-google` · `nano-banana-pro-google`
+
+### Channels
+
+<AccordionGroup>
+  <Accordion title="Flow Channel — nano-banana / nano-banana-pro">
+    Proxied through Flow API with automatic fallback. If Flow fails, the system automatically switches to Google Vertex AI.
+  </Accordion>
+  <Accordion title="Google Direct — nano-banana-google / nano-banana-pro-google">
+    Direct connection to Google Vertex AI official API, bypassing the Flow proxy. The `input` parameters are identical — just change the `model` value to switch channels.
+  </Accordion>
+</AccordionGroup>
 
 ### Model Comparison
 
 <AccordionGroup>
-  <Accordion title="nano-banana — Gemini 2.5 Flash">
+  <Accordion title="nano-banana / nano-banana-google — Gemini 2.5 Flash">
     **Fast & Cost-effective**
     - Engine: Gemini 2.5 Flash
     - Aspect Ratios: `16:9`, `9:16`
     - Resolution: 1K (fixed)
     - Best for: Quick iterations, prototyping
   </Accordion>
-  <Accordion title="nano-banana-pro — Gemini 3.0 Pro">
+  <Accordion title="nano-banana-pro / nano-banana-pro-google — Gemini 3.0 Pro">
     **High Quality**
     - Engine: Gemini 3.0 Pro
     - Aspect Ratios: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`
@@ -30,7 +41,7 @@ Use Gemini-powered Nano Banana models to generate high-quality images from text 
 </AccordionGroup>
 
 <ParamField body="model" type="string" required>
-  Model name, e.g. `nano-banana`, `nano-banana-pro`.
+  Model name, e.g. `nano-banana`, `nano-banana-pro`, `nano-banana-google`, `nano-banana-pro-google`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
