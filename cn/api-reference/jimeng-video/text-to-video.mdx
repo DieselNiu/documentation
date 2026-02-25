@@ -30,7 +30,7 @@ description: "Jimeng / Seedance 文生视频 — 通过文字描述生成视频"
       视频分辨率。可选值：`480p`、`720p`、`1080p`。
     </ParamField>
     <ParamField body="duration" type="integer">
-      视频时长（秒）。Seedance 模型支持 `4`–`15` 秒；其他模型支持 `5`、`10`、`15`。
+      视频时长（秒）。Seedance 模型支持 `4`–`15` 秒；其他模型支持 `5` 或 `10`。
     </ParamField>
     <ParamField body="fallback" type="boolean" default="true">
       Seedance 模型失败后是否自动降级到 `jimeng-video-3.5-pro`。默认 `true`。设为 `false` 则禁止降级，直接返回原始错误。仅对 Seedance 系列模型（`seedance-2.0`、`seedance-2.0-fast`）生效，其他模型忽略此字段。

@@ -46,7 +46,7 @@ Generate videos from reference materials including images, videos, and audio. Th
       Video resolution. Options: `480p`, `720p`, `1080p`.
     </ParamField>
     <ParamField body="duration" type="integer">
-      Video duration in seconds. Seedance models support `4`–`15` seconds; other models support `5`, `10`, `15`.
+      Video duration in seconds. Seedance models support `4`–`15` seconds; other models support `5` or `10`.
     </ParamField>
     <ParamField body="fallback" type="boolean" default="true">
       Whether to automatically fall back to `jimeng-video-3.5-pro` when a Seedance model fails. Defaults to `true`. Set to `false` to disable fallback and return the original error directly. Only applies to Seedance models; ignored by other models. Note: multimodal requests (containing video/audio materials, >2 images, or `@1`/`@2` placeholder references) never fall back regardless of this setting.
