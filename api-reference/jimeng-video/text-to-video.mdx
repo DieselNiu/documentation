@@ -4,7 +4,7 @@ api: "POST /api/v1/task/submit"
 description: "Jimeng / Seedance Text-to-Video — Generate videos from text descriptions"
 ---
 
-Use Jimeng Video or Seedance models to generate videos from a text prompt. Omitting `imageUrls` activates pure text-to-video mode.
+Use Jimeng Video or Seedance models to generate videos from a text prompt. Omitting `mediaUrls` (or `imageUrls`) activates pure text-to-video mode.
 
 ### Available Models
 
@@ -30,7 +30,7 @@ Use Jimeng Video or Seedance models to generate videos from a text prompt. Omitt
       Video resolution. Options: `480p`, `720p`, `1080p`.
     </ParamField>
     <ParamField body="duration" type="integer">
-      Video duration in seconds. Options: `5`, `10`, `15`.
+      Video duration in seconds. Seedance models support `4`–`15` seconds; other models support `5`, `10`, `15`.
     </ParamField>
   </Expandable>
 </ParamField>

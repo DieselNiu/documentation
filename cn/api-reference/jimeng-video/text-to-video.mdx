@@ -4,7 +4,7 @@ api: "POST /api/v1/task/submit"
 description: "Jimeng / Seedance 文生视频 — 通过文字描述生成视频"
 ---
 
-使用 Jimeng Video 或 Seedance 模型，通过纯文字 prompt 生成视频。不传 `imageUrls` 即为纯文生视频模式。
+使用 Jimeng Video 或 Seedance 模型，通过纯文字 prompt 生成视频。不传 `mediaUrls`（或 `imageUrls`）即为纯文生视频模式。
 
 ### 可用模型
 
@@ -30,7 +30,7 @@ description: "Jimeng / Seedance 文生视频 — 通过文字描述生成视频"
       视频分辨率。可选值：`480p`、`720p`、`1080p`。
     </ParamField>
     <ParamField body="duration" type="integer">
-      视频时长（秒）。可选值：`5`、`10`、`15`。
+      视频时长（秒）。Seedance 模型支持 `4`–`15` 秒；其他模型支持 `5`、`10`、`15`。
     </ParamField>
   </Expandable>
 </ParamField>

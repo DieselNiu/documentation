@@ -1,10 +1,22 @@
 ---
-title: "Image to Video"
+title: "Media to Video"
 api: "POST /api/v1/task/submit"
-description: "Jimeng / Seedance Image-to-Video — Generate videos based on reference images, videos, and audio"
+description: "Jimeng / Seedance Media-to-Video — Generate videos from images, videos, and audio"
 ---
 
-By passing `mediaUrls` (or `imageUrls` for image-only scenarios), different generation modes are automatically selected based on the number and type of materials. Applicable to all `seedance-*` and `jimeng-video-*` models.
+Generate videos from reference materials including images, videos, and audio. The generation mode is automatically selected based on the number and type of materials.
+
+### Supported Material Types
+
+| Type | Formats | Usage | Supported Models |
+|------|---------|-------|------------------|
+| Image | `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.bmp` | First/last frame or reference | All models |
+| Video | `.mp4`, `.mov`, `.m4v` | Multimodal reference | `seedance-*` only |
+| Audio | `.mp3`, `.wav` | Multimodal reference | `seedance-*` only |
+
+<Warning>
+  **Video and audio materials are only supported by Seedance models** (`seedance-2.0`, `seedance-2.0-pro`, `seedance-2.0-fast`). The `jimeng-video-*` models only support up to 2 images (first/last frame mode).
+</Warning>
 
 <ParamField body="model" type="string" required>
   Model name, e.g. `seedance-2.0-pro`, `seedance-2.0-fast`, `jimeng-video-3.5-pro`.
@@ -17,13 +29,15 @@ By passing `mediaUrls` (or `imageUrls` for image-only scenarios), different gene
 <ParamField body="input" type="object" required>
   <Expandable title="properties" defaultOpen>
     <ParamField body="prompt" type="string" required>
-      Prompt. In multi-material mode, use `@1`, `@2`, `@3` to reference the corresponding materials by position.
+      Prompt. Use `@1`, `@2`, `@3` to reference materials by position (supports `@图1` and `@image1` as well).
     </ParamField>
     <ParamField body="mediaUrls" type="string[]">
-      List of material URLs. Supports mixed image/video/audio. Media type is auto-detected from the URL extension. The number and type of materials determine the generation mode (see below).
+      List of material URLs. Supports mixed images, videos, and audio. Material type is auto-detected by file extension. The number and type of materials determine the generation mode (see below).
     </ParamField>
     <ParamField body="imageUrls" type="string[]">
-      List of reference image URLs (backward compatible, equivalent to `mediaUrls` with images only). If both `mediaUrls` and `imageUrls` are provided, `mediaUrls` takes precedence.
+      List of reference image URLs. Backward compatible — equivalent to `mediaUrls` with images only.
+
+      > If both `mediaUrls` and `imageUrls` are provided, `mediaUrls` takes precedence.
     </ParamField>
     <ParamField body="ratio" type="string">
       Video aspect ratio. Options: `1:1`, `4:3`, `3:4`, `16:9`, `9:16`.
@@ -32,22 +46,10 @@ By passing `mediaUrls` (or `imageUrls` for image-only scenarios), different gene
       Video resolution. Options: `480p`, `720p`, `1080p`.
     </ParamField>
     <ParamField body="duration" type="integer">
-      Video duration in seconds. Options: `5`, `10`, `15`.
+      Video duration in seconds. Seedance models support `4`–`15` seconds; other models support `5`, `10`, `15`.
     </ParamField>
   </Expandable>
 </ParamField>
-
-<Note>
-  Use `mediaUrls` or `imageUrls` (pick one). Prefer `mediaUrls` for new integrations. If both are provided, `mediaUrls` takes precedence.
-</Note>
-
-### Supported Media Types
-
-| Type | Supported Formats | Usage |
-|------|-------------------|-------|
-| Image | `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.bmp` | First/last frame or reference image |
-| Video | `.mp4`, `.mov`, `.m4v` | Multimodal reference |
-| Audio | `.mp3`, `.wav` | Multimodal reference |
 
 <RequestExample>
 ```bash First Frame (1 image)
@@ -70,12 +72,12 @@ curl --request POST \
   --header 'Authorization: Bearer <token>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "model": "seedance-2.0",
+  "model": "seedance-2.0-pro",
   "input": {
-    "prompt": "Use @1 character and @2 background music to generate a video",
+    "prompt": "@1 dances to the rhythm of @2",
     "mediaUrls": [
-      "https://example.com/character.jpg",
-      "https://example.com/bgm.mp3"
+      "https://example.com/dancer.jpg",
+      "https://example.com/music.mp3"
     ]
   }
 }'
@@ -98,13 +100,14 @@ curl --request POST \
 
 ## Generation Modes
 
-Different modes are automatically selected based on the number and type of materials:
+The generation mode is automatically selected based on the number and type of materials:
 
-| Condition | Mode | Description |
-|-----------|------|-------------|
-| 0 materials | Text-to-Video | Pure text generation |
-| 1-2 images only | First/Last Frame | 1st image = first frame, 2nd image = last frame |
-| 3+ materials, or contains video/audio | Multimodal Reference | Mixed image/video/audio reference |
+| Condition | Mode | Description | Supported Models |
+|-----------|------|-------------|------------------|
+| 1 image | First Frame | Image becomes the first frame | All models |
+| 2 images | First & Last Frame | Two images become the start and end frames | All models |
+| 3+ images | Multi-Image Reference | Reference multiple images via `@1`, `@2`, `@3` | `seedance-*` only |
+| Contains video or audio | Multimodal Reference | Mix images, videos, and audio as references | `seedance-*` only |
 
 ### 1 Image — First Frame Mode
 
@@ -137,7 +140,7 @@ The first image serves as the video's first frame, the second image as the last 
 }
 ```
 
-### 3+ Images — Multi-Image Reference Mode
+### 3+ Images — Multi-Image Reference Mode (Seedance only)
 
 Use `@1`, `@2`, `@3` in the prompt to reference the corresponding materials by position.
 
@@ -145,36 +148,68 @@ Use `@1`, `@2`, `@3` in the prompt to reference the corresponding materials by p
 {
   "model": "seedance-2.0",
   "input": {
-    "prompt": "@1 and @2 are chatting, @3 is watching nearby",
+    "prompt": "@1 and @2 are chatting, @3 is watching",
     "mediaUrls": [
-      "https://assets.movart.ai/3D-Cartoon.jpg",
-      "https://assets.movart.ai/landingpage/dog.webp",
-      "https://assets.movart.ai/landingpage/dog.webp"
+      "https://example.com/person-a.jpg",
+      "https://example.com/person-b.jpg",
+      "https://example.com/person-c.jpg"
     ]
   }
 }
 ```
 
-### Multimodal Reference (image + video/audio mix)
+### Multimodal Reference Mode (Seedance only)
 
-Seedance 2.0 supports mixed uploads of images, videos, and audio. Media type is auto-detected from the URL extension.
+When materials contain videos or audio (or any mix of image + video + audio), the multimodal reference mode is automatically activated. Use `@1`, `@2`, etc. to reference each material by position.
+
+**Image + Audio** — generate a video where the character moves to the rhythm of the music:
+
+```json
+{
+  "model": "seedance-2.0-pro",
+  "input": {
+    "prompt": "@1 dances to the rhythm of @2",
+    "mediaUrls": [
+      "https://example.com/dancer.jpg",
+      "https://example.com/music.mp3"
+    ],
+    "ratio": "16:9",
+    "duration": 8
+  }
+}
+```
+
+**Image + Video** — use a video as motion reference alongside an image:
+
+```json
+{
+  "model": "seedance-2.0-pro",
+  "input": {
+    "prompt": "@1 performs the action shown in @2",
+    "mediaUrls": [
+      "https://example.com/character.jpg",
+      "https://example.com/reference-motion.mp4"
+    ]
+  }
+}
+```
+
+**Multiple types mixed** — combine images, videos, and audio freely:
 
 ```json
 {
   "model": "seedance-2.0",
   "input": {
-    "prompt": "Use @1 character and @2 background music to generate a video",
+    "prompt": "@1 and @2 dance together to @3",
     "mediaUrls": [
-      "https://example.com/character.jpg",
+      "https://example.com/person-a.jpg",
+      "https://example.com/person-b.jpg",
       "https://example.com/bgm.mp3"
-    ]
+    ],
+    "duration": 10
   }
 }
 ```
-
-<Note>
-  All modes above apply to all `seedance-*` and `jimeng-video-*` models. `imageUrls` can still be used for image-only scenarios (backward compatible). New integrations should use `mediaUrls`.
-</Note>
 
 ---
 
@@ -191,9 +226,10 @@ Retrieve the generation result via the [Query Task](/api-reference/query-task) e
     "status": "SUCCESS",
     "input": {
       "model": "seedance-2.0-pro",
-      "prompt": "Blow out candles",
+      "prompt": "@1 dances to the rhythm of @2",
       "mediaUrls": [
-        "https://assets.movart.ai/landingpage/dog.webp"
+        "https://example.com/dancer.jpg",
+        "https://example.com/music.mp3"
       ]
     },
     "result": {
