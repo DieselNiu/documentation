@@ -32,6 +32,9 @@ Use Jimeng Video or Seedance models to generate videos from a text prompt. Omitt
     <ParamField body="duration" type="integer">
       Video duration in seconds. Seedance models support `4`–`15` seconds; other models support `5`, `10`, `15`.
     </ParamField>
+    <ParamField body="fallback" type="boolean" default="true">
+      Whether to automatically fall back to `jimeng-video-3.5-pro` when a Seedance model fails. Defaults to `true`. Set to `false` to disable fallback and return the original error directly. Only applies to Seedance models (`seedance-2.0`, `seedance-2.0-pro`, `seedance-2.0-fast`); ignored by other models.
+    </ParamField>
   </Expandable>
 </ParamField>
 
