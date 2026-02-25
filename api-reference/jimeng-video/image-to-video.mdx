@@ -12,7 +12,7 @@ Generate videos from reference materials including images, videos, and audio. Th
 |------|---------|-------|------------------|
 | Image | `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.bmp` | First/last frame or reference | All models |
 | Video | `.mp4`, `.mov`, `.m4v` | Multimodal reference | `seedance-*` only |
-| Audio | `.mp3`, `.wav` | Multimodal reference | `seedance-*` only |
+| Audio | `.mp3`, `.wav` | Multimodal reference (max 15s) | `seedance-*` only |
 
 <Warning>
   **Video and audio materials are only supported by Seedance models** (`seedance-2.0`, `seedance-2.0-fast`). The `jimeng-video-*` models only support up to 2 images (first/last frame mode).
@@ -164,6 +164,8 @@ Use `@1`, `@2`, `@3` in the prompt to reference the corresponding materials by p
 ### Multimodal Reference Mode (Seedance only)
 
 When materials contain videos or audio (or any mix of image + video + audio), the multimodal reference mode is automatically activated. Use `@1`, `@2`, etc. to reference each material by position.
+
+<Note>Audio files must be **15 seconds or shorter**. Longer audio will be rejected.</Note>
 
 **Image + Audio** — generate a video where the character moves to the rhythm of the music:
 
