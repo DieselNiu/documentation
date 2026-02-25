@@ -8,10 +8,10 @@ description: "Jimeng / Seedance 文生视频 — 通过文字描述生成视频"
 
 ### 可用模型
 
-`jimeng-video-3.5-pro` · `jimeng-video-3.0-pro` · `jimeng-video-3.0` · `jimeng-video-2.0-pro` · `jimeng-video-2.0` · `seedance-2.0` · `seedance-2.0-pro` · `seedance-2.0-fast`
+`jimeng-video-3.5-pro` · `jimeng-video-3.0-pro` · `jimeng-video-3.0` · `jimeng-video-2.0-pro` · `jimeng-video-2.0` · `seedance-2.0` · `seedance-2.0-fast`
 
 <ParamField body="model" type="string" required>
-  模型名称，如 `seedance-2.0-pro`、`seedance-2.0-fast`、`jimeng-video-3.5-pro`。
+  模型名称，如 `seedance-2.0`、`seedance-2.0-fast`、`jimeng-video-3.5-pro`。
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -42,7 +42,7 @@ curl --request POST \
   --header 'Authorization: Bearer <token>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "一条河流穿过秋天的森林，航拍视角",
     "ratio": "16:9",
@@ -78,7 +78,7 @@ curl --request POST \
     "taskId": "790758ee-3675-48fa-a9af-33d33cf84e71",
     "status": "SUCCESS",
     "input": {
-      "model": "seedance-2.0-pro",
+      "model": "seedance-2.0",
       "prompt": "一条河流穿过秋天的森林，航拍视角",
       "ratio": "16:9",
       "duration": 5

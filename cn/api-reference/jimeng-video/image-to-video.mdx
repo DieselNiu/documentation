@@ -15,11 +15,11 @@ description: "Jimeng / Seedance 素材生视频 — 基于图片、视频、音�
 | 音频 | `.mp3`, `.wav` | 用于多模态参考 | 仅 `seedance-*` |
 
 <Warning>
-  **视频和音频素材仅 Seedance 模型支持**（`seedance-2.0`、`seedance-2.0-pro`、`seedance-2.0-fast`）。`jimeng-video-*` 模型仅支持最多 2 张图片（首尾帧模式）。
+  **视频和音频素材仅 Seedance 模型支持**（`seedance-2.0`、`seedance-2.0`、`seedance-2.0-fast`）。`jimeng-video-*` 模型仅支持最多 2 张图片（首尾帧模式）。
 </Warning>
 
 <ParamField body="model" type="string" required>
-  模型名称，如 `seedance-2.0-pro`、`seedance-2.0-fast`、`jimeng-video-3.5-pro`。
+  模型名称，如 `seedance-2.0`、`seedance-2.0-fast`、`jimeng-video-3.5-pro`。
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -58,7 +58,7 @@ curl --request POST \
   --header 'Authorization: Bearer <token>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "吹灭蜡烛",
     "mediaUrls": ["https://example.com/photo.jpg"]
@@ -72,7 +72,7 @@ curl --request POST \
   --header 'Authorization: Bearer <token>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "@1 随着 @2 的节奏跳舞",
     "mediaUrls": [
@@ -115,7 +115,7 @@ curl --request POST \
 
 ```json
 {
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "吹灭蜡烛",
     "mediaUrls": ["https://assets.movart.ai/landingpage/dog.webp"]
@@ -129,7 +129,7 @@ curl --request POST \
 
 ```json
 {
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "变身",
     "mediaUrls": [
@@ -166,7 +166,7 @@ prompt 中用 `@1`、`@2`、`@3` 引用对应位置的素材。
 
 ```json
 {
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "@1 随着 @2 的节奏跳舞",
     "mediaUrls": [
@@ -183,7 +183,7 @@ prompt 中用 `@1`、`@2`、`@3` 引用对应位置的素材。
 
 ```json
 {
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "@1 做出 @2 中的动作",
     "mediaUrls": [
@@ -225,7 +225,7 @@ prompt 中用 `@1`、`@2`、`@3` 引用对应位置的素材。
     "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "status": "SUCCESS",
     "input": {
-      "model": "seedance-2.0-pro",
+      "model": "seedance-2.0",
       "prompt": "@1 随着 @2 的节奏跳舞",
       "mediaUrls": [
         "https://example.com/dancer.jpg",

@@ -15,11 +15,11 @@ Generate videos from reference materials including images, videos, and audio. Th
 | Audio | `.mp3`, `.wav` | Multimodal reference | `seedance-*` only |
 
 <Warning>
-  **Video and audio materials are only supported by Seedance models** (`seedance-2.0`, `seedance-2.0-pro`, `seedance-2.0-fast`). The `jimeng-video-*` models only support up to 2 images (first/last frame mode).
+  **Video and audio materials are only supported by Seedance models** (`seedance-2.0`, `seedance-2.0`, `seedance-2.0-fast`). The `jimeng-video-*` models only support up to 2 images (first/last frame mode).
 </Warning>
 
 <ParamField body="model" type="string" required>
-  Model name, e.g. `seedance-2.0-pro`, `seedance-2.0-fast`, `jimeng-video-3.5-pro`.
+  Model name, e.g. `seedance-2.0`, `seedance-2.0-fast`, `jimeng-video-3.5-pro`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -58,7 +58,7 @@ curl --request POST \
   --header 'Authorization: Bearer <token>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "Blow out candles",
     "mediaUrls": ["https://example.com/photo.jpg"]
@@ -72,7 +72,7 @@ curl --request POST \
   --header 'Authorization: Bearer <token>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "@1 dances to the rhythm of @2",
     "mediaUrls": [
@@ -115,7 +115,7 @@ The image is used as the first frame of the video, and subsequent animation is g
 
 ```json
 {
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "Blow out candles",
     "mediaUrls": ["https://assets.movart.ai/landingpage/dog.webp"]
@@ -129,7 +129,7 @@ The first image serves as the video's first frame, the second image as the last 
 
 ```json
 {
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "Transform",
     "mediaUrls": [
@@ -166,7 +166,7 @@ When materials contain videos or audio (or any mix of image + video + audio), th
 
 ```json
 {
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "@1 dances to the rhythm of @2",
     "mediaUrls": [
@@ -183,7 +183,7 @@ When materials contain videos or audio (or any mix of image + video + audio), th
 
 ```json
 {
-  "model": "seedance-2.0-pro",
+  "model": "seedance-2.0",
   "input": {
     "prompt": "@1 performs the action shown in @2",
     "mediaUrls": [
@@ -225,7 +225,7 @@ Retrieve the generation result via the [Query Task](/api-reference/query-task) e
     "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "status": "SUCCESS",
     "input": {
-      "model": "seedance-2.0-pro",
+      "model": "seedance-2.0",
       "prompt": "@1 dances to the rhythm of @2",
       "mediaUrls": [
         "https://example.com/dancer.jpg",
