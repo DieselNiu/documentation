@@ -14,7 +14,7 @@ Content-Type: application/json
 
 回调 `data` 字段与查询接口响应格式完全一致：
 
-```json
+```json 成功
 {
   "code": 0,
   "msg": "ok",
@@ -22,17 +22,41 @@ Content-Type: application/json
     "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "status": "SUCCESS",
     "input": {
-      "model": "jimeng-4.5",
-      "prompt": "一只在星空下奔跑的柴犬",
+      "model": "seedance-2.0-fast",
+      "prompt": "a cat walking in the garden",
       "ratio": "16:9",
-      "resolution": "2k"
+      "resolution": "1080p",
+      "duration": 10
     },
     "result": {
-      "type": "image",
-      "urls": ["https://cdn.example.com/image1.jpg"]
+      "type": "video",
+      "urls": ["https://media.example.com/videos/2026/02/26/a1b2c3d4.mp4"]
     },
-    "created_at": "2026-02-11T10:00:00Z",
-    "updated_at": "2026-02-11T10:01:30Z"
+    "failure_reason": null,
+    "created_at": "2026-02-26T07:42:43Z",
+    "updated_at": "2026-02-26T10:12:55Z"
+  }
+}
+```
+
+```json 失败（内容审核）
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "FAILURE",
+    "input": {
+      "model": "seedance-2.0-fast",
+      "prompt": "...",
+      "ratio": "16:9",
+      "resolution": "1080p",
+      "duration": 10
+    },
+    "result": null,
+    "failure_reason": "CONTENT_MODERATION",
+    "created_at": "2026-02-26T07:42:43Z",
+    "updated_at": "2026-02-26T07:42:55Z"
   }
 }
 ```
@@ -49,6 +73,18 @@ Content-Type: application/json
 **FAILURE / TIMEOUT / CANCELLED 时：**
 
 `result` 为 `null`。
+
+## failure_reason
+
+始终存在于响应中，无特定可操作原因时为 `null`。
+
+**枚举值：**
+
+| 值 | 含义 | 建议处理方式 |
+|----|------|------------|
+| `CONTENT_MODERATION` | Prompt 或图片因内容合规问题被拒绝 | 告知用户内容违规；**不要重试** |
+| `INSUFFICIENT_POINTS` | 账户积分不足 | 引导用户充值；**不要重试** |
+| `null` | 无特定可操作原因（瞬态错误、超时等） | 视情况可重试 |
 
 ## 注意事项
 

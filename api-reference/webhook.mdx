@@ -14,7 +14,7 @@ Content-Type: application/json
 
 The callback `data` field is identical in format to the query endpoint response:
 
-```json
+```json SUCCESS
 {
   "code": 0,
   "msg": "ok",
@@ -22,17 +22,41 @@ The callback `data` field is identical in format to the query endpoint response:
     "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "status": "SUCCESS",
     "input": {
-      "model": "jimeng-4.5",
-      "prompt": "一只在星空下奔跑的柴犬",
+      "model": "seedance-2.0-fast",
+      "prompt": "a cat walking in the garden",
       "ratio": "16:9",
-      "resolution": "2k"
+      "resolution": "1080p",
+      "duration": 10
     },
     "result": {
-      "type": "image",
-      "urls": ["https://cdn.example.com/image1.jpg"]
+      "type": "video",
+      "urls": ["https://media.example.com/videos/2026/02/26/a1b2c3d4.mp4"]
     },
-    "created_at": "2026-02-11T10:00:00Z",
-    "updated_at": "2026-02-11T10:01:30Z"
+    "failure_reason": null,
+    "created_at": "2026-02-26T07:42:43Z",
+    "updated_at": "2026-02-26T10:12:55Z"
+  }
+}
+```
+
+```json FAILURE (content moderation)
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "FAILURE",
+    "input": {
+      "model": "seedance-2.0-fast",
+      "prompt": "...",
+      "ratio": "16:9",
+      "resolution": "1080p",
+      "duration": 10
+    },
+    "result": null,
+    "failure_reason": "CONTENT_MODERATION",
+    "created_at": "2026-02-26T07:42:43Z",
+    "updated_at": "2026-02-26T07:42:55Z"
   }
 }
 ```
@@ -49,6 +73,18 @@ The callback `data` field is identical in format to the query endpoint response:
 **On FAILURE / TIMEOUT / CANCELLED:**
 
 `result` is `null`.
+
+## failure_reason
+
+Always present in the response. `null` when no specific actionable reason applies.
+
+**Values:**
+
+| Value | Meaning | Recommended Action |
+|-------|---------|-------------------|
+| `CONTENT_MODERATION` | Prompt or image rejected by content policy | Notify the user; **do not retry** |
+| `INSUFFICIENT_POINTS` | Account has insufficient credits | Prompt user to recharge; **do not retry** |
+| `null` | No specific actionable reason (transient error, timeout, etc.) | May retry if appropriate |
 
 ## Important Notes
 

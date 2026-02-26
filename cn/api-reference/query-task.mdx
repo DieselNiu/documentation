@@ -38,6 +38,15 @@ description: "查询任务状态和结果"
         </ResponseField>
       </Expandable>
     </ResponseField>
+    <ResponseField name="failure_reason" type="string | null">
+      机器可读的失败分类，始终存在；无特定可操作原因时为 `null`。
+
+      | 值 | 含义 | 建议处理方式 |
+      |----|------|------------|
+      | `CONTENT_MODERATION` | Prompt 或图片因内容合规问题被拒绝 | 告知用户内容违规；**不要重试** |
+      | `INSUFFICIENT_POINTS` | 账户积分不足 | 引导用户充值；**不要重试** |
+      | `null` | 无特定可操作原因 | 视情况可重试 |
+    </ResponseField>
     <ResponseField name="created_at" type="string">
       任务创建时间（ISO 8601）。
     </ResponseField>
