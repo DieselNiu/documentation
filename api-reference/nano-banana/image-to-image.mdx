@@ -8,7 +8,7 @@ Use Nano Banana to transform existing images based on text prompts. Apply style 
 
 ### Available Models
 
-`nano-banana` · `nano-banana-pro` · `nano-banana-google` · `nano-banana-pro-google`
+`nano-banana` · `nano-banana-2` · `nano-banana-pro` · `nano-banana-google` · `nano-banana-pro-google`
 
 ### Channels
 
@@ -22,7 +22,7 @@ Use Nano Banana to transform existing images based on text prompts. Apply style 
 </AccordionGroup>
 
 <ParamField body="model" type="string" required>
-  Model name, e.g. `nano-banana`, `nano-banana-pro`, `nano-banana-google`, `nano-banana-pro-google`.
+  Model name, e.g. `nano-banana`, `nano-banana-2`, `nano-banana-pro`, `nano-banana-google`, `nano-banana-pro-google`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -38,7 +38,7 @@ Use Nano Banana to transform existing images based on text prompts. Apply style 
       Output image aspect ratio. Options: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`. Default: `16:9`.
     </ParamField>
     <ParamField body="resolution" type="string">
-      Output resolution. Options: `1k`, `2k`, `4k`. Default: `1k` (only `nano-banana-pro` supports 2K/4K).
+      Output resolution. Options: `1k`, `2k`, `4k`. Default: `1k` (only `nano-banana-2` and `nano-banana-pro` support 2K/4K).
     </ParamField>
     <ParamField body="imageUrls" type="array" required>
       Array containing **exactly 1 input image URL**. Must be publicly accessible HTTPS URL.

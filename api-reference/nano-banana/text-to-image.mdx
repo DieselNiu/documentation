@@ -8,7 +8,7 @@ Use Gemini-powered Nano Banana models to generate high-quality images from text 
 
 ### Available Models
 
-`nano-banana` · `nano-banana-pro` · `nano-banana-google` · `nano-banana-pro-google`
+`nano-banana` · `nano-banana-2` · `nano-banana-pro` · `nano-banana-google` · `nano-banana-pro-google`
 
 ### Channels
 
@@ -31,6 +31,13 @@ Use Gemini-powered Nano Banana models to generate high-quality images from text 
     - Resolution: 1K (fixed)
     - Best for: Quick iterations, prototyping
   </Accordion>
+  <Accordion title="nano-banana-2 — Gemini 3.1 Flash">
+    **Fast & High Quality**
+    - Engine: Gemini 3.1 Flash
+    - Aspect Ratios: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`
+    - Resolutions: `1k`, `2k`, `4k`
+    - Best for: Fast generation with high quality, balanced choice
+  </Accordion>
   <Accordion title="nano-banana-pro / nano-banana-pro-google — Gemini 3.0 Pro">
     **High Quality**
     - Engine: Gemini 3.0 Pro
@@ -41,7 +48,7 @@ Use Gemini-powered Nano Banana models to generate high-quality images from text 
 </AccordionGroup>
 
 <ParamField body="model" type="string" required>
-  Model name, e.g. `nano-banana`, `nano-banana-pro`, `nano-banana-google`, `nano-banana-pro-google`.
+  Model name, e.g. `nano-banana`, `nano-banana-2`, `nano-banana-pro`, `nano-banana-google`, `nano-banana-pro-google`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -56,12 +63,12 @@ Use Gemini-powered Nano Banana models to generate high-quality images from text 
     <ParamField body="ratio" type="string">
       Image aspect ratio. Options: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`. Default: `16:9`.
 
-      **Note:** `nano-banana` only supports `16:9` and `9:16`. Other ratios require `nano-banana-pro`.
+      **Note:** `nano-banana` only supports `16:9` and `9:16`. Other ratios require `nano-banana-2` or `nano-banana-pro`.
     </ParamField>
     <ParamField body="resolution" type="string">
       Image resolution. Options: `1k`, `2k`, `4k`. Default: `1k`.
 
-      **Note:** `nano-banana` ignores this parameter (always 1K). Only `nano-banana-pro` supports 2K and 4K.
+      **Note:** `nano-banana` ignores this parameter (always 1K). Only `nano-banana-2` and `nano-banana-pro` support 2K and 4K.
     </ParamField>
   </Expandable>
 </ParamField>

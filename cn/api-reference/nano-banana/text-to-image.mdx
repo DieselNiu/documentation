@@ -8,7 +8,7 @@ description: "Nano Banana 文本生成图片 — 从文本提示词生成图片"
 
 ### 可用模型
 
-`nano-banana` · `nano-banana-pro` · `nano-banana-google` · `nano-banana-pro-google`
+`nano-banana` · `nano-banana-2` · `nano-banana-pro` · `nano-banana-google` · `nano-banana-pro-google`
 
 ### 渠道说明
 
@@ -31,6 +31,13 @@ description: "Nano Banana 文本生成图片 — 从文本提示词生成图片"
     - 分辨率：1K（固定）
     - 适用场景：快速迭代、原型设计
   </Accordion>
+  <Accordion title="nano-banana-2 — Gemini 3.1 Flash">
+    **快速且高质量**
+    - 引擎：Gemini 3.1 Flash
+    - 支持比例：`16:9`、`9:16`、`1:1`、`4:3`、`3:4`
+    - 支持分辨率：`1k`、`2k`、`4k`
+    - 适用场景：快速生成且需要高质量，平衡之选
+  </Accordion>
   <Accordion title="nano-banana-pro / nano-banana-pro-google — Gemini 3.0 Pro">
     **高质量**
     - 引擎：Gemini 3.0 Pro
@@ -41,7 +48,7 @@ description: "Nano Banana 文本生成图片 — 从文本提示词生成图片"
 </AccordionGroup>
 
 <ParamField body="model" type="string" required>
-  模型名称，如 `nano-banana`、`nano-banana-pro`、`nano-banana-google`、`nano-banana-pro-google`。
+  模型名称，如 `nano-banana`、`nano-banana-2`、`nano-banana-pro`、`nano-banana-google`、`nano-banana-pro-google`。
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -56,12 +63,12 @@ description: "Nano Banana 文本生成图片 — 从文本提示词生成图片"
     <ParamField body="ratio" type="string">
       图片宽高比。可选值：`16:9`、`9:16`、`1:1`、`4:3`、`3:4`。默认值：`16:9`。
 
-      **注意**：`nano-banana` 仅支持 `16:9` 和 `9:16`。其他比例需使用 `nano-banana-pro`。
+      **注意**：`nano-banana` 仅支持 `16:9` 和 `9:16`。其他比例需使用 `nano-banana-2` 或 `nano-banana-pro`。
     </ParamField>
     <ParamField body="resolution" type="string">
       图片分辨率。可选值：`1k`、`2k`、`4k`。默认值：`1k`。
 
-      **注意**：`nano-banana` 忽略此参数（固定 1K）。仅 `nano-banana-pro` 支持 2K 和 4K。
+      **注意**：`nano-banana` 忽略此参数（固定 1K）。仅 `nano-banana-2` 和 `nano-banana-pro` 支持 2K 和 4K。
     </ParamField>
   </Expandable>
 </ParamField>
