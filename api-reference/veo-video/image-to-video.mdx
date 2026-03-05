@@ -4,22 +4,11 @@ api: "POST /api/v1/task/submit"
 description: "Veo 3 Image-to-Video — Animate images or create videos from image references"
 ---
 
-Use Google Veo 3.1 to create videos from images. Supports three modes based on the number of input images, with two channel options.
+Use Google Veo 3.1 to create videos from images. Supports three modes based on the number of input images.
 
 ### Available Models
 
-`veo3` · `veo3_fast` · `veo3_relaxed` · `veo3-google` · `veo3-google-fast`
-
-### Channels
-
-<AccordionGroup>
-  <Accordion title="Flow Channel — veo3 / veo3_fast / veo3_relaxed">
-    Proxied through Flow API with automatic fallback. If Flow fails, the system automatically switches to Google Vertex AI.
-  </Accordion>
-  <Accordion title="Google Direct — veo3-google / veo3-google-fast">
-    Direct connection to Google Vertex AI official API, bypassing the Flow proxy.
-  </Accordion>
-</AccordionGroup>
+`veo3` · `veo3_fast`
 
 ### Generation Modes
 
@@ -40,7 +29,7 @@ Use Google Veo 3.1 to create videos from images. Supports three modes based on t
 </Note>
 
 <ParamField body="model" type="string" required>
-  Model name, e.g. `veo3`, `veo3_fast`, `veo3_relaxed`, `veo3-google`, `veo3-google-fast`.
+  Model name, e.g. `veo3`, `veo3_fast`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -150,6 +139,5 @@ curl --request POST \
 
 <Note>
   **Speed Mode Limitations:**
-  - **R2V mode (3 images)**: Does not support Quality mode. If you use `veo3` model, it will automatically fall back to Fast mode. We recommend explicitly using `veo3_fast` or `veo3_relaxed` for R2V.
-  - **I2V Fast mode**: Not available. The system automatically uses Relaxed mode when Fast is requested for I2V.
+  - **R2V mode (3 images)**: Does not support Quality mode. If you use `veo3` model, it will automatically fall back to Fast mode. We recommend explicitly using `veo3_fast` for R2V.
 </Note>
