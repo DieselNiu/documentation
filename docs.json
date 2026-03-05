@@ -137,7 +137,7 @@
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://api.maxapi.io/dashboard"
+      "href": "https://maxapi.io/market"
     }
   },
   "contextual": {
