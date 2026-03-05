@@ -1,7 +1,7 @@
 ---
 title: "素材生视频"
 api: "POST /api/v1/task/submit"
-description: "Jimeng / Seedance 素材生视频 — 基于图片、视频、音频等素材生成视频"
+description: "Seedance 素材生视频 — 基于图片、视频、音频等素材生成视频"
 ---
 
 通过传入图片、视频、音频等素材生成视频。根据素材数量和类型自动选择生成模式。
@@ -11,15 +11,15 @@ description: "Jimeng / Seedance 素材生视频 — 基于图片、视频、音�
 | 类型 | 支持格式 | 说明 | 支持模型 |
 |------|---------|------|---------|
 | 图片 | `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.bmp` | 用于首尾帧或参考图 | 所有模型 |
-| 视频 | `.mp4`, `.mov`, `.m4v` | 用于多模态参考 | 仅 `seedance-*` |
-| 音频 | `.mp3`, `.wav` | 用于多模态参考（不超过 15 秒） | 仅 `seedance-*` |
+| 视频 | `.mp4`, `.mov`, `.m4v` | 用于多模态参考 | 仅 `seedance-2.0`、`seedance-2.0-fast` |
+| 音频 | `.mp3`, `.wav` | 用于多模态参考（不超过 15 秒） | 仅 `seedance-2.0`、`seedance-2.0-fast` |
 
 <Warning>
-  **视频和音频素材仅 Seedance 模型支持**（`seedance-2.0`、`seedance-2.0-fast`）。`jimeng-video-*` 模型仅支持最多 2 张图片（首尾帧模式）。
+  **视频和音频素材仅 `seedance-2.0` 和 `seedance-2.0-fast` 支持**。`seedance-1.5-pro` 模型仅支持最多 2 张图片（首尾帧模式）。
 </Warning>
 
 <ParamField body="model" type="string" required>
-  模型名称，如 `seedance-2.0`、`seedance-2.0-fast`、`jimeng-video-3.5-pro`。
+  模型名称，如 `seedance-2.0`、`seedance-2.0-fast`、`seedance-1.5-pro`。
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -46,10 +46,10 @@ description: "Jimeng / Seedance 素材生视频 — 基于图片、视频、音�
       视频分辨率。可选值：`480p`、`720p`、`1080p`。
     </ParamField>
     <ParamField body="duration" type="integer">
-      视频时长（秒）。Seedance 模型支持 `4`–`15` 秒；其他模型支持 `5` 或 `10`。
+      视频时长（秒）。`seedance-2.0` 和 `seedance-2.0-fast` 支持 `4`–`15` 秒；`seedance-1.5-pro` 支持 `5` 或 `10`。
     </ParamField>
     <ParamField body="fallback" type="boolean" default="true">
-      Seedance 模型失败后是否自动降级到 `jimeng-video-3.5-pro`。默认 `true`。设为 `false` 则禁止降级，直接返回原始错误。仅对 Seedance 系列模型生效，其他模型忽略此字段。注意：多模态请求（包含视频/音频素材、超过 2 张图片、或提示词含 `@1`/`@2` 等占位符引用）无论此值如何都不会降级。
+      Seedance 2.0 模型失败后是否自动降级到 `seedance-1.5-pro`。默认 `true`。设为 `false` 则禁止降级，直接返回原始错误。仅对 `seedance-2.0` 和 `seedance-2.0-fast` 生效，`seedance-1.5-pro` 忽略此字段。注意：多模态请求（包含视频/音频素材、超过 2 张图片、或提示词含 `@1`/`@2` 等占位符引用）无论此值如何都不会降级。
     </ParamField>
   </Expandable>
 </ParamField>
@@ -109,8 +109,8 @@ curl --request POST \
 |------|------|------|---------|
 | 1 张图片 | 首帧模式 | 图片作为视频首帧 | 所有模型 |
 | 2 张图片 | 首尾帧模式 | 两张图片分别作为首帧和尾帧 | 所有模型 |
-| 3+ 张图片 | 多图参考模式 | 通过 `@1`、`@2`、`@3` 引用多张图片 | 仅 `seedance-*` |
-| 包含视频或音频 | 多模态参考模式 | 图片、视频、音频混合作为参考素材 | 仅 `seedance-*` |
+| 3+ 张图片 | 多图参考模式 | 通过 `@1`、`@2`、`@3` 引用多张图片 | 仅 `seedance-2.0`、`seedance-2.0-fast` |
+| 包含视频或音频 | 多模态参考模式 | 图片、视频、音频混合作为参考素材 | 仅 `seedance-2.0`、`seedance-2.0-fast` |
 
 ### 1 张图 — 首帧模式
 

@@ -1,7 +1,7 @@
 ---
 title: "Media to Video"
 api: "POST /api/v1/task/submit"
-description: "Jimeng / Seedance Media-to-Video — Generate videos from images, videos, and audio"
+description: "Seedance Media-to-Video — Generate videos from images, videos, and audio"
 ---
 
 Generate videos from reference materials including images, videos, and audio. The generation mode is automatically selected based on the number and type of materials.
@@ -11,15 +11,15 @@ Generate videos from reference materials including images, videos, and audio. Th
 | Type | Formats | Usage | Supported Models |
 |------|---------|-------|------------------|
 | Image | `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.bmp` | First/last frame or reference | All models |
-| Video | `.mp4`, `.mov`, `.m4v` | Multimodal reference | `seedance-*` only |
-| Audio | `.mp3`, `.wav` | Multimodal reference (max 15s) | `seedance-*` only |
+| Video | `.mp4`, `.mov`, `.m4v` | Multimodal reference | `seedance-2.0`, `seedance-2.0-fast` only |
+| Audio | `.mp3`, `.wav` | Multimodal reference (max 15s) | `seedance-2.0`, `seedance-2.0-fast` only |
 
 <Warning>
-  **Video and audio materials are only supported by Seedance models** (`seedance-2.0`, `seedance-2.0-fast`). The `jimeng-video-*` models only support up to 2 images (first/last frame mode).
+  **Video and audio materials are only supported by `seedance-2.0` and `seedance-2.0-fast`**. The `seedance-1.5-pro` model only supports up to 2 images (first/last frame mode).
 </Warning>
 
 <ParamField body="model" type="string" required>
-  Model name, e.g. `seedance-2.0`, `seedance-2.0-fast`, `jimeng-video-3.5-pro`.
+  Model name, e.g. `seedance-2.0`, `seedance-2.0-fast`, `seedance-1.5-pro`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -46,10 +46,10 @@ Generate videos from reference materials including images, videos, and audio. Th
       Video resolution. Options: `480p`, `720p`, `1080p`.
     </ParamField>
     <ParamField body="duration" type="integer">
-      Video duration in seconds. Seedance models support `4`–`15` seconds; other models support `5` or `10`.
+      Video duration in seconds. `seedance-2.0` and `seedance-2.0-fast` support `4`–`15` seconds; `seedance-1.5-pro` supports `5` or `10`.
     </ParamField>
     <ParamField body="fallback" type="boolean" default="true">
-      Whether to automatically fall back to `jimeng-video-3.5-pro` when a Seedance model fails. Defaults to `true`. Set to `false` to disable fallback and return the original error directly. Only applies to Seedance models; ignored by other models. Note: multimodal requests (containing video/audio materials, >2 images, or `@1`/`@2` placeholder references) never fall back regardless of this setting.
+      Whether to automatically fall back to `seedance-1.5-pro` when a Seedance 2.0 model fails. Defaults to `true`. Set to `false` to disable fallback and return the original error directly. Only applies to `seedance-2.0` and `seedance-2.0-fast`; ignored by `seedance-1.5-pro`. Note: multimodal requests (containing video/audio materials, >2 images, or `@1`/`@2` placeholder references) never fall back regardless of this setting.
     </ParamField>
   </Expandable>
 </ParamField>
@@ -109,8 +109,8 @@ The generation mode is automatically selected based on the number and type of ma
 |-----------|------|-------------|------------------|
 | 1 image | First Frame | Image becomes the first frame | All models |
 | 2 images | First & Last Frame | Two images become the start and end frames | All models |
-| 3+ images | Multi-Image Reference | Reference multiple images via `@1`, `@2`, `@3` | `seedance-*` only |
-| Contains video or audio | Multimodal Reference | Mix images, videos, and audio as references | `seedance-*` only |
+| 3+ images | Multi-Image Reference | Reference multiple images via `@1`, `@2`, `@3` | `seedance-2.0`, `seedance-2.0-fast` only |
+| Contains video or audio | Multimodal Reference | Mix images, videos, and audio as references | `seedance-2.0`, `seedance-2.0-fast` only |
 
 ### 1 Image — First Frame Mode
 

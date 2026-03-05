@@ -1,17 +1,17 @@
 ---
 title: "Text to Video"
 api: "POST /api/v1/task/submit"
-description: "Jimeng / Seedance Text-to-Video — Generate videos from text descriptions"
+description: "Seedance Text-to-Video — Generate videos from text descriptions"
 ---
 
-Use Jimeng Video or Seedance models to generate videos from a text prompt. Omitting `mediaUrls` (or `imageUrls`) activates pure text-to-video mode.
+Use Seedance models to generate videos from a text prompt. Omitting `mediaUrls` (or `imageUrls`) activates pure text-to-video mode.
 
 ### Available Models
 
-`jimeng-video-3.5-pro` · `jimeng-video-3.0-pro` · `jimeng-video-3.0` · `jimeng-video-2.0-pro` · `jimeng-video-2.0` · `seedance-2.0` · `seedance-2.0-fast`
+`seedance-2.0` · `seedance-2.0-fast` · `seedance-1.5-pro`
 
 <ParamField body="model" type="string" required>
-  Model name, e.g. `seedance-2.0`, `seedance-2.0-fast`, `jimeng-video-3.5-pro`.
+  Model name, e.g. `seedance-2.0`, `seedance-2.0-fast`, `seedance-1.5-pro`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -30,10 +30,10 @@ Use Jimeng Video or Seedance models to generate videos from a text prompt. Omitt
       Video resolution. Options: `480p`, `720p`, `1080p`.
     </ParamField>
     <ParamField body="duration" type="integer">
-      Video duration in seconds. Seedance models support `4`–`15` seconds; other models support `5` or `10`.
+      Video duration in seconds. `seedance-2.0` and `seedance-2.0-fast` support `4`–`15` seconds; `seedance-1.5-pro` supports `5` or `10`.
     </ParamField>
     <ParamField body="fallback" type="boolean" default="true">
-      Whether to automatically fall back to `jimeng-video-3.5-pro` when a Seedance model fails. Defaults to `true`. Set to `false` to disable fallback and return the original error directly. Only applies to Seedance models (`seedance-2.0`, `seedance-2.0-fast`); ignored by other models.
+      Whether to automatically fall back to `seedance-1.5-pro` when a Seedance 2.0 model fails. Defaults to `true`. Set to `false` to disable fallback and return the original error directly. Only applies to `seedance-2.0` and `seedance-2.0-fast`; ignored by `seedance-1.5-pro`.
     </ParamField>
   </Expandable>
 </ParamField>
