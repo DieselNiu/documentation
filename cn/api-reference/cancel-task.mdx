@@ -4,7 +4,7 @@ api: "POST /api/v1/task/{taskId}/cancel"
 description: "取消进行中的任务"
 ---
 
-取消一个尚未到达终态的任务。仅当任务状态为 `PENDING`、`PROCESSING` 或 `SUBMITTED` 时可取消。
+取消一个仍在队列中的任务。仅当任务状态为 `PENDING` 时可取消。一旦任务进入 `PROCESSING` 或 `SUBMITTED` 状态，将无法取消。
 
 <ParamField path="taskId" type="string" required>
   要取消的任务 ID。
@@ -26,7 +26,14 @@ curl --request POST \
 }
 ```
 
-```json 400
+```json 400 任务处理中
+{
+  "code": 400,
+  "msg": "task is already being processed"
+}
+```
+
+```json 400 任务已终态
 {
   "code": 400,
   "msg": "task already in terminal state"

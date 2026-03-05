@@ -4,7 +4,7 @@ api: "POST /api/v1/task/{taskId}/cancel"
 description: "Cancel a task that is in progress"
 ---
 
-Cancel a task that has not yet reached a terminal state. A task can only be cancelled when its status is `PENDING`, `PROCESSING`, or `SUBMITTED`.
+Cancel a task that is still queued. A task can only be cancelled when its status is `PENDING`. Once a task enters `PROCESSING` or `SUBMITTED`, it can no longer be cancelled.
 
 <ParamField path="taskId" type="string" required>
   The ID of the task to cancel.
@@ -26,7 +26,14 @@ curl --request POST \
 }
 ```
 
-```json 400
+```json 400 Task being processed
+{
+  "code": 400,
+  "msg": "task is already being processed"
+}
+```
+
+```json 400 Terminal state
 {
   "code": 400,
   "msg": "task already in terminal state"
