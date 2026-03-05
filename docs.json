@@ -41,10 +41,10 @@
                 ]
               },
               {
-                "group": "Jimeng Image",
+                "group": "Seedream Image",
                 "pages": [
-                  "api-reference/jimeng-image/text-to-image",
-                  "api-reference/jimeng-image/image-to-image"
+                  "api-reference/seedream-image/text-to-image",
+                  "api-reference/seedream-image/image-to-image"
                 ]
               },
               {
@@ -95,10 +95,10 @@
                 ]
               },
               {
-                "group": "即梦图片",
+                "group": "Seedream 图片",
                 "pages": [
-                  "cn/api-reference/jimeng-image/text-to-image",
-                  "cn/api-reference/jimeng-image/image-to-image"
+                  "cn/api-reference/seedream-image/text-to-image",
+                  "cn/api-reference/seedream-image/image-to-image"
                 ]
               },
               {
