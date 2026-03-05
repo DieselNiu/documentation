@@ -41,13 +41,6 @@
                 ]
               },
               {
-                "group": "Seedream Image",
-                "pages": [
-                  "api-reference/seedream-image/text-to-image",
-                  "api-reference/seedream-image/image-to-image"
-                ]
-              },
-              {
                 "group": "Seedance Video",
                 "pages": [
                   "api-reference/jimeng-video/text-to-video",
@@ -66,6 +59,13 @@
                 "pages": [
                   "api-reference/nano-banana/text-to-image",
                   "api-reference/nano-banana/image-to-image"
+                ]
+              },
+              {
+                "group": "Seedream Image",
+                "pages": [
+                  "api-reference/seedream-image/text-to-image",
+                  "api-reference/seedream-image/image-to-image"
                 ]
               }
             ]
@@ -95,13 +95,6 @@
                 ]
               },
               {
-                "group": "Seedream 图片",
-                "pages": [
-                  "cn/api-reference/seedream-image/text-to-image",
-                  "cn/api-reference/seedream-image/image-to-image"
-                ]
-              },
-              {
                 "group": "Seedance 视频",
                 "pages": [
                   "cn/api-reference/jimeng-video/text-to-video",
@@ -120,6 +113,13 @@
                 "pages": [
                   "cn/api-reference/nano-banana/text-to-image",
                   "cn/api-reference/nano-banana/image-to-image"
+                ]
+              },
+              {
+                "group": "Seedream 图片",
+                "pages": [
+                  "cn/api-reference/seedream-image/text-to-image",
+                  "cn/api-reference/seedream-image/image-to-image"
                 ]
               }
             ]
