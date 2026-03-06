@@ -44,6 +44,9 @@ description: "Veo 3 图片生成视频 — 为图片添加动画或从图片参�
     <ParamField body="ratio" type="string">
       视频宽高比。可选值：`16:9`、`9:16`。默认值：`16:9`。
     </ParamField>
+    <ParamField body="resolution" type="string">
+      分辨率放大。可选值：`1080p`、`4k`。不传则为默认分辨率（不放大）。注意：I2V 单图模式不支持分辨率放大，传入会被忽略。
+    </ParamField>
     <ParamField body="imageUrls" type="array" required>
       图片 URL 数组。必须包含**恰好 1、2 或 3 张图片**：
       - **1 张图片**：单图动画（I2V）

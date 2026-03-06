@@ -44,6 +44,9 @@ Use Google Veo 3.1 to create videos from images. Supports three modes based on t
     <ParamField body="ratio" type="string">
       Video aspect ratio. Options: `16:9`, `9:16`. Default: `16:9`.
     </ParamField>
+    <ParamField body="resolution" type="string">
+      Resolution upscale. Options: `1080p`, `4k`. Default: standard resolution (no upscale). Note: I2V (single image) mode does not support resolution upscale — the parameter will be ignored.
+    </ParamField>
     <ParamField body="imageUrls" type="array" required>
       Array of image URLs. Must contain **exactly 1, 2, or 3 images**:
       - **1 image**: Single image animation (I2V)
