@@ -43,8 +43,8 @@
               {
                 "group": "Seedance Video",
                 "pages": [
-                  "api-reference/jimeng-video/text-to-video",
-                  "api-reference/jimeng-video/image-to-video"
+                  "api-reference/seedance-video/text-to-video",
+                  "api-reference/seedance-video/image-to-video"
                 ]
               },
               {
@@ -97,8 +97,8 @@
               {
                 "group": "Seedance 视频",
                 "pages": [
-                  "cn/api-reference/jimeng-video/text-to-video",
-                  "cn/api-reference/jimeng-video/image-to-video"
+                  "cn/api-reference/seedance-video/text-to-video",
+                  "cn/api-reference/seedance-video/image-to-video"
                 ]
               },
               {
