@@ -19,13 +19,19 @@ Use Google Veo 3.1 to create videos from images. Supports three modes based on t
   <Accordion title="First + Last Frame (I2V-FL) — 2 images">
     Create a smooth transition video between a start frame and an end frame.
   </Accordion>
-  <Accordion title="Reference Images (R2V) — 3 images">
-    Generate a video using 3 reference images for style transfer or scene blending.
+  <Accordion title="Reference Images (R2V) — 1-3 images">
+    Generate a video using 1-3 reference images for style transfer or creative inspiration.
   </Accordion>
 </AccordionGroup>
 
 <Note>
-  No need to specify `mode` — the system automatically infers it based on the number of images in `imageUrls`.
+  **Mode Selection:**
+  - **Auto-inference** (default): System infers mode from image count (0→t2v, 1→i2v, 2→i2v-fl, 3→r2v)
+  - **Explicit mode**: Add `mode` field to override auto-inference (e.g., use `mode: "r2v"` with 1 image for style reference instead of first-frame control)
+
+  **I2V vs R2V difference:**
+  - **I2V**: Image becomes the video's **first frame** (strict frame control)
+  - **R2V**: Image serves as **style/content reference** (flexible creative generation)
 </Note>
 
 <ParamField body="model" type="string" required>
@@ -44,13 +50,16 @@ Use Google Veo 3.1 to create videos from images. Supports three modes based on t
     <ParamField body="ratio" type="string">
       Video aspect ratio. Options: `16:9`, `9:16`. Default: `16:9`.
     </ParamField>
+    <ParamField body="mode" type="string">
+      Explicitly specify generation mode: `i2v`, `i2v-fl`, or `r2v`. Optional — system auto-infers from image count if not provided. Use this when you want to override auto-inference (e.g., `mode: "r2v"` with 1 image for style reference).
+    </ParamField>
     <ParamField body="resolution" type="string">
       Resolution upscale. Options: `1080p`, `4k`. Default: standard resolution (no upscale). Note: I2V (single image) mode does not support resolution upscale — the parameter will be ignored.
     </ParamField>
     <ParamField body="imageUrls" type="array" required>
-      Array of image URLs. Must contain **exactly 1, 2, or 3 images**:
-      - **1 image**: Single image animation (I2V)
-      - **2 images**: First + last frame transition (I2V-FL)
+      Array of image URLs. Must contain **1, 2, or 3 images**:
+      - **1 image**: Single image animation (I2V) or style reference (R2V with explicit mode)
+      - **2 images**: First + last frame transition (I2V-FL) or style reference (R2V with explicit mode)
       - **3 images**: Reference-based video generation (R2V)
     </ParamField>
   </Expandable>
@@ -86,6 +95,22 @@ curl --request POST \
       "https://example.com/day.jpg",
       "https://example.com/night.jpg"
     ]
+  }
+}'
+```
+
+```bash Reference Images (R2V) with 1 image
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "veo3",
+  "input": {
+    "prompt": "Create a video inspired by this artistic style",
+    "ratio": "16:9",
+    "mode": "r2v",
+    "imageUrls": ["https://example.com/reference.jpg"]
   }
 }'
 ```

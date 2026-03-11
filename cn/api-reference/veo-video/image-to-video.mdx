@@ -19,13 +19,19 @@ description: "Veo 3 图片生成视频 — 为图片添加动画或从图片参�
   <Accordion title="首尾帧视频（I2V-FL）— 2 张图片">
     创建起始帧和结束帧之间的平滑过渡视频。
   </Accordion>
-  <Accordion title="参考图生成（R2V）— 3 张图片">
-    使用 3 张参考图片生成视频，可用于风格迁移或场景融合。
+  <Accordion title="参考图生成（R2V）— 1-3 张图片">
+    使用 1-3 张参考图片生成视频，可用于风格迁移或创意灵感。
   </Accordion>
 </AccordionGroup>
 
 <Note>
-  无需指定 `mode` 参数 — 系统会根据 `imageUrls` 中的图片数量自动推断生成模式。
+  **模式选择：**
+  - **自动推断**（默认）：系统根据图片数量自动推断模式（0→t2v, 1→i2v, 2→i2v-fl, 3→r2v）
+  - **显式指定**：添加 `mode` 字段覆盖自动推断（例如：使用 1 张图片时指定 `mode: "r2v"` 作为风格参考而非首帧控制）
+
+  **I2V vs R2V 的区别：**
+  - **I2V**：图片作为视频的**首帧**（严格的帧控制）
+  - **R2V**：图片作为**风格/内容参考**（灵活的创意生成）
 </Note>
 
 <ParamField body="model" type="string" required>
@@ -44,13 +50,16 @@ description: "Veo 3 图片生成视频 — 为图片添加动画或从图片参�
     <ParamField body="ratio" type="string">
       视频宽高比。可选值：`16:9`、`9:16`。默认值：`16:9`。
     </ParamField>
+    <ParamField body="mode" type="string">
+      显式指定生成模式：`i2v`、`i2v-fl` 或 `r2v`。可选 — 不提供时系统会根据图片数量自动推断。当需要覆盖自动推断时使用（例如：使用 1 张图片时指定 `mode: "r2v"` 作为风格参考）。
+    </ParamField>
     <ParamField body="resolution" type="string">
       分辨率放大。可选值：`1080p`、`4k`。不传则为默认分辨率（不放大）。注意：I2V 单图模式不支持分辨率放大，传入会被忽略。
     </ParamField>
     <ParamField body="imageUrls" type="array" required>
-      图片 URL 数组。必须包含**恰好 1、2 或 3 张图片**：
-      - **1 张图片**：单图动画（I2V）
-      - **2 张图片**：首尾帧过渡（I2V-FL）
+      图片 URL 数组。必须包含 **1、2 或 3 张图片**：
+      - **1 张图片**：单图动画（I2V）或风格参考（显式指定 R2V 模式）
+      - **2 张图片**：首尾帧过渡（I2V-FL）或风格参考（显式指定 R2V 模式）
       - **3 张图片**：参考图生成（R2V）
     </ParamField>
   </Expandable>
@@ -86,6 +95,22 @@ curl --request POST \
       "https://example.com/day.jpg",
       "https://example.com/night.jpg"
     ]
+  }
+}'
+```
+
+```bash 参考图生成（R2V）使用 1 张图片
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "veo3",
+  "input": {
+    "prompt": "创建一个受中国水墨画风格启发的视频",
+    "ratio": "16:9",
+    "mode": "r2v",
+    "imageUrls": ["https://example.com/reference.jpg"]
   }
 }'
 ```
