@@ -68,7 +68,7 @@ The callback `data` field is identical in format to the query endpoint response:
 | Field | Type | Description |
 |-------|------|-------------|
 | `type` | string | Result type: `image` or `video` |
-| `urls` | string[] | List of resource URLs. Images may have multiple entries; videos typically have 1 |
+| `urls` | string[] | List of resource URLs. Images may have multiple entries; videos typically have 1. **URLs expire after 7 days** |
 
 **On FAILURE / TIMEOUT / CANCELLED:**
 
