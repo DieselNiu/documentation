@@ -46,10 +46,13 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
   "model": "seedance-2.0",
+  "callBackUrl": "https://example.com/webhook",
   "input": {
     "prompt": "一条河流穿过秋天的森林，航拍视角",
     "ratio": "16:9",
-    "duration": 5
+    "resolution": "1080p",
+    "duration": 5,
+    "fallback": true
   }
 }'
 ```
@@ -84,12 +87,14 @@ curl --request POST \
       "model": "seedance-2.0",
       "prompt": "一条河流穿过秋天的森林，航拍视角",
       "ratio": "16:9",
-      "duration": 5
+      "resolution": "1080p",
+      "duration": 5,
+      "fallback": true
     },
     "result": {
       "type": "video",
       "urls": [
-        "https://v9-dreamnia.jimeng.com/video/tos/cn/video_example.mp4"
+        "https://example.com/output/video-example.mp4"
       ]
     },
     "created_at": "2026-02-10T22:05:27.378310Z",

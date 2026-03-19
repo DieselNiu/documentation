@@ -48,9 +48,12 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
   "model": "seedream-4.5",
+  "callBackUrl": "https://example.com/webhook",
   "input": {
     "prompt": "Transform to watercolor style",
-    "images": ["https://example.com/photo.jpg"]
+    "images": ["https://example.com/photo.jpg"],
+    "ratio": "16:9",
+    "resolution": "2k"
   }
 }'
 ```
@@ -83,15 +86,16 @@ Retrieve the generation result via the [Query Task](/api-reference/query-task) e
     "status": "SUCCESS",
     "input": {
       "model": "seedream-4.5",
-      "prompt": "将这张照片变成水彩画风格",
+      "prompt": "Transform to watercolor style",
       "images": ["https://example.com/photo.jpg"],
+      "ratio": "16:9",
       "resolution": "2k"
     },
     "result": {
       "type": "image",
       "urls": [
-        "https://p3-dreamina-sign.byteimg.com/result1.png",
-        "https://p3-dreamina-sign.byteimg.com/result2.png"
+        "https://example.com/output/result1.png",
+        "https://example.com/output/result2.png"
       ]
     },
     "created_at": "2026-02-10T22:00:00.000000Z",

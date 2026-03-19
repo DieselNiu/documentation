@@ -51,9 +51,11 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
   "model": "veo3",
+  "callBackUrl": "https://example.com/webhook",
   "input": {
     "prompt": "Ocean waves crashing on a rocky shore at golden hour",
-    "ratio": "16:9"
+    "ratio": "16:9",
+    "resolution": "1080p"
   }
 }'
 ```
@@ -65,9 +67,11 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
   "model": "veo3_fast",
+  "callBackUrl": "https://example.com/webhook",
   "input": {
     "prompt": "Ocean waves crashing on a rocky shore at golden hour",
-    "ratio": "9:16"
+    "ratio": "9:16",
+    "resolution": "1080p"
   }
 }'
 ```
@@ -101,12 +105,13 @@ Retrieve the generation result via the [Query Task](/api-reference/query-task) e
     "input": {
       "model": "veo3",
       "prompt": "Ocean waves crashing on a rocky shore at golden hour",
-      "ratio": "16:9"
+      "ratio": "16:9",
+      "resolution": "1080p"
     },
     "result": {
       "type": "video",
       "urls": [
-        "https://flow.dieselniu.im/output/video-a1b2c3d4.mp4"
+        "https://example.com/output/video-a1b2c3d4.mp4"
       ]
     },
     "created_at": "2026-02-12T10:00:00.000000Z",

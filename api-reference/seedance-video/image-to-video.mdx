@@ -34,11 +34,6 @@ Generate videos from reference materials including images, videos, and audio. Th
     <ParamField body="mediaUrls" type="string[]">
       List of material URLs. Supports mixed images, videos, and audio. Material type is auto-detected by file extension. The number and type of materials determine the generation mode (see below).
     </ParamField>
-    <ParamField body="imageUrls" type="string[]">
-      List of reference image URLs. Backward compatible — equivalent to `mediaUrls` with images only.
-
-      > If both `mediaUrls` and `imageUrls` are provided, `mediaUrls` takes precedence.
-    </ParamField>
     <ParamField body="ratio" type="string">
       Video aspect ratio. Options: `1:1`, `4:3`, `3:4`, `16:9`, `9:16`.
     </ParamField>
@@ -62,9 +57,14 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
   "model": "seedance-2.0",
+  "callBackUrl": "https://example.com/webhook",
   "input": {
     "prompt": "Blow out candles",
-    "mediaUrls": ["https://example.com/photo.jpg"]
+    "mediaUrls": ["https://example.com/photo.jpg"],
+    "ratio": "16:9",
+    "resolution": "1080p",
+    "duration": 5,
+    "fallback": true
   }
 }'
 ```
@@ -76,12 +76,17 @@ curl --request POST \
   --header 'Content-Type: application/json' \
   --data '{
   "model": "seedance-2.0",
+  "callBackUrl": "https://example.com/webhook",
   "input": {
     "prompt": "@1 dances to the rhythm of @2",
     "mediaUrls": [
       "https://example.com/dancer.jpg",
       "https://example.com/music.mp3"
-    ]
+    ],
+    "ratio": "16:9",
+    "resolution": "1080p",
+    "duration": 8,
+    "fallback": false
   }
 }'
 ```
@@ -121,7 +126,7 @@ The image is used as the first frame of the video, and subsequent animation is g
   "model": "seedance-2.0",
   "input": {
     "prompt": "Blow out candles",
-    "mediaUrls": ["https://assets.movart.ai/landingpage/dog.webp"]
+    "mediaUrls": ["https://example.com/dog.webp"]
   }
 }
 ```
@@ -136,8 +141,8 @@ The first image serves as the video's first frame, the second image as the last 
   "input": {
     "prompt": "Transform",
     "mediaUrls": [
-      "https://assets.movart.ai/3D-Cartoon.jpg",
-      "https://assets.movart.ai/landingpage/dog.webp"
+      "https://example.com/3d-cartoon.jpg",
+      "https://example.com/dog.webp"
     ]
   }
 }
@@ -240,7 +245,7 @@ Retrieve the generation result via the [Query Task](/api-reference/query-task) e
     "result": {
       "type": "video",
       "urls": [
-        "https://v9-dreamnia.jimeng.com/video/tos/cn/video_example.mp4"
+        "https://example.com/output/video-example.mp4"
       ]
     },
     "created_at": "2026-02-10T23:00:00.000000Z",
