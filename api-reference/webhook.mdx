@@ -82,7 +82,7 @@ Always present in the response. `null` when no specific actionable reason applie
 
 | Value | Meaning | Recommended Action |
 |-------|---------|-------------------|
-| `CONTENT_MODERATION` | Prompt or image rejected by content policy | Notify the user; **do not retry** |
+| `CONTENT_MODERATION` | Prompt or image rejected due to real human faces, copyrighted characters or public figures, or NSFW content | Notify the user; **do not retry** |
 | `INSUFFICIENT_POINTS` | Account has insufficient credits | Prompt user to recharge; **do not retry** |
 | `null` | No specific actionable reason (transient error, timeout, etc.) | May retry if appropriate |
 

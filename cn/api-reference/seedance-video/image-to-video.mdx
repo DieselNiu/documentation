@@ -6,12 +6,16 @@ description: "Seedance 素材生视频 — 基于图片、视频、音频等素�
 
 通过传入图片、视频、音频等素材生成视频。根据素材数量和类型自动选择生成模式。
 
+<Warning>
+  Seedance 视频生成耗时可能在 **2 分钟到 4 小时**之间，具体取决于上游官方接口的排队情况。使用该模型时，建议你**务必配置 `callBackUrl`**，这样结果一旦生成完成即可及时回调通知。**不建议**持续轮询 [Query Task](/api-reference/query-task) 接口。
+</Warning>
+
 ### 支持的素材类型
 
 | 类型 | 支持格式 | 说明 | 支持模型 |
 |------|---------|------|---------|
 | 图片 | `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.bmp` | 用于首尾帧或参考图 | 所有模型 |
-| 视频 | `.mp4`, `.mov`, `.m4v` | 用于多模态参考 | 仅 `seedance-2.0`、`seedance-2.0-fast` |
+| 视频 | `.mp4`, `.mov`, `.m4v` | 用于多模态参考（上传视频总时长不超过 15 秒） | 仅 `seedance-2.0`、`seedance-2.0-fast` |
 | 音频 | `.mp3`, `.wav` | 用于多模态参考（不超过 15 秒） | 仅 `seedance-2.0`、`seedance-2.0-fast` |
 
 <Warning>
@@ -23,7 +27,7 @@ description: "Seedance 素材生视频 — 基于图片、视频、音频等素�
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
-  Webhook 回调地址。
+  Webhook 回调地址。强烈建议用于 Seedance 视频任务，因为生成耗时可能在 2 分钟到 4 小时之间，取决于上游官方接口排队情况。
 </ParamField>
 
 <ParamField body="input" type="object" required>
@@ -32,7 +36,7 @@ description: "Seedance 素材生视频 — 基于图片、视频、音频等素�
       提示词。可用 `@1`、`@2`、`@3` 引用对应位置的素材（也支持 `@图1`、`@image1` 写法）。
     </ParamField>
     <ParamField body="mediaUrls" type="string[]">
-      素材 URL 列表。支持图片、视频、音频混合传入，素材类型根据文件扩展名自动检测。素材的数量和类型决定生成模式（见下方说明）。
+      参考素材 URL 列表，可上传 **1-12 个**素材，包括图片 URL、视频 URL 和音频 URL，其中**图片最多上传 9 张**，且**上传视频总时长不能超过 15 秒**。素材类型根据文件扩展名自动检测。素材的数量和类型决定生成模式（见下方说明）。
     </ParamField>
     <ParamField body="ratio" type="string">
       视频比例。可选值：`1:1`、`4:3`、`3:4`、`16:9`、`9:16`。
@@ -170,7 +174,7 @@ prompt 中用 `@1`、`@2`、`@3` 引用对应位置的素材。
 
 当素材中包含视频或音频（或图片 + 视频 + 音频的任意混合）时，自动进入多模态参考模式。用 `@1`、`@2` 等引用对应位置的素材。
 
-<Note>音频文件时长不能超过 **15 秒**，超过将被拒绝。</Note>
+<Note>音频文件时长不能超过 **15 秒**，且上传视频总时长不能超过 **15 秒**，超过将被拒绝。</Note>
 
 **图片 + 音频** — 让角色随音乐节奏舞动：
 

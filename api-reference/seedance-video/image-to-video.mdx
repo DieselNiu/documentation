@@ -6,12 +6,16 @@ description: "Seedance Media-to-Video — Generate videos from images, videos, a
 
 Generate videos from reference materials including images, videos, and audio. The generation mode is automatically selected based on the number and type of materials.
 
+<Warning>
+  Seedance video generation can take anywhere from **2 minutes to 4 hours**, depending on the upstream provider's queue. You should **always configure `callBackUrl`** when using this model so the result can be delivered as soon as it is ready. Continuous polling of the [Query Task](/api-reference/query-task) endpoint is **not recommended**.
+</Warning>
+
 ### Supported Material Types
 
 | Type | Formats | Usage | Supported Models |
 |------|---------|-------|------------------|
 | Image | `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.bmp` | First/last frame or reference | All models |
-| Video | `.mp4`, `.mov`, `.m4v` | Multimodal reference | `seedance-2.0`, `seedance-2.0-fast` only |
+| Video | `.mp4`, `.mov`, `.m4v` | Multimodal reference (total video duration max 15s) | `seedance-2.0`, `seedance-2.0-fast` only |
 | Audio | `.mp3`, `.wav` | Multimodal reference (max 15s) | `seedance-2.0`, `seedance-2.0-fast` only |
 
 <Warning>
@@ -23,7 +27,7 @@ Generate videos from reference materials including images, videos, and audio. Th
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
-  Webhook callback URL.
+  Webhook callback URL. Strongly recommended for Seedance video tasks because generation latency may range from 2 minutes to 4 hours depending on the upstream queue.
 </ParamField>
 
 <ParamField body="input" type="object" required>
@@ -32,7 +36,7 @@ Generate videos from reference materials including images, videos, and audio. Th
       Prompt. Use `@1`, `@2`, `@3` to reference materials by position (supports `@图1` and `@image1` as well).
     </ParamField>
     <ParamField body="mediaUrls" type="string[]">
-      List of material URLs. Supports mixed images, videos, and audio. Material type is auto-detected by file extension. The number and type of materials determine the generation mode (see below).
+      List of **1 to 12** reference material URLs, including image URLs, video URLs, and audio URLs. You can upload **up to 9 images**. The total uploaded video duration must be **15 seconds or less**. Material type is auto-detected by file extension. The number and type of materials determine the generation mode (see below).
     </ParamField>
     <ParamField body="ratio" type="string">
       Video aspect ratio. Options: `1:1`, `4:3`, `3:4`, `16:9`, `9:16`.
@@ -170,7 +174,7 @@ Use `@1`, `@2`, `@3` in the prompt to reference the corresponding materials by p
 
 When materials contain videos or audio (or any mix of image + video + audio), the multimodal reference mode is automatically activated. Use `@1`, `@2`, etc. to reference each material by position.
 
-<Note>Audio files must be **15 seconds or shorter**. Longer audio will be rejected.</Note>
+<Note>Audio files must be **15 seconds or shorter**, and the total uploaded video duration must be **15 seconds or less**. Longer inputs will be rejected.</Note>
 
 **Image + Audio** — generate a video where the character moves to the rhythm of the music:
 

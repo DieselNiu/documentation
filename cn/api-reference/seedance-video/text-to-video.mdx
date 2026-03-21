@@ -6,6 +6,10 @@ description: "Seedance 文生视频 — 通过文字描述生成视频"
 
 使用 Seedance 模型，通过纯文字 prompt 生成视频。不传 `mediaUrls`（或 `imageUrls`）即为纯文生视频模式。
 
+<Warning>
+  Seedance 视频生成耗时可能在 **2 分钟到 4 小时**之间，具体取决于上游官方接口的排队情况。使用该模型时，建议你**务必配置 `callBackUrl`**，这样结果一旦生成完成即可及时回调通知。**不建议**持续轮询 [Query Task](/api-reference/query-task) 接口。
+</Warning>
+
 ### 可用模型
 
 `seedance-2.0` · `seedance-2.0-fast` · `seedance-1.5-pro`
@@ -15,7 +19,7 @@ description: "Seedance 文生视频 — 通过文字描述生成视频"
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
-  Webhook 回调地址。
+  Webhook 回调地址。强烈建议用于 Seedance 视频任务，因为生成耗时可能在 2 分钟到 4 小时之间，取决于上游官方接口排队情况。
 </ParamField>
 
 <ParamField body="input" type="object" required>

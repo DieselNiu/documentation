@@ -6,6 +6,10 @@ description: "Seedance Text-to-Video — Generate videos from text descriptions"
 
 Use Seedance models to generate videos from a text prompt. Omitting `mediaUrls` (or `imageUrls`) activates pure text-to-video mode.
 
+<Warning>
+  Seedance video generation can take anywhere from **2 minutes to 4 hours**, depending on the upstream provider's queue. You should **always configure `callBackUrl`** when using this model so the result can be delivered as soon as it is ready. Continuous polling of the [Query Task](/api-reference/query-task) endpoint is **not recommended**.
+</Warning>
+
 ### Available Models
 
 `seedance-2.0` · `seedance-2.0-fast` · `seedance-1.5-pro`
@@ -15,7 +19,7 @@ Use Seedance models to generate videos from a text prompt. Omitting `mediaUrls` 
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
-  Webhook callback URL.
+  Webhook callback URL. Strongly recommended for Seedance video tasks because generation latency may range from 2 minutes to 4 hours depending on the upstream queue.
 </ParamField>
 
 <ParamField body="input" type="object" required>

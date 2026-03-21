@@ -45,7 +45,7 @@ description: "查询任务状态和结果"
 
       | 值 | 含义 | 建议处理方式 |
       |----|------|------------|
-      | `CONTENT_MODERATION` | Prompt 或图片因内容合规问题被拒绝 | 告知用户内容违规；**不要重试** |
+      | `CONTENT_MODERATION` | Prompt 或图片因包含真人人脸、受版权保护的人物或公众人物，或 NSFW 内容而被拒绝 | 告知用户内容违规；**不要重试** |
       | `INSUFFICIENT_POINTS` | 账户积分不足 | 引导用户充值；**不要重试** |
       | `null` | 无特定可操作原因 | 视情况可重试 |
     </ResponseField>
