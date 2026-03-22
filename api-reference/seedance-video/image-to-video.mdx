@@ -53,6 +53,10 @@ Generate videos from reference materials including images, videos, and audio. Th
   </Expandable>
 </ParamField>
 
+<Note>
+  If the request fails validation, the task's `failure_reason` will be `INVALID_PARAMETERS`. For `mediaUrls`, check these rules first in order: 1 to 12 material URLs, at most 9 images, total uploaded video duration of 15 seconds or less, and total uploaded audio duration of 15 seconds or less.
+</Note>
+
 <RequestExample>
 ```bash First Frame (1 image)
 curl --request POST \

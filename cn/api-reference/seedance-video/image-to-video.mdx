@@ -53,6 +53,10 @@ description: "Seedance 素材生视频 — 基于图片、视频、音频等素�
   </Expandable>
 </ParamField>
 
+<Note>
+  如果请求因参数校验失败，任务中的 `failure_reason` 会返回 `INVALID_PARAMETERS`。对于 `mediaUrls`，请优先按以下顺序检查：素材 URL 数量是否为 1 到 12 个、图片是否不超过 9 张、上传视频总时长是否不超过 15 秒、上传音频总时长是否不超过 15 秒。
+</Note>
+
 <RequestExample>
 ```bash 首帧模式（1 张图片）
 curl --request POST \

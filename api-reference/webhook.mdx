@@ -83,6 +83,7 @@ Always present in the response. `null` when no specific actionable reason applie
 | Value | Meaning | Recommended Action |
 |-------|---------|-------------------|
 | `CONTENT_MODERATION` | Prompt or image rejected due to real human faces, copyrighted characters or public figures, or NSFW content | Notify the user; **do not retry** |
+| `INVALID_PARAMETERS` | Submitted parameters are invalid. For Seedance media-to-video, check these rules first: `mediaUrls` must contain 1 to 12 material URLs, include at most 9 images, total uploaded video duration must be 15 seconds or less, and total uploaded audio duration must be 15 seconds or less | Fix request parameters; **do not retry until corrected** |
 | `INSUFFICIENT_POINTS` | Account has insufficient credits | Prompt user to recharge; **do not retry** |
 | `null` | No specific actionable reason (transient error, timeout, etc.) | May retry if appropriate |
 
