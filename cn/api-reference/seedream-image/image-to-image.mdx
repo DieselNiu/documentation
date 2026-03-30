@@ -4,7 +4,7 @@ api: "POST /api/v1/task/submit"
 description: "Seedream 图生图 — 基于参考图片生成新图片"
 ---
 
-使用与文生图相同的模型。当 `input` 中包含 `images` 字段时，自动切换为图生图模式。
+使用与文生图相同的模型。当 `input` 中包含 `imageUrls` 字段时，自动切换为图生图模式。
 
 <ParamField body="model" type="string" required>
   模型名称，如 `seedream-4.5`。与文生图使用相同的模型。
@@ -19,7 +19,7 @@ description: "Seedream 图生图 — 基于参考图片生成新图片"
     <ParamField body="prompt" type="string" required>
       提示词，描述你想要的变换效果。
     </ParamField>
-    <ParamField body="images" type="array" required>
+    <ParamField body="imageUrls" type="array" required>
       参考图片列表，1~10 张。每项可以是 URL 字符串，或 `{"url": "https://..."}` 对象。
     </ParamField>
     <ParamField body="negative_prompt" type="string">
@@ -45,7 +45,7 @@ curl --request POST \
   "callBackUrl": "https://example.com/webhook",
   "input": {
     "prompt": "将这张照片变成水彩画风格",
-    "images": ["https://example.com/photo.jpg"],
+    "imageUrls": ["https://example.com/photo.jpg"],
     "ratio": "16:9",
     "resolution": "2k"
   }
@@ -81,7 +81,7 @@ curl --request POST \
     "input": {
       "model": "seedream-4.5",
       "prompt": "将这张照片变成水彩画风格",
-      "images": ["https://example.com/photo.jpg"],
+      "imageUrls": ["https://example.com/photo.jpg"],
       "ratio": "16:9",
       "resolution": "2k"
     },

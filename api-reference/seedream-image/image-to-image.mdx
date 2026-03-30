@@ -4,7 +4,7 @@ api: "POST /api/v1/task/submit"
 description: "Seedream Image-to-Image — Generate new images based on reference images"
 ---
 
-Uses the same models as Text to Image. When the `input` contains an `images` field, it automatically switches to image-to-image mode.
+Uses the same models as Text to Image. When the `input` contains an `imageUrls` field, it automatically switches to image-to-image mode.
 
 <ParamField body="model" type="string" required>
   Model name, e.g. `seedream-4.5`. Uses the same models as Text to Image.
@@ -19,7 +19,7 @@ Uses the same models as Text to Image. When the `input` contains an `images` fie
     <ParamField body="prompt" type="string" required>
       Prompt describing the transformation you want to apply.
     </ParamField>
-    <ParamField body="images" type="array" required>
+    <ParamField body="imageUrls" type="array" required>
       List of reference images, 1 to 10. Each item can be a URL string or a `{"url": "https://..."}` object.
     </ParamField>
     <ParamField body="negative_prompt" type="string">
@@ -45,7 +45,7 @@ curl --request POST \
   "callBackUrl": "https://example.com/webhook",
   "input": {
     "prompt": "Transform to watercolor style",
-    "images": ["https://example.com/photo.jpg"],
+    "imageUrls": ["https://example.com/photo.jpg"],
     "ratio": "16:9",
     "resolution": "2k"
   }
@@ -81,7 +81,7 @@ Retrieve the generation result via the [Query Task](/api-reference/query-task) e
     "input": {
       "model": "seedream-4.5",
       "prompt": "Transform to watercolor style",
-      "images": ["https://example.com/photo.jpg"],
+      "imageUrls": ["https://example.com/photo.jpg"],
       "ratio": "16:9",
       "resolution": "2k"
     },
