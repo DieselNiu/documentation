@@ -45,6 +45,7 @@
                 "pages": [
                   "api-reference/seedance-video/text-to-video",
                   "api-reference/seedance-video/image-to-video",
+                  "api-reference/seedance-video/moderation-and-penalty",
                   "api-reference/query-task",
                   "api-reference/webhook"
                 ]
@@ -107,6 +108,7 @@
                 "pages": [
                   "cn/api-reference/seedance-video/text-to-video",
                   "cn/api-reference/seedance-video/image-to-video",
+                  "cn/api-reference/seedance-video/moderation-and-penalty",
                   "cn/api-reference/query-task",
                   "cn/api-reference/webhook"
                 ]
