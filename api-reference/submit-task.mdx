@@ -6,6 +6,15 @@ description: "Submit an AI generation task and immediately receive a taskId"
 
 Submit an asynchronous generation task. All models (image, video) share this endpoint, distinguished by the `model` parameter.
 
+<Note>
+  `400` responses from this endpoint can mean either:
+
+  - request validation failed, such as a missing required field
+  - the request was blocked by pre-submission content moderation
+
+  If the request is rejected by content moderation, the response includes `msg: "content rejected by moderation"` plus `data.flagged` and `data.categories` fields with the moderation result details.
+</Note>
+
 <ParamField body="model" type="string" required>
   Model name. For example, `seedream-4.5`, `seedance-2.0`, etc. See individual model documentation for details.
 </ParamField>
@@ -58,6 +67,31 @@ curl --request POST \
 {
   "code": 400,
   "msg": "model is required"
+}
+```
+
+```json 400 Content moderation
+{
+  "code": 400,
+  "msg": "content rejected by moderation",
+  "data": {
+    "flagged": true,
+    "categories": {
+      "harassment": false,
+      "harassment/threatening": false,
+      "sexual": true,
+      "hate": false,
+      "hate/threatening": false,
+      "illicit": false,
+      "illicit/violent": false,
+      "self-harm/intent": false,
+      "self-harm/instructions": false,
+      "self-harm": false,
+      "sexual/minors": false,
+      "violence": false,
+      "violence/graphic": false
+    }
+  }
 }
 ```
 

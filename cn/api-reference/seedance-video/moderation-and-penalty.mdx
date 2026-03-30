@@ -23,6 +23,37 @@ description: "Seedance 内容审核流程、退款规则与提交后违规附加
 - **处罚结果**：无处罚，任务全额退款
 - **目的**：在消耗上游资源前拦截明显违规内容
 
+如果请求在这一层被拦截，`submit` 接口会返回类似下面的响应：
+
+```json
+{
+  "code": 400,
+  "msg": "content rejected by moderation",
+  "data": {
+    "flagged": true,
+    "categories": {
+      "harassment": false,
+      "harassment/threatening": false,
+      "sexual": true,
+      "hate": false,
+      "hate/threatening": false,
+      "illicit": false,
+      "illicit/violent": false,
+      "self-harm/intent": false,
+      "self-harm/instructions": false,
+      "self-harm": false,
+      "sexual/minors": false,
+      "violence": false,
+      "violence/graphic": false
+    }
+  }
+}
+```
+
+<Note>
+  这种情况下任务会在提交到上游之前被拒绝，因此不会产生提交后的违规附加扣费。
+</Note>
+
 ## 第二层：上游内容审核
 
 这一层发生在任务已经提交到 Seedance 之后。

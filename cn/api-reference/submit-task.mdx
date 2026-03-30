@@ -6,6 +6,15 @@ description: "提交 AI 生成任务，立即返回 taskId"
 
 提交一个异步生成任务。所有模型（图片、视频）共享此接口，通过 `model` 参数区分。
 
+<Note>
+  该接口返回 `400` 时，可能表示两种情况：
+
+  - 请求参数校验失败，例如缺少必填字段
+  - 请求在提交前被内容审核拦截
+
+  如果是内容审核拦截，响应里会包含 `msg: "content rejected by moderation"`，以及 `data.flagged`、`data.categories` 等审核结果字段。
+</Note>
+
 <ParamField body="model" type="string" required>
   模型名称。如 `seedream-4.5`、`seedance-2.0` 等。详见各模型文档。
 </ParamField>
@@ -58,6 +67,31 @@ curl --request POST \
 {
   "code": 400,
   "msg": "model is required"
+}
+```
+
+```json 400 内容审核拦截
+{
+  "code": 400,
+  "msg": "content rejected by moderation",
+  "data": {
+    "flagged": true,
+    "categories": {
+      "harassment": false,
+      "harassment/threatening": false,
+      "sexual": true,
+      "hate": false,
+      "hate/threatening": false,
+      "illicit": false,
+      "illicit/violent": false,
+      "self-harm/intent": false,
+      "self-harm/instructions": false,
+      "self-harm": false,
+      "sexual/minors": false,
+      "violence": false,
+      "violence/graphic": false
+    }
+  }
 }
 ```
 

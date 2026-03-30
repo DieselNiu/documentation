@@ -23,6 +23,37 @@ This moderation happens before a task is submitted to Seedance.
 - **Penalty:** None. The task is fully refunded
 - **Purpose:** Prevent obviously prohibited content from consuming upstream resources
 
+If the request is blocked at this stage, the `submit` endpoint returns a response like this:
+
+```json
+{
+  "code": 400,
+  "msg": "content rejected by moderation",
+  "data": {
+    "flagged": true,
+    "categories": {
+      "harassment": false,
+      "harassment/threatening": false,
+      "sexual": true,
+      "hate": false,
+      "hate/threatening": false,
+      "illicit": false,
+      "illicit/violent": false,
+      "self-harm/intent": false,
+      "self-harm/instructions": false,
+      "self-harm": false,
+      "sexual/minors": false,
+      "violence": false,
+      "violence/graphic": false
+    }
+  }
+}
+```
+
+<Note>
+  In this case, the task is rejected before upstream submission, so no post-submission surcharge applies.
+</Note>
+
 ## Layer 2: Upstream Content Review
 
 This moderation happens after the task has already been submitted to Seedance.
