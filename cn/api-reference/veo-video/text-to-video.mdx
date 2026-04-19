@@ -8,7 +8,7 @@ description: "Veo 3 文本生成视频 — 从文本描述生成高质量视频"
 
 ### 可用模型
 
-`veo3` · `veo3_fast`
+`veo3` · `veo3_fast` · `veo3_lite`
 
 ### 速度模式
 
@@ -19,10 +19,13 @@ description: "Veo 3 文本生成视频 — 从文本描述生成高质量视频"
   <Accordion title="Fast 快速模式 — veo3_fast">
     速度优先。适合对时效性要求高的场景。
   </Accordion>
+  <Accordion title="Lite 轻量模式 — veo3_lite">
+    轻量版本，固定 720p 输出。单价最低，适合草稿和大批量生成。不支持 4K/1080p 放大 — 传 `resolution` 会被自动忽略。
+  </Accordion>
 </AccordionGroup>
 
 <ParamField body="model" type="string" required>
-  模型名称，如 `veo3`、`veo3_fast`。
+  模型名称，如 `veo3`、`veo3_fast`、`veo3_lite`。
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -72,6 +75,21 @@ curl --request POST \
     "prompt": "黄金时刻，海浪拍打着岩石海岸",
     "ratio": "9:16",
     "resolution": "1080p"
+  }
+}'
+```
+
+```bash 轻量模式（仅 720p）
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "veo3_lite",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "黄金时刻，海浪拍打着岩石海岸",
+    "ratio": "16:9"
   }
 }'
 ```

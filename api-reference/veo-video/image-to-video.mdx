@@ -8,7 +8,7 @@ Use Google Veo 3.1 to create videos from images. Supports three modes based on t
 
 ### Available Models
 
-`veo3` · `veo3_fast`
+`veo3` · `veo3_fast` · `veo3_lite`
 
 ### Generation Modes
 
@@ -35,7 +35,7 @@ Use Google Veo 3.1 to create videos from images. Supports three modes based on t
 </Note>
 
 <ParamField body="model" type="string" required>
-  Model name, e.g. `veo3`, `veo3_fast`.
+  Model name, e.g. `veo3`, `veo3_fast`, `veo3_lite`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -173,4 +173,5 @@ curl --request POST \
 <Note>
   **Speed Mode Limitations:**
   - **R2V mode (3 images)**: Does not support Quality mode. If you use `veo3` model, it will automatically fall back to Fast mode. We recommend explicitly using `veo3_fast` for R2V.
+  - **Lite mode (`veo3_lite`)**: Supports I2V (single image, fixed at 720p) and I2V-FL (first+last frame) only. Does not support R2V — requests with 3 images will fail. The `resolution` parameter is ignored.
 </Note>

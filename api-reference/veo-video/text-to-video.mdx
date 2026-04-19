@@ -8,7 +8,7 @@ Use Google Veo 3.1 to generate high-quality videos from text descriptions. Suppo
 
 ### Available Models
 
-`veo3` · `veo3_fast`
+`veo3` · `veo3_fast` · `veo3_lite`
 
 ### Speed Modes
 
@@ -19,10 +19,13 @@ Use Google Veo 3.1 to generate high-quality videos from text descriptions. Suppo
   <Accordion title="Fast Mode — veo3_fast">
     Optimized for speed. Ideal for time-sensitive scenarios.
   </Accordion>
+  <Accordion title="Lite Mode — veo3_lite">
+    Lightweight variant at 720p output. Lowest cost per video, ideal for drafts and high-volume use. Does not support 4K/1080p upscaling — `resolution` is ignored if provided.
+  </Accordion>
 </AccordionGroup>
 
 <ParamField body="model" type="string" required>
-  Model name, e.g. `veo3`, `veo3_fast`.
+  Model name, e.g. `veo3`, `veo3_fast`, `veo3_lite`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -72,6 +75,21 @@ curl --request POST \
     "prompt": "Ocean waves crashing on a rocky shore at golden hour",
     "ratio": "9:16",
     "resolution": "1080p"
+  }
+}'
+```
+
+```bash Lite Mode (720p only)
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "veo3_lite",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "Ocean waves crashing on a rocky shore at golden hour",
+    "ratio": "16:9"
   }
 }'
 ```

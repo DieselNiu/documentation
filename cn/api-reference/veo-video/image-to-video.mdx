@@ -8,7 +8,7 @@ description: "Veo 3 图片生成视频 — 为图片添加动画或从图片参�
 
 ### 可用模型
 
-`veo3` · `veo3_fast`
+`veo3` · `veo3_fast` · `veo3_lite`
 
 ### 生成模式
 
@@ -35,7 +35,7 @@ description: "Veo 3 图片生成视频 — 为图片添加动画或从图片参�
 </Note>
 
 <ParamField body="model" type="string" required>
-  模型名称，如 `veo3`、`veo3_fast`。
+  模型名称，如 `veo3`、`veo3_fast`、`veo3_lite`。
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -173,4 +173,5 @@ curl --request POST \
 <Note>
   **速度模式限制：**
   - **R2V 模式（3 张图片）**：不支持 Quality 质量模式。如果使用 `veo3` 模型，将自动回退到 Fast 模式。建议明确使用 `veo3_fast`。
+  - **Lite 模式（`veo3_lite`）**：仅支持 I2V（单图，固定 720p）和 I2V-FL（首尾帧）。不支持 R2V — 传 3 张图片会直接报错。`resolution` 参数会被忽略。
 </Note>
