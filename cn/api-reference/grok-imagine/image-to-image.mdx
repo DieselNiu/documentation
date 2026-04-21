@@ -1,0 +1,67 @@
+---
+title: "图生图"
+api: "POST /api/v1/task/submit"
+description: "Grok Imagine 图生图 —— 基于参考图和文本提示编辑图像（xAI）"
+---
+
+基于 1-2 张参考图和文本提示进行图像编辑。上游固定输出 1024×1024，因此不接受 `ratio` 和 `resolution` 参数。
+
+### 可用模型
+
+`grok-imagine/image-to-image` —— $0.015 / 张。
+
+<ParamField body="model" type="string" required>
+  固定为 `grok-imagine/image-to-image`。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调 URL。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="参数" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      对参考图要做的编辑描述。
+    </ParamField>
+    <ParamField body="imageUrls" type="array" required>
+      1-2 张参考图 URL（需公网可访问）。
+    </ParamField>
+    <ParamField body="n" type="integer">
+      输出图片数量，1-2。默认 `1`。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "grok-imagine/image-to-image",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "把主体放到霓虹小巷夜景里",
+    "imageUrls": ["https://example.com/portrait.jpg"],
+    "n": 1
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+<Note>
+  输出固定 1024×1024，最多 2 张参考图。
+</Note>

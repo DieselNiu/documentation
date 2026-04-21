@@ -1,0 +1,140 @@
+---
+title: "Text to Image"
+api: "POST /api/v1/task/submit"
+description: "Grok Imagine Text-to-Image — Generate images from text prompts (xAI)"
+---
+
+Generate images from text using xAI's Grok Imagine. Three tiers differ in quality, batch size, and pricing. Grok Imagine is known for minimal content restrictions.
+
+### Available Models
+
+`grok-imagine/text-to-image-lite` · `grok-imagine/text-to-image-standard` · `grok-imagine/text-to-image-pro`
+
+### Tier Comparison
+
+<AccordionGroup>
+  <Accordion title="grok-imagine/text-to-image-lite">
+    **Cheapest tier**
+    - Price: $0.001 per image
+    - `n` range: 1-4
+    - Output: always 1024×1024 (does **not** accept `ratio` / `resolution`)
+    - Best for: drafts, high-volume exploration
+  </Accordion>
+  <Accordion title="grok-imagine/text-to-image-standard">
+    **Balanced tier**
+    - Price: $0.0012 per image
+    - `n` range: 1-10
+  </Accordion>
+  <Accordion title="grok-imagine/text-to-image-pro">
+    **Highest quality**
+    - Price: $0.0015 per image
+    - `n` range: 1-10
+  </Accordion>
+</AccordionGroup>
+
+<ParamField body="model" type="string" required>
+  One of `grok-imagine/text-to-image-lite`, `grok-imagine/text-to-image-standard`, `grok-imagine/text-to-image-pro`.
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      Text description of the image to generate.
+    </ParamField>
+    <ParamField body="n" type="integer">
+      Number of images to generate. Default: `1`.
+
+      - `lite`: 1-4
+      - `standard` / `pro`: 1-10
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      Aspect ratio. Options: `1:1`, `16:9`, `9:16`. Default: `1:1`.
+
+      **Not supported by `text-to-image-lite`** (lite output is always 1024×1024).
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      Output resolution. Options: `720p`, `1080p`. Default: `720p`.
+
+      **Note:** Ignored when `ratio` is `1:1` (output is always 1024×1024). Also not supported by `text-to-image-lite`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash lite
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "grok-imagine/text-to-image-lite",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "A cyberpunk samurai in neon Tokyo rain",
+    "n": 2
+  }
+}'
+```
+
+```bash pro
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "grok-imagine/text-to-image-pro",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "Portrait of an astronaut drinking tea, photorealistic",
+    "n": 1,
+    "ratio": "1:1"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## Query Result
+
+Retrieve the result via the [Query Task](/api-reference/query-task) endpoint or Webhook.
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "SUCCESS",
+    "input": {
+      "model": "grok-imagine/text-to-image-pro",
+      "prompt": "Portrait of an astronaut drinking tea",
+      "ratio": "1:1"
+    },
+    "result": {
+      "type": "image",
+      "urls": ["https://cdn.maxapi.io/images/.../image-0.jpg"]
+    }
+  }
+}
+```
+
+<Note>
+  Average generation time: 5-20 seconds. Each result URL is hosted on Max API's CDN.
+</Note>

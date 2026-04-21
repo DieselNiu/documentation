@@ -1,0 +1,135 @@
+---
+title: "文生图"
+api: "POST /api/v1/task/submit"
+description: "Grok Imagine 文生图 —— 基于文本提示生成图像（xAI）"
+---
+
+使用 xAI 的 Grok Imagine 从文本生成图像。提供 lite / standard / pro 三档，区别在于质量、批量上限和价格。Grok Imagine 对内容限制较少。
+
+### 可用模型
+
+`grok-imagine/text-to-image-lite` · `grok-imagine/text-to-image-standard` · `grok-imagine/text-to-image-pro`
+
+### 档位对比
+
+<AccordionGroup>
+  <Accordion title="grok-imagine/text-to-image-lite">
+    **最低价**
+    - 价格：$0.001 / 张
+    - `n` 范围：1-4
+    - 输出尺寸固定 1024×1024（**不接受** `ratio` / `resolution` 参数）
+    - 场景：草图、大批量探索
+  </Accordion>
+  <Accordion title="grok-imagine/text-to-image-standard">
+    **平衡档**
+    - 价格：$0.0012 / 张
+    - `n` 范围：1-10
+  </Accordion>
+  <Accordion title="grok-imagine/text-to-image-pro">
+    **最高质量**
+    - 价格：$0.0015 / 张
+    - `n` 范围：1-10
+  </Accordion>
+</AccordionGroup>
+
+<ParamField body="model" type="string" required>
+  `grok-imagine/text-to-image-lite`、`grok-imagine/text-to-image-standard`、`grok-imagine/text-to-image-pro` 之一。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调 URL。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="参数" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      图像描述提示词。
+    </ParamField>
+    <ParamField body="n" type="integer">
+      生成图片数量，默认 `1`。
+
+      - `lite`：1-4
+      - `standard` / `pro`：1-10
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      宽高比。可选：`1:1`、`16:9`、`9:16`。默认 `1:1`。
+
+      **`text-to-image-lite` 不支持**（lite 档输出固定 1024×1024）。
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      输出分辨率。可选：`720p`、`1080p`。默认 `720p`。
+
+      **说明：** 当 `ratio` 为 `1:1` 时该参数被忽略（固定输出 1024×1024）；`text-to-image-lite` 也不支持该参数。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash lite
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "grok-imagine/text-to-image-lite",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "赛博朋克武士，霓虹雨夜的东京",
+    "n": 2
+  }
+}'
+```
+
+```bash pro
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "grok-imagine/text-to-image-pro",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "宇航员喝茶肖像，写实风格",
+    "n": 1,
+    "ratio": "1:1"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## 查询结果
+
+通过 [查询任务](/cn/api-reference/query-task) 或 Webhook 获取结果。
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "SUCCESS",
+    "result": {
+      "type": "image",
+      "urls": ["https://cdn.maxapi.io/images/.../image-0.jpg"]
+    }
+  }
+}
+```
+
+<Note>
+  平均生成时间 5-20 秒。图片托管在 Max API 自有 CDN。
+</Note>

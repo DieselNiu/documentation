@@ -101,4 +101,16 @@ PENDING → PROCESSING → SUBMITTED → SUCCESS
     | `nano-banana-2` | Gemini 3.1 Flash | Fast & high quality (~10-20s) |
     | `nano-banana-pro` | Gemini 3.0 Pro | High quality (~30-60s) |
   </Tab>
+  <Tab title="Grok Imagine (xAI)">
+    | model | Type | Description |
+    |-------|------|-------------|
+    | `grok-imagine/text-to-image-lite` | image | Text→Image, $0.001/image, `n` up to 4 |
+    | `grok-imagine/text-to-image-standard` | image | Text→Image, $0.0012/image, `n` up to 10 |
+    | `grok-imagine/text-to-image-pro` | image | Text→Image, $0.0015/image, `n` up to 10 |
+    | `grok-imagine/image-to-image` | image | Image edit (1-2 refs, fixed 1024×1024), $0.015/image |
+    | `grok-imagine/text-to-video` | video | `duration` 6/10/12/16/20s, $0.007/s |
+    | `grok-imagine/image-to-video` | video | Up to 5 reference images, $0.007/s |
+
+    Common params: `ratio` (`1:1` · `16:9` · `9:16`), `resolution` (images: `720p`/`1080p` · videos: `480p`/`720p`), `mode` (videos only: `fun`/`normal`/`spicy`/`custom`).
+  </Tab>
 </Tabs>

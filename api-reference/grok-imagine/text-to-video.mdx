@@ -1,0 +1,82 @@
+---
+title: "Text to Video"
+api: "POST /api/v1/task/submit"
+description: "Grok Imagine Text-to-Video — Generate videos from a text prompt (xAI)"
+---
+
+Create short videos from a text prompt using xAI's Grok Imagine Video.
+
+### Available Model
+
+`grok-imagine/text-to-video` — $0.007 per second of generated video.
+
+### Supported Options
+
+- `duration`: `6`, `10`, `12`, `16`, `20` seconds
+- `ratio`: `1:1`, `16:9`, `9:16`
+- `resolution`: `480p`, `720p`
+- `mode`: `fun`, `normal`, `spicy`, `custom`
+
+<ParamField body="model" type="string" required>
+  Must be `grok-imagine/text-to-video`.
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      Describe the scene.
+    </ParamField>
+    <ParamField body="duration" type="integer">
+      Duration in seconds. One of: `6`, `10`, `12`, `16`, `20`. Default: `6`.
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      Aspect ratio. `1:1`, `16:9`, or `9:16`. Default: `9:16` (vertical).
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      `480p` or `720p`. Default: `720p`.
+    </ParamField>
+    <ParamField body="mode" type="string">
+      `fun`, `normal`, `spicy`, or `custom`. Default: `custom`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "grok-imagine/text-to-video",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "A dog surfing a giant wave at golden hour, cinematic",
+    "duration": 10,
+    "ratio": "16:9",
+    "resolution": "720p",
+    "mode": "normal"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+<Note>
+  Typical generation time: under 5 minutes. The result is delivered via Webhook or the [Query Task](/api-reference/query-task) endpoint as an MP4 URL hosted on Max API's CDN.
+</Note>

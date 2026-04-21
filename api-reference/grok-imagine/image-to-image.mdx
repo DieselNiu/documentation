@@ -1,0 +1,67 @@
+---
+title: "Image to Image"
+api: "POST /api/v1/task/submit"
+description: "Grok Imagine Image-to-Image — Edit existing images with text prompts (xAI)"
+---
+
+Edit up to two reference images with a text prompt. Upstream locks output to 1024×1024, so `ratio` and `resolution` are not accepted.
+
+### Available Model
+
+`grok-imagine/image-to-image` — $0.015 per image.
+
+<ParamField body="model" type="string" required>
+  Must be `grok-imagine/image-to-image`.
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      Describe the edit to apply to the reference image(s).
+    </ParamField>
+    <ParamField body="imageUrls" type="array" required>
+      1-2 reference image URLs (publicly accessible).
+    </ParamField>
+    <ParamField body="n" type="integer">
+      Number of outputs. Range: 1-2. Default: `1`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "grok-imagine/image-to-image",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "Put the subject in a neon-lit alley at night",
+    "imageUrls": ["https://example.com/portrait.jpg"],
+    "n": 1
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+<Note>
+  Output is always 1024×1024. Provide at most 2 reference images.
+</Note>

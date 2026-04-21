@@ -76,6 +76,17 @@
                   "api-reference/query-task",
                   "api-reference/webhook"
                 ]
+              },
+              {
+                "group": "Grok Imagine (xAI)",
+                "pages": [
+                  "api-reference/grok-imagine/text-to-image",
+                  "api-reference/grok-imagine/image-to-image",
+                  "api-reference/grok-imagine/text-to-video",
+                  "api-reference/grok-imagine/image-to-video",
+                  "api-reference/query-task",
+                  "api-reference/webhook"
+                ]
               }
             ]
           }
@@ -136,6 +147,17 @@
                 "pages": [
                   "cn/api-reference/seedream-image/text-to-image",
                   "cn/api-reference/seedream-image/image-to-image",
+                  "cn/api-reference/query-task",
+                  "cn/api-reference/webhook"
+                ]
+              },
+              {
+                "group": "Grok Imagine (xAI)",
+                "pages": [
+                  "cn/api-reference/grok-imagine/text-to-image",
+                  "cn/api-reference/grok-imagine/image-to-image",
+                  "cn/api-reference/grok-imagine/text-to-video",
+                  "cn/api-reference/grok-imagine/image-to-video",
                   "cn/api-reference/query-task",
                   "cn/api-reference/webhook"
                 ]

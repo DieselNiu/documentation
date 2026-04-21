@@ -1,0 +1,82 @@
+---
+title: "文生视频"
+api: "POST /api/v1/task/submit"
+description: "Grok Imagine 文生视频 —— 基于文本提示生成视频（xAI）"
+---
+
+基于文本提示生成短视频。
+
+### 可用模型
+
+`grok-imagine/text-to-video` —— $0.007 / 秒。
+
+### 可选参数
+
+- `duration`：`6`、`10`、`12`、`16`、`20` 秒
+- `ratio`：`1:1`、`16:9`、`9:16`
+- `resolution`：`480p`、`720p`
+- `mode`：`fun`、`normal`、`spicy`、`custom`
+
+<ParamField body="model" type="string" required>
+  固定为 `grok-imagine/text-to-video`。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调 URL。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="参数" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      场景描述。
+    </ParamField>
+    <ParamField body="duration" type="integer">
+      时长秒数，可选 `6`、`10`、`12`、`16`、`20`。默认 `6`。
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      宽高比。`1:1`、`16:9`、`9:16`。默认 `9:16`（竖屏）。
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      `480p` 或 `720p`，默认 `720p`。
+    </ParamField>
+    <ParamField body="mode" type="string">
+      `fun`、`normal`、`spicy`、`custom`。默认 `custom`。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "grok-imagine/text-to-video",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "金色余晖下，小狗冲浪越过巨浪，电影感",
+    "duration": 10,
+    "ratio": "16:9",
+    "resolution": "720p",
+    "mode": "normal"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+<Note>
+  生成时间通常 5 分钟内。结果通过 Webhook 或 [查询任务](/cn/api-reference/query-task) 获取（MP4 URL，托管在 Max API CDN）。
+</Note>

@@ -1,0 +1,81 @@
+---
+title: "图生视频"
+api: "POST /api/v1/task/submit"
+description: "Grok Imagine 图生视频 —— 以参考图引导视频生成（xAI）"
+---
+
+用 1-5 张参考图加文本提示，生成带有运动和镜头变化的短视频。
+
+### 可用模型
+
+`grok-imagine/image-to-video` —— $0.007 / 秒。
+
+<ParamField body="model" type="string" required>
+  固定为 `grok-imagine/image-to-video`。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调 URL。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="参数" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      描述镜头运动与场景演变。
+    </ParamField>
+    <ParamField body="imageUrls" type="array" required>
+      1-5 张参考图 URL（需公网可访问）。
+    </ParamField>
+    <ParamField body="duration" type="integer">
+      时长，`6`/`10`/`12`/`16`/`20`。默认 `6`。
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      `1:1`、`16:9`、`9:16`。默认 `9:16`。
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      `480p` 或 `720p`。默认 `720p`。
+    </ParamField>
+    <ParamField body="mode" type="string">
+      `fun`、`normal`、`spicy`、`custom`。默认 `custom`。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "grok-imagine/image-to-video",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "镜头缓慢推进，主体转头",
+    "imageUrls": [
+      "https://example.com/portrait-a.jpg",
+      "https://example.com/portrait-b.jpg"
+    ],
+    "duration": 10,
+    "ratio": "9:16",
+    "mode": "normal"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+<Note>
+  最多 5 张参考图。后端会下载参考图后转发给上游，请确保 URL 公网可达。
+</Note>
