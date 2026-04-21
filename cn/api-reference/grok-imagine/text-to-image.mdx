@@ -17,7 +17,7 @@ description: "Grok Imagine 文生图 —— 基于文本提示生成图像（xAI
     **最低价**
     - 价格：$0.001 / 张
     - `n` 范围：1-4
-    - 输出为竖屏图片，具体尺寸由 Grok 决定（每次可能不同），**不接受** `ratio` / `resolution` 参数
+    - 输出尺寸由 Grok 根据 prompt 语义推断（例如写"横版风景"会出横图，"竖版肖像"会出竖图）。**不接受** `ratio` / `resolution` 参数 —— 需要指定方向请在 prompt 里描述。
     - 场景：草图、大批量探索
   </Accordion>
   <Accordion title="grok-imagine/text-to-image-standard">
@@ -54,7 +54,7 @@ description: "Grok Imagine 文生图 —— 基于文本提示生成图像（xAI
     <ParamField body="ratio" type="string">
       宽高比。可选：`1:1`、`16:9`、`9:16`。默认 `1:1`。
 
-      **`text-to-image-lite` 不支持** —— lite 档输出为竖屏图片，具体尺寸由 Grok 决定。
+      **`text-to-image-lite` 不支持** —— 想指定方向请在 `prompt` 里描述（例如"一张宽幅电影感风景"或"一张竖版人物肖像"）。
     </ParamField>
     <ParamField body="resolution" type="string">
       输出分辨率。可选：`720p`、`1080p`。默认 `720p`。
