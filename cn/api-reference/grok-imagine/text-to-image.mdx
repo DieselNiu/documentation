@@ -80,6 +80,23 @@ curl --request POST \
 }'
 ```
 
+```bash standard
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "grok-imagine/text-to-image-standard",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "赛博朋克武士，霓虹雨夜的东京",
+    "n": 4,
+    "ratio": "16:9",
+    "resolution": "720p"
+  }
+}'
+```
+
 ```bash pro
 curl --request POST \
   --url https://api.maxapi.io/api/v1/task/submit \
