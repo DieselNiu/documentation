@@ -17,7 +17,7 @@ Generate images from text using xAI's Grok Imagine. Three tiers differ in qualit
     **Cheapest tier**
     - Price: $0.001 per image
     - `n` range: 1-4
-    - Output: always 1024×1024 (does **not** accept `ratio` / `resolution`)
+    - Output dimensions decided by Grok's chat engine (typically ~784×1168 portrait, varies per generation). Does **not** accept `ratio` / `resolution`.
     - Best for: drafts, high-volume exploration
   </Accordion>
   <Accordion title="grok-imagine/text-to-image-standard">
@@ -54,7 +54,7 @@ Generate images from text using xAI's Grok Imagine. Three tiers differ in qualit
     <ParamField body="ratio" type="string">
       Aspect ratio. Options: `1:1`, `16:9`, `9:16`. Default: `1:1`.
 
-      **Not supported by `text-to-image-lite`** (lite output is always 1024×1024).
+      **Not supported by `text-to-image-lite`** — lite output dimensions are decided by Grok (typically portrait, varies per generation).
     </ParamField>
     <ParamField body="resolution" type="string">
       Output resolution. Options: `720p`, `1080p`. Default: `720p`.
