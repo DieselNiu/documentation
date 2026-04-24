@@ -1,0 +1,95 @@
+---
+title: "文生图"
+api: "POST /api/v1/task/submit"
+description: "GPT Image 2 文生图 —— 基于文本提示生成图像（OpenAI 兼容接口）"
+---
+
+使用 GPT Image 2 从文本生成图像。上游是同步接口；平台仍然走标准的 submit / query / webhook 异步任务流程。
+
+### 可用模型
+
+`gpt-image-2/text-to-image`
+
+### 价格
+
+- **$0.006 / 张**（固定）
+
+<ParamField body="model" type="string" required>
+  `gpt-image-2/text-to-image`
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调地址。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      生成图像的文本描述。
+    </ParamField>
+    <ParamField body="n" type="integer">
+      生成张数。范围 `1-4`，默认 `1`。
+    </ParamField>
+    <ParamField body="model" type="string">
+      上游模型变体。可选 `gpt-image-2`（默认）或 `gpt-image-1`。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash default
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "gpt-image-2/text-to-image",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "一只乌鸦在跑步",
+    "n": 1
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## 获取结果
+
+通过 [Query Task](/cn/api-reference/query-task) 或 Webhook 获取结果。
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "SUCCESS",
+    "input": {
+      "model": "gpt-image-2/text-to-image",
+      "prompt": "一只乌鸦在跑步"
+    },
+    "result": {
+      "type": "image",
+      "urls": ["https://cdn.maxapi.io/images/.../image-0.png"]
+    }
+  }
+}
+```
+
+<Note>
+  上游返回 base64，由 Max API 解码后上传 CDN；最终 `urls` 为可直接访问的图片地址。
+</Note>

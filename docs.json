@@ -87,6 +87,15 @@
                   "api-reference/query-task",
                   "api-reference/webhook"
                 ]
+              },
+              {
+                "group": "GPT Image 2 (OpenAI)",
+                "pages": [
+                  "api-reference/gpt-image-2/text-to-image",
+                  "api-reference/gpt-image-2/image-to-image",
+                  "api-reference/query-task",
+                  "api-reference/webhook"
+                ]
               }
             ]
           }
@@ -158,6 +167,15 @@
                   "cn/api-reference/grok-imagine/image-to-image",
                   "cn/api-reference/grok-imagine/text-to-video",
                   "cn/api-reference/grok-imagine/image-to-video",
+                  "cn/api-reference/query-task",
+                  "cn/api-reference/webhook"
+                ]
+              },
+              {
+                "group": "GPT Image 2 (OpenAI)",
+                "pages": [
+                  "cn/api-reference/gpt-image-2/text-to-image",
+                  "cn/api-reference/gpt-image-2/image-to-image",
                   "cn/api-reference/query-task",
                   "cn/api-reference/webhook"
                 ]

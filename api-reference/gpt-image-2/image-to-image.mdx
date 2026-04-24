@@ -1,0 +1,95 @@
+---
+title: "Image to Image"
+api: "POST /api/v1/task/submit"
+description: "GPT Image 2 Image-to-Image — Edit an existing image with a prompt"
+---
+
+Edit an existing image using GPT Image 2. Max API fetches each reference URL and forwards it as `multipart/form-data` to the upstream `/v1/images/edits` endpoint.
+
+### Available Model
+
+`gpt-image-2/image-to-image`
+
+### Pricing
+
+- **$0.006 per image** (flat)
+
+<ParamField body="model" type="string" required>
+  `gpt-image-2/image-to-image`
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      Text description of the edit to apply.
+    </ParamField>
+    <ParamField body="imageUrls" type="string[]" required>
+      Publicly reachable HTTPS URL of the source image. Upstream `/v1/images/edits` accepts only **1 image**; extra URLs are dropped. WebP is transcoded to JPEG on-the-fly.
+    </ParamField>
+    <ParamField body="n" type="integer">
+      Number of output variations. Range: `1-4`. Default: `1`.
+    </ParamField>
+    <ParamField body="model" type="string">
+      Upstream model variant. One of `gpt-image-2` (default) or `gpt-image-1`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash default
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "gpt-image-2/image-to-image",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "Turn this into a cool synthwave style",
+    "imageUrls": ["https://example.com/source.jpg"],
+    "n": 1
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## Query Result
+
+Retrieve the result via the [Query Task](/api-reference/query-task) endpoint or Webhook.
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "SUCCESS",
+    "input": {
+      "model": "gpt-image-2/image-to-image",
+      "prompt": "Turn this into a cool synthwave style"
+    },
+    "result": {
+      "type": "image",
+      "urls": ["https://cdn.maxapi.io/images/.../image-0.png"]
+    }
+  }
+}
+```

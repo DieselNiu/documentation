@@ -1,0 +1,95 @@
+---
+title: "Text to Image"
+api: "POST /api/v1/task/submit"
+description: "GPT Image 2 Text-to-Image — Generate images from text prompts (OpenAI-compatible)"
+---
+
+Generate images from text using GPT Image 2. Synchronous upstream; the API still exposes the standard async submit/query/webhook flow.
+
+### Available Model
+
+`gpt-image-2/text-to-image`
+
+### Pricing
+
+- **$0.006 per image** (flat)
+
+<ParamField body="model" type="string" required>
+  `gpt-image-2/text-to-image`
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      Text description of the image to generate.
+    </ParamField>
+    <ParamField body="n" type="integer">
+      Number of images to generate. Range: `1-4`. Default: `1`.
+    </ParamField>
+    <ParamField body="model" type="string">
+      Upstream model variant. One of `gpt-image-2` (default) or `gpt-image-1`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash default
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "gpt-image-2/text-to-image",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "A crow running down a neon-lit street",
+    "n": 1
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+---
+
+## Query Result
+
+Retrieve the result via the [Query Task](/api-reference/query-task) endpoint or Webhook.
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "status": "SUCCESS",
+    "input": {
+      "model": "gpt-image-2/text-to-image",
+      "prompt": "A crow running down a neon-lit street"
+    },
+    "result": {
+      "type": "image",
+      "urls": ["https://cdn.maxapi.io/images/.../image-0.png"]
+    }
+  }
+}
+```
+
+<Note>
+  Upstream returns base64 which we decode and upload to Max API's CDN; the result URL is a direct image link.
+</Note>
