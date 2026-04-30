@@ -16,7 +16,7 @@ description: "提交 AI 生成任务，立即返回 taskId"
 </Note>
 
 <ParamField body="model" type="string" required>
-  模型名称。如 `seedream-4.5`、`seedance-2.0` 等。详见各模型文档。
+  模型名称。如 `nano-banana`、`veo3` 等。详见各模型文档。
 </ParamField>
 
 <ParamField body="input" type="object" required>
@@ -44,7 +44,7 @@ curl --request POST \
   --header 'Authorization: Bearer <token>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "model": "seedream-4.5",
+  "model": "nano-banana",
   "input": {
     "prompt": "赛博朋克风格的东京街景"
   }

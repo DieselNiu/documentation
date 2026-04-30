@@ -46,7 +46,7 @@ description: "查询任务状态和结果"
       | 值 | 含义 | 建议处理方式 |
       |----|------|------------|
       | `CONTENT_MODERATION` | Prompt 或图片因包含真人人脸、受版权保护的人物或公众人物，或 NSFW 内容而被拒绝 | 告知用户内容违规；**不要重试** |
-      | `INVALID_PARAMETERS` | 传入参数不正确。对于 Seedance 素材生视频，请优先检查这些规则：`mediaUrls` 必须传入 1 到 12 个素材 URL，图片最多 9 张，上传视频总时长不能超过 15 秒，上传音频总时长不能超过 15 秒 | 修正请求参数后再提交；**不要直接重试** |
+      | `INVALID_PARAMETERS` | 传入参数不正确 | 修正请求参数后再提交；**不要直接重试** |
       | `INSUFFICIENT_POINTS` | 账户积分不足 | 引导用户充值；**不要重试** |
       | `null` | 无特定可操作原因 | 视情况可重试 |
     </ResponseField>
@@ -76,7 +76,7 @@ curl --request GET \
     "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad",
     "status": "SUCCESS",
     "input": {
-      "model": "seedream-4.5",
+      "model": "nano-banana",
       "prompt": "赛博朋克风格的东京街景",
       "ratio": "16:9",
       "resolution": "2k"
@@ -102,7 +102,7 @@ curl --request GET \
     "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad",
     "status": "PROCESSING",
     "input": {
-      "model": "seedream-4.5",
+      "model": "nano-banana",
       "prompt": "赛博朋克风格的东京街景"
     },
     "result": null,
@@ -121,7 +121,7 @@ curl --request GET \
     "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad",
     "status": "FAILURE",
     "input": {
-      "model": "seedance-2.0-fast",
+      "model": "veo3",
       "prompt": "..."
     },
     "result": null,

@@ -46,7 +46,7 @@ Query the current status and generation results of a task by `taskId`.
       | Value | Meaning | Recommended Action |
       |-------|---------|-------------------|
       | `CONTENT_MODERATION` | Prompt or image rejected due to real human faces, copyrighted characters or public figures, or NSFW content | Notify the user; **do not retry** |
-      | `INVALID_PARAMETERS` | Submitted parameters are invalid. For Seedance media-to-video, check these rules first: `mediaUrls` must contain 1 to 12 material URLs, include at most 9 images, total uploaded video duration must be 15 seconds or less, and total uploaded audio duration must be 15 seconds or less | Fix request parameters; **do not retry until corrected** |
+      | `INVALID_PARAMETERS` | Submitted parameters are invalid | Fix request parameters; **do not retry until corrected** |
       | `INSUFFICIENT_POINTS` | Account has insufficient credits | Prompt user to recharge; **do not retry** |
       | `null` | No specific actionable reason | May retry if appropriate |
     </ResponseField>
@@ -76,7 +76,7 @@ curl --request GET \
     "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad",
     "status": "SUCCESS",
     "input": {
-      "model": "seedream-4.5",
+      "model": "nano-banana",
       "prompt": "赛博朋克风格的东京街景",
       "ratio": "16:9",
       "resolution": "2k"
@@ -102,7 +102,7 @@ curl --request GET \
     "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad",
     "status": "PROCESSING",
     "input": {
-      "model": "seedream-4.5",
+      "model": "nano-banana",
       "prompt": "赛博朋克风格的东京街景"
     },
     "result": null,
@@ -121,7 +121,7 @@ curl --request GET \
     "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad",
     "status": "FAILURE",
     "input": {
-      "model": "seedance-2.0-fast",
+      "model": "veo3",
       "prompt": "..."
     },
     "result": null,

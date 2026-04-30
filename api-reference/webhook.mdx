@@ -22,7 +22,7 @@ The callback `data` field is identical in format to the query endpoint response:
     "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "status": "SUCCESS",
     "input": {
-      "model": "seedance-2.0-fast",
+      "model": "veo3",
       "prompt": "a cat walking in the garden",
       "ratio": "16:9",
       "resolution": "1080p",
@@ -47,7 +47,7 @@ The callback `data` field is identical in format to the query endpoint response:
     "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "status": "FAILURE",
     "input": {
-      "model": "seedance-2.0-fast",
+      "model": "veo3",
       "prompt": "...",
       "ratio": "16:9",
       "resolution": "1080p",
@@ -83,7 +83,7 @@ Always present in the response. `null` when no specific actionable reason applie
 | Value | Meaning | Recommended Action |
 |-------|---------|-------------------|
 | `CONTENT_MODERATION` | Prompt or image rejected due to real human faces, copyrighted characters or public figures, or NSFW content | Notify the user; **do not retry** |
-| `INVALID_PARAMETERS` | Submitted parameters are invalid. For Seedance media-to-video, check these rules first: `mediaUrls` must contain 1 to 12 material URLs, include at most 9 images, total uploaded video duration must be 15 seconds or less, and total uploaded audio duration must be 15 seconds or less | Fix request parameters; **do not retry until corrected** |
+| `INVALID_PARAMETERS` | Submitted parameters are invalid | Fix request parameters; **do not retry until corrected** |
 | `INSUFFICIENT_POINTS` | Account has insufficient credits | Prompt user to recharge; **do not retry** |
 | `null` | No specific actionable reason (transient error, timeout, etc.) | May retry if appropriate |
 
