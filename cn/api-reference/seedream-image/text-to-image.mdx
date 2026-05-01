@@ -32,6 +32,12 @@ description: "Seedream 文生图 — 通过文字描述生成图片"
     <ParamField body="resolution" type="string">
       分辨率。可选值：`1k`、`2k`、`4k`。
     </ParamField>
+    <ParamField body="n" type="integer">
+      生成图片数量，默认 `1`。按 `n` 线性扣费。
+
+      - `seedream-5-lite`：1–4
+      - `seedream-4` / `seedream-4.5` / `seedream-4.6`：1–15
+    </ParamField>
   </Expandable>
 </ParamField>
 
