@@ -4,7 +4,7 @@ api: "POST /api/v1/task/submit"
 description: "GPT Image 2 图生图 —— 基于参考图与提示词编辑图像"
 ---
 
-使用 GPT Image 2 编辑现有图像。Max API 会拉取每个 `imageUrls` 并以 `multipart/form-data` 转发到上游 `/v1/images/edits`。
+使用 GPT Image 2 编辑现有图像。
 
 ### 可用模型
 
@@ -12,7 +12,15 @@ description: "GPT Image 2 图生图 —— 基于参考图与提示词编辑图�
 
 ### 价格
 
-- **$0.006 / 张**（固定）
+按 **分辨率档位 × 张数** 计费，失败不扣费：
+
+| `resolution` | 单价 / 张 |
+| --- | --- |
+| `1k`（默认） | **$0.02** |
+| `2k` | **$0.04** |
+| `4k` | **$0.06** |
+
+总费用 = `n × 单价(resolution)`。
 
 <ParamField body="model" type="string" required>
   `gpt-image-2/image-to-image`
@@ -28,19 +36,32 @@ description: "GPT Image 2 图生图 —— 基于参考图与提示词编辑图�
       描述要应用的编辑效果。
     </ParamField>
     <ParamField body="imageUrls" type="string[]" required>
-      可公网访问的参考图 HTTPS URL。上游 `/v1/images/edits` 只接受 **1 张**，多传的会被丢弃。WebP 会自动转码为 JPEG。
+      可公网访问的参考图 HTTPS URL。**仅接受 1 张**。WebP 会自动转码为 JPEG。
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      图像宽高比。13 个可选值：
+
+      `1:1` / `3:2` / `2:3` / `4:3` / `3:4` / `5:4` / `4:5` / `16:9` / `9:16` / `2:1` / `1:2` / `21:9` / `9:21`
+
+      不传时由上游决定（通常贴近输入图比例）。
+
+      <Warning>
+        当 `resolution = 4k` 时，`ratio` 仅支持 `16:9` / `9:16` / `2:1` / `1:2` / `21:9` / `9:21`。
+      </Warning>
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      输出分辨率档位。可选 `1k` / `2k` / `4k`。默认 `1k`。
+
+      `ratio × resolution` → 实际像素：详见[文生图文档](/cn/api-reference/gpt-image-2/text-to-image)。
     </ParamField>
     <ParamField body="n" type="integer">
-      输出变体数量。范围 `1-4`，默认 `1`。
-    </ParamField>
-    <ParamField body="model" type="string">
-      上游模型变体。可选 `gpt-image-2`（默认）或 `gpt-image-1`。
+      输出变体数量。范围 `1-10`，默认 `1`。账单按 `n × 单价(resolution)` 线性扣费。
     </ParamField>
   </Expandable>
 </ParamField>
 
 <RequestExample>
-```bash default
+```bash 默认（1K）
 curl --request POST \
   --url https://api.maxapi.io/api/v1/task/submit \
   --header 'Authorization: Bearer <token>' \
@@ -49,9 +70,27 @@ curl --request POST \
   "model": "gpt-image-2/image-to-image",
   "callBackUrl": "https://example.com/webhook",
   "input": {
-    "prompt": "酷酷的风格",
+    "prompt": "把人物风格改成赛博朋克",
     "imageUrls": ["https://example.com/source.jpg"],
+    "ratio": "3:4",
     "n": 1
+  }
+}'
+```
+
+```bash 4K 输出
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "gpt-image-2/image-to-image",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "提升细节并放大到 4K",
+    "imageUrls": ["https://example.com/source.jpg"],
+    "ratio": "16:9",
+    "resolution": "4k"
   }
 }'
 ```
@@ -84,7 +123,7 @@ curl --request POST \
     "status": "SUCCESS",
     "input": {
       "model": "gpt-image-2/image-to-image",
-      "prompt": "酷酷的风格"
+      "prompt": "把人物风格改成赛博朋克"
     },
     "result": {
       "type": "image",

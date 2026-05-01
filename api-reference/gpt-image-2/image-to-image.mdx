@@ -1,10 +1,10 @@
 ---
 title: "Image to Image"
 api: "POST /api/v1/task/submit"
-description: "GPT Image 2 Image-to-Image — Edit an existing image with a prompt"
+description: "GPT Image 2 Image-to-Image — Edit images using a reference + prompt"
 ---
 
-Edit an existing image using GPT Image 2. Max API fetches each reference URL and forwards it as `multipart/form-data` to the upstream `/v1/images/edits` endpoint.
+Edit an existing image with GPT Image 2.
 
 ### Available Model
 
@@ -12,7 +12,15 @@ Edit an existing image using GPT Image 2. Max API fetches each reference URL and
 
 ### Pricing
 
-- **$0.006 per image** (flat)
+Billed per **resolution tier × n**. Failed tasks are not charged.
+
+| `resolution` | Unit price |
+| --- | --- |
+| `1k` (default) | **$0.02 / image** |
+| `2k` | **$0.04 / image** |
+| `4k` | **$0.06 / image** |
+
+Total cost = `n × unit_price(resolution)`.
 
 <ParamField body="model" type="string" required>
   `gpt-image-2/image-to-image`
@@ -25,22 +33,35 @@ Edit an existing image using GPT Image 2. Max API fetches each reference URL and
 <ParamField body="input" type="object" required>
   <Expandable title="properties" defaultOpen>
     <ParamField body="prompt" type="string" required>
-      Text description of the edit to apply.
+      Describe the edit to apply.
     </ParamField>
     <ParamField body="imageUrls" type="string[]" required>
-      Publicly reachable HTTPS URL of the source image. Upstream `/v1/images/edits` accepts only **1 image**; extra URLs are dropped. WebP is transcoded to JPEG on-the-fly.
+      Public HTTPS URL of the reference image. **Only 1 URL accepted.** WebP is transcoded to JPEG automatically.
+    </ParamField>
+    <ParamField body="ratio" type="string">
+      Output aspect ratio. 13 supported values:
+
+      `1:1` / `3:2` / `2:3` / `4:3` / `3:4` / `5:4` / `4:5` / `16:9` / `9:16` / `2:1` / `1:2` / `21:9` / `9:21`
+
+      Defaults to the upstream's choice (typically follows the input image's aspect).
+
+      <Warning>
+        When `resolution = 4k`, `ratio` must be one of `16:9` / `9:16` / `2:1` / `1:2` / `21:9` / `9:21`.
+      </Warning>
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      Output resolution tier. One of `1k` / `2k` / `4k`. Defaults to `1k`.
+
+      For the full `ratio × resolution` pixel matrix, see the [text-to-image docs](/api-reference/gpt-image-2/text-to-image).
     </ParamField>
     <ParamField body="n" type="integer">
-      Number of output variations. Range: `1-4`. Default: `1`.
-    </ParamField>
-    <ParamField body="model" type="string">
-      Upstream model variant. One of `gpt-image-2` (default) or `gpt-image-1`.
+      Number of output variants. Range `1-10`. Default `1`. Billed linearly: `n × unit_price(resolution)`.
     </ParamField>
   </Expandable>
 </ParamField>
 
 <RequestExample>
-```bash default
+```bash Default (1K)
 curl --request POST \
   --url https://api.maxapi.io/api/v1/task/submit \
   --header 'Authorization: Bearer <token>' \
@@ -49,9 +70,27 @@ curl --request POST \
   "model": "gpt-image-2/image-to-image",
   "callBackUrl": "https://example.com/webhook",
   "input": {
-    "prompt": "Turn this into a cool synthwave style",
+    "prompt": "Restyle the subject in cyberpunk aesthetic",
     "imageUrls": ["https://example.com/source.jpg"],
+    "ratio": "3:4",
     "n": 1
+  }
+}'
+```
+
+```bash 4K Output
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "gpt-image-2/image-to-image",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "Enhance details and upscale to 4K",
+    "imageUrls": ["https://example.com/source.jpg"],
+    "ratio": "16:9",
+    "resolution": "4k"
   }
 }'
 ```
@@ -84,7 +123,7 @@ Retrieve the result via the [Query Task](/api-reference/query-task) endpoint or 
     "status": "SUCCESS",
     "input": {
       "model": "gpt-image-2/image-to-image",
-      "prompt": "Turn this into a cool synthwave style"
+      "prompt": "Restyle the subject in cyberpunk aesthetic"
     },
     "result": {
       "type": "image",
