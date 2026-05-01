@@ -54,6 +54,7 @@
                 "pages": [
                   "api-reference/nano-banana/text-to-image",
                   "api-reference/nano-banana/image-to-image",
+                  "api-reference/nano-banana/upscale",
                   "api-reference/query-task",
                   "api-reference/webhook"
                 ]
@@ -127,6 +128,7 @@
                 "pages": [
                   "cn/api-reference/nano-banana/text-to-image",
                   "cn/api-reference/nano-banana/image-to-image",
+                  "cn/api-reference/nano-banana/upscale",
                   "cn/api-reference/query-task",
                   "cn/api-reference/webhook"
                 ]
