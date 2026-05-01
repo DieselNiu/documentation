@@ -20,10 +20,7 @@ description: "Seedream 图生图 — 基于参考图片生成新图片"
       提示词，描述你想要的变换效果。
     </ParamField>
     <ParamField body="imageUrls" type="array" required>
-      参考图片列表，1~10 张。每项可以是 URL 字符串，或 `{"url": "https://..."}` 对象。
-    </ParamField>
-    <ParamField body="negative_prompt" type="string">
-      反向提示词。
+      参考图片 URL 列表，1~10 张。
     </ParamField>
     <ParamField body="ratio" type="string">
       图片比例。可选值：`1:1`、`4:3`、`3:4`、`16:9`、`9:16`、`3:2`、`2:3`、`21:9`。
