@@ -59,6 +59,15 @@
                 ]
               },
               {
+                "group": "Seedream Image",
+                "pages": [
+                  "api-reference/seedream-image/text-to-image",
+                  "api-reference/seedream-image/image-to-image",
+                  "api-reference/query-task",
+                  "api-reference/webhook"
+                ]
+              },
+              {
                 "group": "Grok Imagine (xAI)",
                 "pages": [
                   "api-reference/grok-imagine/text-to-image",
@@ -118,6 +127,15 @@
                 "pages": [
                   "cn/api-reference/nano-banana/text-to-image",
                   "cn/api-reference/nano-banana/image-to-image",
+                  "cn/api-reference/query-task",
+                  "cn/api-reference/webhook"
+                ]
+              },
+              {
+                "group": "Seedream 图片",
+                "pages": [
+                  "cn/api-reference/seedream-image/text-to-image",
+                  "cn/api-reference/seedream-image/image-to-image",
                   "cn/api-reference/query-task",
                   "cn/api-reference/webhook"
                 ]
