@@ -43,6 +43,15 @@ Use Google Veo 3.1 to generate high-quality videos from text descriptions. Suppo
     <ParamField body="resolution" type="string">
       Resolution upscale. Options: `1080p`, `4k`. Default: standard resolution (no upscale).
     </ParamField>
+    <ParamField body="duration" type="integer">
+      Video length in seconds. Options: `4`, `6`, `8`. Default: `8`.
+
+      Credits scale linearly with duration: a 4-second video costs half of an 8-second video at the same resolution and mode. See pricing page for the exact rate per tier.
+
+      Notes:
+      - `r2v` mode supports only `8` seconds (4/6 will silently fall back to 8 with a warning).
+      - `i2v` (single-image) Quality tier supports only `8` seconds; pick `i2v-fl` (first+last frame) if you need 4s/6s at Quality.
+    </ParamField>
   </Expandable>
 </ParamField>
 

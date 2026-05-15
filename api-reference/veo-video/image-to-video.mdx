@@ -56,6 +56,14 @@ Use Google Veo 3.1 to create videos from images. Supports three modes based on t
     <ParamField body="resolution" type="string">
       Resolution upscale. Options: `1080p`, `4k`. Default: standard resolution (no upscale). Note: I2V (single image) mode does not support resolution upscale — the parameter will be ignored.
     </ParamField>
+    <ParamField body="duration" type="integer">
+      Video length in seconds. Options: `4`, `6`, `8`. Default: `8`.
+
+      Credits scale linearly with duration. Mode/tier support:
+      - `i2v-fl` (first+last frame): all tiers (Quality, Fast, Lite) support 4/6/8.
+      - `i2v` (single image): only Lite supports 4/6/8; Quality/Fast silently fall back to 8s.
+      - `r2v` (multi-image reference): only `8` supported; 4/6 silently fall back to 8.
+    </ParamField>
     <ParamField body="imageUrls" type="array" required>
       Array of image URLs. Must contain **1, 2, or 3 images**:
       - **1 image**: Single image animation (I2V) or style reference (R2V with explicit mode)

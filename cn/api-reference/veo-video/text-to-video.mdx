@@ -43,6 +43,15 @@ description: "Veo 3 文本生成视频 — 从文本描述生成高质量视频"
     <ParamField body="resolution" type="string">
       分辨率放大。可选值：`1080p`、`4k`。不传则为默认分辨率（不放大）。
     </ParamField>
+    <ParamField body="duration" type="integer">
+      视频时长（秒）。可选值：`4`、`6`、`8`。默认值：`8`。
+
+      Credits 按时长线性折扣：相同模式与分辨率下，4 秒视频费用为 8 秒视频的一半。具体费率见定价页。
+
+      注意：
+      - `r2v` 模式仅支持 `8` 秒；传 4/6 会回退到 8 秒并打 warn 日志。
+      - `i2v`（单张图片）Quality 等级仅支持 `8` 秒；如需 4s/6s 请选 `i2v-fl`（首尾帧）。
+    </ParamField>
   </Expandable>
 </ParamField>
 

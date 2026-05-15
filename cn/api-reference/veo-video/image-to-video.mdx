@@ -56,6 +56,14 @@ description: "Veo 3 图片生成视频 — 为图片添加动画或从图片参�
     <ParamField body="resolution" type="string">
       分辨率放大。可选值：`1080p`、`4k`。不传则为默认分辨率（不放大）。注意：I2V 单图模式不支持分辨率放大，传入会被忽略。
     </ParamField>
+    <ParamField body="duration" type="integer">
+      视频时长（秒）。可选值：`4`、`6`、`8`。默认值：`8`。
+
+      Credits 按时长线性折扣。各模式/等级支持情况：
+      - `i2v-fl`（首尾帧）：所有等级（Quality/Fast/Lite）均支持 4/6/8。
+      - `i2v`（单图）：仅 Lite 支持 4/6/8；Quality/Fast 会静默回退到 8 秒。
+      - `r2v`（多图参考）：仅支持 `8` 秒；传 4/6 会静默回退到 8 秒。
+    </ParamField>
     <ParamField body="imageUrls" type="array" required>
       图片 URL 数组。必须包含 **1、2 或 3 张图片**：
       - **1 张图片**：单图动画（I2V）或风格参考（显式指定 R2V 模式）
