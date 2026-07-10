@@ -1,0 +1,77 @@
+---
+title: "Lora 图片生成和编辑"
+api: "POST /api/v1/task/submit"
+description: "Z Image Lora 和 Qwen Image Edit Lora"
+---
+
+使用 Lora 图片模型生成或编辑图片。对外模型 ID 使用 `lora`。
+
+### 可用模型
+
+`z-image-lora` · `qwen-image-edit-lora`
+
+### 价格
+
+| 模型                   | 单位 | 价格   |
+| ---------------------- | ---- | ------ |
+| `z-image-lora`         | 张   | $0.013 |
+| `qwen-image-edit-lora` | 张   | $0.040 |
+
+`z-image-lora` 传入 `prompt_extend=true` 会额外增加 $0.001。积分按整数向上取整。
+
+<ParamField body="model" type="string" required>
+  `z-image-lora` 或 `qwen-image-edit-lora`。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调地址。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="z-image-lora 属性" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      图片生成提示词。
+    </ParamField>
+    <ParamField body="width" type="integer">
+      输出宽度，256-1536。默认 `1024`。
+    </ParamField>
+    <ParamField body="height" type="integer">
+      输出高度，256-1536。默认 `1536`。
+    </ParamField>
+    <ParamField body="prompt_extend" type="boolean">
+      是否启用提示词优化。MaxAPI 默认 `false`。
+    </ParamField>
+    <ParamField body="seed" type="integer">
+      可选随机种子。
+    </ParamField>
+  </Expandable>
+  <Expandable title="qwen-image-edit-lora 属性">
+    <ParamField body="prompt" type="string" required>
+      图片编辑指令。
+    </ParamField>
+    <ParamField body="image" type="string" required>
+      公开可访问的 HTTP/HTTPS 图片 URL。不支持 base64。
+    </ParamField>
+    <ParamField body="seed" type="integer">
+      可选随机种子。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "z-image-lora",
+  "input": {
+    "prompt": "电影感人像，强烈轮廓光",
+    "width": 1024,
+    "height": 1536,
+    "prompt_extend": true
+  }
+}'
+```
+</RequestExample>

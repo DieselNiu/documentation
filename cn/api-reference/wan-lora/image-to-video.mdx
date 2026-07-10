@@ -1,0 +1,89 @@
+---
+title: "Wan Lora 图生视频"
+api: "POST /api/v1/task/submit"
+description: "Wan Lora 图生视频 — 根据图片和提示词生成视频"
+---
+
+使用 Wan Lora 图生视频模型，根据图片和提示词生成视频。对外模型 ID 使用 `lora`。
+
+### 可用模型
+
+`wan2.2-i2v-lora` · `wan2.7-i2v-lora`
+
+### 价格
+
+| 模型              | 分辨率  | 时长    | 价格       |
+| ----------------- | ------- | ------- | ---------- |
+| `wan2.2-i2v-lora` | `480p`  | `5`     | $0.27      |
+| `wan2.2-i2v-lora` | `720p`  | `5`     | $0.54      |
+| `wan2.2-i2v-lora` | `480p`  | `8`     | $0.43      |
+| `wan2.2-i2v-lora` | `720p`  | `8`     | $0.86      |
+| `wan2.7-i2v-lora` | `720p`  | 2-15 秒 | $0.17 / 秒 |
+| `wan2.7-i2v-lora` | `1080p` | 2-15 秒 | $0.27 / 秒 |
+
+`prompt_extend=true` 会额外增加 $0.001。积分按整数向上取整。
+
+<ParamField body="model" type="string" required>
+  `wan2.2-i2v-lora` 或 `wan2.7-i2v-lora`。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调地址。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="属性" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      描述视频画面和运动。
+    </ParamField>
+    <ParamField body="image" type="string" required>
+      公开可访问的 HTTP/HTTPS 图片 URL。不支持 base64。
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      `wan2.2-i2v-lora`: `480p` 或 `720p`，默认 `480p`。 `wan2.7-i2v-lora`:
+      `720p` 或 `1080p`，MaxAPI 默认 `720p`。
+    </ParamField>
+    <ParamField body="duration" type="integer">
+      `wan2.2-i2v-lora`: `5` 或 `8`，默认 `5`。 `wan2.7-i2v-lora`: `2` 到
+      `15`，默认 `5`。
+    </ParamField>
+    <ParamField body="prompt_extend" type="boolean">
+      是否启用提示词优化。MaxAPI 默认 `false`。
+    </ParamField>
+    <ParamField body="last_image" type="string">
+      `wan2.2-i2v-lora` 可选的尾帧参考图 URL。不支持 base64。
+    </ParamField>
+    <ParamField body="negative_prompt" type="string">
+      `wan2.7-i2v-lora` 可选负向提示词。
+    </ParamField>
+    <ParamField body="audio_url" type="string">
+      `wan2.7-i2v-lora` 可选 HTTP/HTTPS 音频 URL。不支持 base64。
+    </ParamField>
+    <ParamField body="audio" type="boolean">
+      `wan2.7-i2v-lora` 是否输出音频。
+    </ParamField>
+    <ParamField body="seed" type="integer">
+      可选随机种子。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan2.7-i2v-lora",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "角色转向镜头，电影感灯光",
+    "image": "https://example.com/input.png",
+    "resolution": "720p",
+    "duration": 5,
+    "prompt_extend": true
+  }
+}'
+```
+</RequestExample>

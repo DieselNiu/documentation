@@ -1,0 +1,57 @@
+---
+title: "Face Swap"
+api: "POST /api/v1/task/submit"
+description: "Face Swap — 替换图片中的人脸"
+---
+
+使用参考人脸图片替换目标图片中的人脸。
+
+### 可用模型
+
+`face-swap`
+
+### 价格
+
+| 模型        | 单位 | 价格   |
+| ----------- | ---- | ------ |
+| `face-swap` | 张   | $0.013 |
+
+积分按整数向上取整。
+
+<ParamField body="model" type="string" required>
+  必须是 `face-swap`。
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook 回调地址。
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="属性" defaultOpen>
+    <ParamField body="image" type="string" required>
+      目标图片的公开 HTTP/HTTPS URL。不支持 base64。
+    </ParamField>
+    <ParamField body="face_image" type="string" required>
+      参考人脸图片的公开 HTTP/HTTPS URL。不支持 base64。
+    </ParamField>
+    <ParamField body="seed" type="integer">
+      可选随机种子。
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "face-swap",
+  "input": {
+    "image": "https://example.com/target.jpg",
+    "face_image": "https://example.com/face.jpg"
+  }
+}'
+```
+</RequestExample>

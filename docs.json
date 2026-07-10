@@ -86,6 +86,16 @@
                   "api-reference/query-task",
                   "api-reference/webhook"
                 ]
+              },
+              {
+                "group": "Wan Lora",
+                "pages": [
+                  "api-reference/wan-lora/image-to-video",
+                  "api-reference/wan-lora/image-generation-edit",
+                  "api-reference/wan-lora/face-swap",
+                  "api-reference/query-task",
+                  "api-reference/webhook"
+                ]
               }
             ]
           }
@@ -159,6 +169,16 @@
                   "cn/api-reference/query-task",
                   "cn/api-reference/webhook"
                 ]
+              },
+              {
+                "group": "Wan Lora",
+                "pages": [
+                  "cn/api-reference/wan-lora/image-to-video",
+                  "cn/api-reference/wan-lora/image-generation-edit",
+                  "cn/api-reference/wan-lora/face-swap",
+                  "cn/api-reference/query-task",
+                  "cn/api-reference/webhook"
+                ]
               }
             ]
           }
@@ -179,13 +199,7 @@
     }
   },
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "cursor"
-    ]
+    "options": ["copy", "view", "chatgpt", "claude", "cursor"]
   },
   "footer": {
     "socials": {

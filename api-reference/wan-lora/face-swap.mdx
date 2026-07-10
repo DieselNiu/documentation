@@ -1,0 +1,70 @@
+---
+title: "Face Swap"
+api: "POST /api/v1/task/submit"
+description: "Face Swap — Replace a face in an image"
+---
+
+Swap a face in a source image using a reference face image.
+
+### Available Model
+
+`face-swap`
+
+### Pricing
+
+| Model       | Unit  | Price  |
+| ----------- | ----- | ------ |
+| `face-swap` | image | $0.013 |
+
+Credits are rounded up to whole credits.
+
+<ParamField body="model" type="string" required>
+  Must be `face-swap`.
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="image" type="string" required>
+      Public HTTP/HTTPS URL for the target image. Base64 input is not supported.
+    </ParamField>
+    <ParamField body="face_image" type="string" required>
+      Public HTTP/HTTPS URL for the reference face image. Base64 input is not
+      supported.
+    </ParamField>
+    <ParamField body="seed" type="integer">
+      Optional random seed.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "face-swap",
+  "input": {
+    "image": "https://example.com/target.jpg",
+    "face_image": "https://example.com/face.jpg"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad"
+  }
+}
+```
+</ResponseExample>

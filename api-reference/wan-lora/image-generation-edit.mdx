@@ -1,0 +1,89 @@
+---
+title: "Lora Image Generation and Edit"
+api: "POST /api/v1/task/submit"
+description: "Z Image Lora and Qwen Image Edit Lora"
+---
+
+Generate or edit images with Lora image models. Public model IDs use `lora`.
+
+### Available Models
+
+`z-image-lora` · `qwen-image-edit-lora`
+
+### Pricing
+
+| Model                  | Unit  | Price  |
+| ---------------------- | ----- | ------ |
+| `z-image-lora`         | image | $0.013 |
+| `qwen-image-edit-lora` | image | $0.040 |
+
+For `z-image-lora`, `prompt_extend=true` adds $0.001 to the request. Credits are rounded up to whole credits.
+
+<ParamField body="model" type="string" required>
+  `z-image-lora` or `qwen-image-edit-lora`.
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="z-image-lora properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      Text prompt for image generation.
+    </ParamField>
+    <ParamField body="width" type="integer">
+      Output width, 256-1536. Default `1024`.
+    </ParamField>
+    <ParamField body="height" type="integer">
+      Output height, 256-1536. Default `1536`.
+    </ParamField>
+    <ParamField body="prompt_extend" type="boolean">
+      Enable prompt optimization. Default `false` in MaxAPI.
+    </ParamField>
+    <ParamField body="seed" type="integer">
+      Optional random seed.
+    </ParamField>
+  </Expandable>
+  <Expandable title="qwen-image-edit-lora properties">
+    <ParamField body="prompt" type="string" required>
+      Edit instruction.
+    </ParamField>
+    <ParamField body="image" type="string" required>
+      Public HTTP/HTTPS image URL. Base64 input is not supported.
+    </ParamField>
+    <ParamField body="seed" type="integer">
+      Optional random seed.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "z-image-lora",
+  "input": {
+    "prompt": "A cinematic portrait with dramatic rim light",
+    "width": 1024,
+    "height": 1536,
+    "prompt_extend": true
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad"
+  }
+}
+```
+</ResponseExample>

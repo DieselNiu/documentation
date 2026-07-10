@@ -1,0 +1,108 @@
+---
+title: "Wan Lora Image to Video"
+api: "POST /api/v1/task/submit"
+description: "Wan Lora Image-to-Video — Generate videos from an image and prompt"
+---
+
+Generate Wan Lora image-to-video tasks using an image and prompt. Public model IDs use `lora`.
+
+### Available Models
+
+`wan2.2-i2v-lora` · `wan2.7-i2v-lora`
+
+### Pricing
+
+| Model             | Resolution | Duration     | Price          |
+| ----------------- | ---------- | ------------ | -------------- |
+| `wan2.2-i2v-lora` | `480p`     | `5`          | $0.27          |
+| `wan2.2-i2v-lora` | `720p`     | `5`          | $0.54          |
+| `wan2.2-i2v-lora` | `480p`     | `8`          | $0.43          |
+| `wan2.2-i2v-lora` | `720p`     | `8`          | $0.86          |
+| `wan2.7-i2v-lora` | `720p`     | 2-15 seconds | $0.17 / second |
+| `wan2.7-i2v-lora` | `1080p`    | 2-15 seconds | $0.27 / second |
+
+`prompt_extend=true` adds $0.001 to the request. Credits are rounded up to whole credits.
+
+<ParamField body="model" type="string" required>
+  `wan2.2-i2v-lora` or `wan2.7-i2v-lora`.
+</ParamField>
+
+<ParamField body="callBackUrl" type="string">
+  Webhook callback URL.
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  <Expandable title="properties" defaultOpen>
+    <ParamField body="prompt" type="string" required>
+      Prompt describing the desired motion and scene.
+    </ParamField>
+    <ParamField body="image" type="string" required>
+      Public HTTP/HTTPS image URL. Base64 input is not supported.
+    </ParamField>
+    <ParamField body="resolution" type="string">
+      For `wan2.2-i2v-lora`: `480p` or `720p`. Default `480p`. For
+      `wan2.7-i2v-lora`: `720p` or `1080p`. Default `720p` in MaxAPI.
+    </ParamField>
+    <ParamField body="duration" type="integer">
+      For `wan2.2-i2v-lora`: `5` or `8`. Default `5`. For `wan2.7-i2v-lora`: `2`
+      to `15`. Default `5`.
+    </ParamField>
+    <ParamField body="prompt_extend" type="boolean">
+      Enable prompt optimization. Default `false` in MaxAPI.
+    </ParamField>
+    <ParamField body="last_image" type="string">
+      Optional final reference image URL for `wan2.2-i2v-lora`. Base64 input is
+      not supported.
+    </ParamField>
+    <ParamField body="negative_prompt" type="string">
+      Optional negative prompt for `wan2.7-i2v-lora`.
+    </ParamField>
+    <ParamField body="audio_url" type="string">
+      Optional HTTP/HTTPS audio URL for `wan2.7-i2v-lora`. Base64 input is not
+      supported.
+    </ParamField>
+    <ParamField body="audio" type="boolean">
+      Whether to include audio output for `wan2.7-i2v-lora`.
+    </ParamField>
+    <ParamField body="seed" type="integer">
+      Optional random seed.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan2.7-i2v-lora",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "A character turns toward the camera with cinematic lighting",
+    "image": "https://example.com/input.png",
+    "resolution": "720p",
+    "duration": 5,
+    "prompt_extend": true
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Submitted successfully
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}
+```
+</ResponseExample>
+
+<Note>
+  Retrieve the final video URLs through the Query Task endpoint or your webhook.
+  Result URLs may expire; download files promptly.
+</Note>
