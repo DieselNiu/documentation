@@ -36,7 +36,7 @@ Total cost = `n × unit_price(resolution)`.
       Describe the edit to apply.
     </ParamField>
     <ParamField body="imageUrls" type="string[]" required>
-      Public HTTPS URL of the reference image. **Only 1 URL accepted.** WebP is transcoded to JPEG automatically.
+      Array of public HTTPS URLs to reference images, **up to 16**. When multiple are provided, they are all used as references, in order. WebP is transcoded to JPEG automatically.
     </ParamField>
     <ParamField body="ratio" type="string">
       Output aspect ratio. 13 supported values:
@@ -73,6 +73,26 @@ curl --request POST \
     "prompt": "Restyle the subject in cyberpunk aesthetic",
     "imageUrls": ["https://example.com/source.jpg"],
     "ratio": "3:4",
+    "n": 1
+  }
+}'
+```
+
+```bash Multiple references
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "gpt-image-2/image-to-image",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "Place the subject from image 1 into the scene from image 2",
+    "imageUrls": [
+      "https://example.com/subject.jpg",
+      "https://example.com/scene.jpg"
+    ],
+    "ratio": "16:9",
     "n": 1
   }
 }'

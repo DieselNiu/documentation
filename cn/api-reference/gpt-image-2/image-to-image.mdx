@@ -36,7 +36,7 @@ description: "GPT Image 2 图生图 —— 基于参考图与提示词编辑图�
       描述要应用的编辑效果。
     </ParamField>
     <ParamField body="imageUrls" type="string[]" required>
-      可公网访问的参考图 HTTPS URL。**仅接受 1 张**。WebP 会自动转码为 JPEG。
+      可公网访问的参考图 HTTPS URL 数组，**最多 16 张**。传多张时按顺序作为参考图一起参与编辑。WebP 会自动转码为 JPEG。
     </ParamField>
     <ParamField body="ratio" type="string">
       图像宽高比。13 个可选值：
@@ -73,6 +73,26 @@ curl --request POST \
     "prompt": "把人物风格改成赛博朋克",
     "imageUrls": ["https://example.com/source.jpg"],
     "ratio": "3:4",
+    "n": 1
+  }
+}'
+```
+
+```bash 多参考图
+curl --request POST \
+  --url https://api.maxapi.io/api/v1/task/submit \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "gpt-image-2/image-to-image",
+  "callBackUrl": "https://example.com/webhook",
+  "input": {
+    "prompt": "把参考图 1 的人物放进参考图 2 的场景里",
+    "imageUrls": [
+      "https://example.com/subject.jpg",
+      "https://example.com/scene.jpg"
+    ],
+    "ratio": "16:9",
     "n": 1
   }
 }'
