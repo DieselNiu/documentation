@@ -4,7 +4,7 @@ api: "POST /api/v1/task/submit"
 description: "Grok Imagine 文生图 —— 基于文本提示生成图像（xAI）"
 ---
 
-使用 xAI 的 Grok Imagine 从文本生成图像。提供 lite / standard / pro 三档，区别在于质量、批量上限和价格。Grok Imagine 对内容限制较少。
+使用 xAI 的 Grok Imagine 从文本生成图像。提供 lite / standard / pro 三档，区别在于质量和批量上限。三档价格相同，都是 $0.02 / 张。Grok Imagine 对内容限制较少。
 
 ### 可用模型
 
@@ -14,20 +14,20 @@ description: "Grok Imagine 文生图 —— 基于文本提示生成图像（xAI
 
 <AccordionGroup>
   <Accordion title="grok-imagine/text-to-image-lite">
-    **最低价**
-    - 价格：$0.001 / 张
+    **基础档**
+    - 价格：$0.02 / 张
     - `n` 范围：1-4
     - 输出尺寸由 Grok 根据 prompt 语义推断（例如写"横版风景"会出横图，"竖版肖像"会出竖图）。**不接受** `ratio` / `resolution` 参数 —— 需要指定方向请在 prompt 里描述。
     - 场景：草图、大批量探索
   </Accordion>
   <Accordion title="grok-imagine/text-to-image-standard">
     **平衡档**
-    - 价格：$0.0012 / 张
+    - 价格：$0.02 / 张
     - `n` 范围：1-10
   </Accordion>
   <Accordion title="grok-imagine/text-to-image-pro">
     **最高质量**
-    - 价格：$0.0015 / 张
+    - 价格：$0.02 / 张
     - `n` 范围：1-10
   </Accordion>
 </AccordionGroup>

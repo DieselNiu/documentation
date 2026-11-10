@@ -96,12 +96,12 @@ PENDING → PROCESSING → SUBMITTED → SUCCESS
   <Tab title="Grok Imagine（xAI）">
     | model | 类型 | 说明 |
     |-------|------|------|
-    | `grok-imagine/text-to-image-lite` | 图片 | 文生图，$0.001/张，`n` 最多 4 |
-    | `grok-imagine/text-to-image-standard` | 图片 | 文生图，$0.0012/张，`n` 最多 10 |
-    | `grok-imagine/text-to-image-pro` | 图片 | 文生图，$0.0015/张，`n` 最多 10 |
-    | `grok-imagine/image-to-image` | 图片 | 图像编辑（1-2 张参考图，固定 1024×1024），$0.015/张 |
-    | `grok-imagine/text-to-video` | 视频 | `duration` 6/10/12/16/20 秒，$0.007/秒 |
-    | `grok-imagine/image-to-video` | 视频 | 最多 5 张参考图，$0.007/秒 |
+    | `grok-imagine/text-to-image-lite` | 图片 | 文生图，$0.02/张，`n` 最多 4 |
+    | `grok-imagine/text-to-image-standard` | 图片 | 文生图，$0.02/张，`n` 最多 10 |
+    | `grok-imagine/text-to-image-pro` | 图片 | 文生图，$0.02/张，`n` 最多 10 |
+    | `grok-imagine/image-to-image` | 图片 | 图像编辑（1-2 张参考图，固定 1024×1024），$0.02/张 |
+    | `grok-imagine/text-to-video` | 视频 | `duration` 6/10/12/15 秒，480p $0.02/秒，720p $0.03/秒 |
+    | `grok-imagine/image-to-video` | 视频 | 最多 5 张参考图，480p $0.02/秒，720p $0.03/秒 |
 
     公共参数：`ratio`（`1:1` · `16:9` · `9:16`）、`resolution`（图片：`720p`/`1080p`；视频：`480p`/`720p`）、`mode`（仅视频：`fun`/`normal`/`spicy`/`custom`）。
   </Tab>
