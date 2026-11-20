@@ -5,3 +5,11 @@
 # Draft content
 drafts/
 *.draft.mdx
+
+# LoRA and Face Swap reference pages are kept in source for later publication.
+api-reference/wan-lora/image-to-video.mdx
+api-reference/wan-lora/image-generation-edit.mdx
+api-reference/wan-lora/face-swap.mdx
+cn/api-reference/wan-lora/image-to-video.mdx
+cn/api-reference/wan-lora/image-generation-edit.mdx
+cn/api-reference/wan-lora/face-swap.mdx
