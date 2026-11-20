@@ -1,0 +1,210 @@
+---
+title: "Wan Video and Image"
+api: "POST https://api.maxapi.io/api/v1/task/submit"
+description: "Wan 3.0 and 2.x API models, first and last frames, driving audio, image generation, and pricing"
+---
+
+Send a JSON body to `POST https://api.maxapi.io/api/v1/task/submit` with an [API key](/api-reference/authentication). Set `model` to an ID below and put generation settings in the `input` object. To receive a [webhook](/api-reference/webhook), optionally add a top-level `callBackUrl` string.
+
+## Video models
+
+| Model ID | `input.mode` values | `input.duration` (seconds) | `input.resolution` |
+| --- | --- | --- | --- |
+| `wan-3.0`, `wan-3.0-prime` | `text-to-video`, `image-to-video`, `first-last-frame`, `reference-to-video` | 2–30, integer | `480p`, `720p`, `1080p` |
+| `wan-2.7` | `text-to-video`, `image-to-video`, `first-last-frame` | 2–15, integer | `720p`, `1080p` |
+| `wan-2.6` | `text-to-video`, `image-to-video` | 5, 10, 15 | `720p`, `1080p` |
+| `wan-2.6-flash` | `image-to-video` | 5, 10, 15 | `720p`, `1080p` |
+| `wan-2.5` | `text-to-video`, `image-to-video` | 5, 10 | `480p`, `720p`, `1080p` |
+
+### Video request fields
+
+| Field | Type | Models | Required or default |
+| --- | --- | --- | --- |
+| `input.prompt` | string | All | Required, non-empty. Describe the action, camera motion and scene. |
+| `input.mode` | string | All | Optional. See [mode and media rules](#video-modes-and-media). |
+| `input.imageUrls` | string[] | All | Required for image, first/last frame and reference modes. The image count and order depend on the mode. |
+| `input.audioUrls` | string[] | 2.7, 2.6, 2.6 Flash, 2.5 | Optional. One driving audio URL at most. See [driving audio](#driving-audio). |
+| `input.duration` | integer | All | Defaults to `5` seconds. See the model table for allowed values. |
+| `input.resolution` | string | All | Defaults to `720p`. |
+| `input.ratio` | string | All | 3.0 and Prime default to `adaptive`. Both accept `16:9`, `9:16`, `4:3`, `3:4` and `1:1`. Wan 2.x uses these five fixed ratios for text-to-video, defaults to `16:9`, and takes its framing from the opening image in frame modes. For 2.5 at 480p, text-to-video takes `16:9`, `9:16` or `1:1`. |
+| `input.audio` | boolean | 3.0, 3.0 Prime, 2.6 Flash | Defaults to `true`. Set `false` for silent output. On Flash, omit `audioUrls` to use the silent rate. |
+| `input.negativePrompt` | string | All listed 2.x video models | Optional. Describe content or effects to avoid. |
+| `input.promptExtend` | boolean | All listed 2.x video models | Defaults to `true`. Set `false` to disable automatic prompt expansion. |
+| `input.seed` | integer or null | All | Optional, from 0 to 2147483647. Omit or send `null` to leave the seed unspecified. |
+
+### Video modes and media
+
+Pass media as JSON arrays of direct, publicly fetchable HTTP(S) file URLs. Use an array even for a single file, for example `"imageUrls": ["https://cdn.example.com/start.jpg"]`. Replace the example URLs with your own. Signed URLs must remain readable for the duration of the task without extra headers or cookies.
+
+| Mode | How to pass `input.imageUrls` |
+| --- | --- |
+| `text-to-video` | Omit the field. |
+| `image-to-video` | Exactly one image, used as the opening frame. |
+| `first-last-frame` | Exactly two images. `imageUrls[0]` is the opening frame and `imageUrls[1]` is the closing frame. Set `mode` explicitly when you need fixed frames. |
+| `reference-to-video` | Wan 3.0 and Prime only. Pass 1–10 images to guide subjects or style. |
+
+Without `mode`, zero images select text-to-video and one image selects image-to-video on models supporting those modes. **Two images on 3.0 or Prime select reference mode. Two images on 2.7 select first/last frame mode.** Flash requires one opening image. The public Wan API currently accepts image references only in reference mode. Omit `videoUrls` for all Wan models.
+
+#### Driving audio
+
+On Wan 2.x video, put one public audio file URL in `audioUrls[0]` to guide the video with a supplied track. This works with text-to-video and image-to-video where supported, and with first/last frames on Wan 2.7. A text-to-video request on those models can send a prompt and an audio URL without images. On 2.6 Flash, use `audio: false` and omit `audioUrls` for a silent clip. Wan 3.0 and Prime use `input.audio` to toggle generated sound.
+
+## Image models
+
+| Model ID | `input.resolution` | Credits per image |
+| --- | --- | --- |
+| `wan-2.7-image` | `1k`, `2k` | 4 |
+| `wan-2.7-image-pro` | `1k`, `2k`, `4k` for text-to-image only | 9 |
+
+Each task returns one image. Omit `imageUrls` for text-to-image. Provide up to nine URLs for image-to-image and describe the changes in `prompt`. Image models infer the task from `imageUrls`; omit `mode`.
+
+| Field | Type | Required or default |
+| --- | --- | --- |
+| `input.prompt` | string | Required, non-empty. |
+| `input.imageUrls` | string[] | Optional. Pass 1–9 image URLs to edit or use as references. For Pro at `4k`, omit the field. |
+| `input.resolution` | string | Defaults to `2k`. See the model table. |
+| `input.ratio` | string | Defaults to `auto`. To set a ratio explicitly, use positive integers separated by a colon, such as `16:9`. Allowed range is `1:4` to `4:1`. |
+| `input.seed` | integer or null | Optional, from 0 to 2147483647. Omit or send `null` to leave the seed unspecified. |
+
+## Request examples
+
+Choose a mode in the examples. The first example fixes both frames with `wan-3.0`. The image-to-video example passes a driving audio track with `wan-2.7`.
+
+<RequestExample>
+```bash First and last frames
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan-3.0",
+  "input": {
+    "prompt": "A locked-off shot of a skyline transitioning from daylight to night.",
+    "mode": "first-last-frame",
+    "imageUrls": [
+      "https://example.com/day.jpg",
+      "https://example.com/night.jpg"
+    ],
+    "duration": 5,
+    "resolution": "720p"
+  }
+}'
+```
+
+```bash Text to video
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan-3.0-prime",
+  "input": {
+    "prompt": "A paper boat drifts across a pond at sunrise.",
+    "mode": "text-to-video",
+    "duration": 5,
+    "ratio": "16:9"
+  }
+}'
+```
+
+```bash Image to video
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan-2.7",
+  "input": {
+    "prompt": "Open on the provided frame and follow the rhythm of the track.",
+    "mode": "image-to-video",
+    "imageUrls": [
+      "https://example.com/opening.jpg"
+    ],
+    "audioUrls": [
+      "https://example.com/rhythm.mp3"
+    ],
+    "duration": 5
+  }
+}'
+```
+
+```bash Reference to video
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan-3.0",
+  "input": {
+    "prompt": "Show the bicycle from the product photo in the studio from the second image.",
+    "mode": "reference-to-video",
+    "imageUrls": [
+      "https://example.com/product.jpg",
+      "https://example.com/studio.jpg"
+    ],
+    "duration": 5
+  }
+}'
+```
+
+```bash Text to image
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan-2.7-image-pro",
+  "input": {
+    "prompt": "An editorial photograph of a ceramic cup on a stone worktop.",
+    "resolution": "4k",
+    "ratio": "16:9"
+  }
+}'
+```
+
+```bash Image to image
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan-2.7-image",
+  "input": {
+    "prompt": "Keep the cup and replace the background with pale blue paper.",
+    "imageUrls": [
+      "https://example.com/cup.jpg"
+    ],
+    "resolution": "2k"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Task submitted
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad"
+  }
+}
+```
+</ResponseExample>
+
+## Get the result
+
+Read `data.taskId` after submission, then [query the task](/api-reference/query-task) or use a webhook. When `data.status` reaches `SUCCESS`, read the video or image URL from `data.result.urls[0]`. Stop polling on `SUCCESS`, `FAILURE`, `TIMEOUT` or `CANCELLED`.
+
+```bash
+curl "https://api.maxapi.io/api/v1/task/${TASK_ID}" \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}"
+```
+
+## Video pricing (USD per second)
+
+| Model ID | Duration (seconds) | 480p | 720p | 1080p |
+| --- | --- | --- | --- | --- |
+| `wan-3.0` | 2–30 | $0.0575 | $0.115 | $0.23 |
+| `wan-3.0-prime` | 2–30 | $0.0782 | $0.161 | $0.322 |
+| `wan-2.7` | 2–15 | — | $0.115 | $0.1725 |
+| `wan-2.6` | 5, 10, 15 | — | $0.115 | $0.1725 |
+| `wan-2.6-flash` | 5, 10, 15 | — | $0.0575 | $0.08625 |
+| `wan-2.5` | 5, 10 | $0.0575 | $0.115 | $0.1725 |
+| `wan-2.6-flash` (silent) | 5, 10, 15 | — | $0.02875 | $0.043125 |
+
+Multiply the rate by the output duration and round the total up to a whole credit. One credit is $0.01. For example, a five-second 720p clip from `wan-3.0` costs 58 credits.

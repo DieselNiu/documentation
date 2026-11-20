@@ -17,6 +17,22 @@
   },
   "redirects": [
     {
+      "source": "/cn/api-reference/models/wan-dashscope.md",
+      "destination": "/cn/api-reference/models/wan.md"
+    },
+    {
+      "source": "/cn/api-reference/models/wan-dashscope",
+      "destination": "/cn/api-reference/models/wan"
+    },
+    {
+      "source": "/api-reference/models/wan-dashscope.md",
+      "destination": "/api-reference/models/wan.md"
+    },
+    {
+      "source": "/api-reference/models/wan-dashscope",
+      "destination": "/api-reference/models/wan"
+    },
+    {
       "source": "/api-reference/models/seedance-yike",
       "destination": "/api-reference/models/seedance"
     },
@@ -85,7 +101,7 @@
               {
                 "group": "Wan and Gemini Omni",
                 "pages": [
-                  "api-reference/models/wan-dashscope",
+                  "api-reference/models/wan",
                   "api-reference/models/gemini-omni"
                 ]
               },
@@ -178,7 +194,7 @@
               {
                 "group": "万相 Wan 与 Gemini Omni",
                 "pages": [
-                  "cn/api-reference/models/wan-dashscope",
+                  "cn/api-reference/models/wan",
                   "cn/api-reference/models/gemini-omni"
                 ]
               },

@@ -1,0 +1,210 @@
+---
+title: "通义万相 Wan"
+api: "POST https://api.maxapi.io/api/v1/task/submit"
+description: "Wan 3.0 和 2.x 的接口字段、首尾帧、驱动音频、图片生成和计费"
+---
+
+使用 [API 密钥](/cn/api-reference/authentication)向 `POST https://api.maxapi.io/api/v1/task/submit` 发送 JSON 请求。顶层 `model` 填下表中的模型 ID，生成参数放在 `input` 对象内。如需接收 [Webhook](/cn/api-reference/webhook)，可在顶层传字符串字段 `callBackUrl`。
+
+## 视频模型
+
+| 模型 ID | `input.mode` 可选值 | `input.duration`（秒） | `input.resolution` |
+| --- | --- | --- | --- |
+| `wan-3.0`、`wan-3.0-prime` | `text-to-video`、`image-to-video`、`first-last-frame`、`reference-to-video` | 2–30 的整数 | `480p`、`720p`、`1080p` |
+| `wan-2.7` | `text-to-video`、`image-to-video`、`first-last-frame` | 2–15 的整数 | `720p`、`1080p` |
+| `wan-2.6` | `text-to-video`、`image-to-video` | 5、10、15 | `720p`、`1080p` |
+| `wan-2.6-flash` | `image-to-video` | 5、10、15 | `720p`、`1080p` |
+| `wan-2.5` | `text-to-video`、`image-to-video` | 5、10 | `480p`、`720p`、`1080p` |
+
+### 视频请求字段
+
+| 字段 | 类型 | 适用模型 | 必填或默认值 |
+| --- | --- | --- | --- |
+| `input.prompt` | string | 全部 | 必填，非空。描述主体动作、运镜和场景。 |
+| `input.mode` | string | 全部 | 可选。推断规则见下文「视频模式与素材」。 |
+| `input.imageUrls` | string[] | 全部 | 图生视频、首尾帧、参考生视频必填。张数和顺序取决于模式。 |
+| `input.audioUrls` | string[] | 2.7、2.6、2.6 Flash、2.5 | 可选，最多一个驱动音频 URL。 |
+| `input.duration` | integer | 全部 | 默认 `5` 秒。可选时长见模型表。 |
+| `input.resolution` | string | 全部 | 默认 `720p`。 |
+| `input.ratio` | string | 全部 | 3.0 和 Prime 默认 `adaptive`，也支持 `16:9`、`9:16`、`4:3`、`3:4`、`1:1`。Wan 2.x 文生视频使用这五种固定比例，默认 `16:9`，图生视频和首尾帧的画幅由首帧决定。2.5 的 480p 文生视频只支持 `16:9`、`9:16` 和 `1:1`。 |
+| `input.audio` | boolean | 3.0、3.0 Prime、2.6 Flash | 默认 `true`。传 `false` 输出静音。Flash 走静音价时需省略 `audioUrls`。 |
+| `input.negativePrompt` | string | 表内所有 2.x 视频模型 | 可选，描述希望避免的内容或效果。 |
+| `input.promptExtend` | boolean | 表内所有 2.x 视频模型 | 默认 `true`。传 `false` 关闭自动扩写提示词。 |
+| `input.seed` | integer 或 null | 全部 | 可选，0 到 2147483647。省略或传 `null` 表示不指定 seed。 |
+
+### 视频模式与素材
+
+素材字段都是 JSON 字符串数组。即使只传一个文件，也写成数组，例如 `"imageUrls": ["https://cdn.example.com/start.jpg"]`。请用可直连文件的公网 HTTP(S) URL 替换示例地址。签名链接需要在任务执行期间有效，且可在无需额外请求头或 Cookie 的情况下读取。
+
+| 模式 | `input.imageUrls` 怎么传 |
+| --- | --- |
+| `text-to-video` | 省略。 |
+| `image-to-video` | 恰好一张图，作为首帧。 |
+| `first-last-frame` | 恰好两张图，`imageUrls[0]` 是首帧，`imageUrls[1]` 是尾帧。需要固定首尾帧时请显式设置 `mode`。 |
+| `reference-to-video` | 仅 3.0 和 Prime 支持。传 1–10 张图，可参考主体或风格。 |
+
+省略 `mode` 时，在支持对应模式的型号上，无图推断为文生视频，单图推断为图生视频。**3.0 和 Prime 收到两张图会进入参考生视频，2.7 收到两张图会进入首尾帧。** Flash 必须传一张首帧图。Wan 当前公开接口的参考生视频只接收参考图，所有 Wan 型号均应省略 `videoUrls`。
+
+#### 驱动音频
+
+Wan 2.x 视频可在 `audioUrls[0]` 传一个公网音频文件 URL，用已有音轨驱动生成。适用于模型支持的文生视频、图生视频，以及 2.7 的首尾帧。文生视频可以只传提示词和驱动音频，省略图片。2.6 Flash 如需静音，传 `audio: false` 并省略 `audioUrls`。3.0 和 Prime 通过 `input.audio` 控制是否生成声音。
+
+## 图片模型
+
+| 模型 ID | `input.resolution` | 积分/张 |
+| --- | --- | --- |
+| `wan-2.7-image` | `1k`、`2k` | 4 |
+| `wan-2.7-image-pro` | `1k`、`2k`、`4k`（仅文生图） | 9 |
+
+每次返回一张图。文生图省略 `imageUrls`，图生图最多传九张图，在 `prompt` 里描述想修改的内容。图片模型会按 `imageUrls` 推断任务类型，请省略 `mode`。
+
+| 字段 | 类型 | 必填或默认值 |
+| --- | --- | --- |
+| `input.prompt` | string | 必填，非空。 |
+| `input.imageUrls` | string[] | 可选。图生图传 1–9 张参考图，Pro 的 `4k` 请求省略该字段。 |
+| `input.resolution` | string | 默认 `2k`。可选值见图片模型表。 |
+| `input.ratio` | string | 默认 `auto`。指定比例时使用冒号分隔的正整数，例如 `16:9`。范围为 `1:4` 到 `4:1`。 |
+| `input.seed` | integer 或 null | 可选，0 到 2147483647。省略或传 `null` 表示不指定 seed。 |
+
+## 请求示例
+
+在示例中切换所需模式。首尾帧示例使用 `wan-3.0` 固定首帧和尾帧，图生视频示例使用 `wan-2.7` 搭配驱动音频。
+
+<RequestExample>
+```bash 首尾帧
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan-3.0",
+  "input": {
+    "prompt": "固定机位，城市天际线从白天过渡到夜晚。",
+    "mode": "first-last-frame",
+    "imageUrls": [
+      "https://example.com/day.jpg",
+      "https://example.com/night.jpg"
+    ],
+    "duration": 5,
+    "resolution": "720p"
+  }
+}'
+```
+
+```bash 文生视频
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan-3.0-prime",
+  "input": {
+    "prompt": "日出时，一艘纸船慢慢漂过池塘。",
+    "mode": "text-to-video",
+    "duration": 5,
+    "ratio": "16:9"
+  }
+}'
+```
+
+```bash 图生视频
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan-2.7",
+  "input": {
+    "prompt": "从提供的首帧开始，按音轨的节奏运镜。",
+    "mode": "image-to-video",
+    "imageUrls": [
+      "https://example.com/opening.jpg"
+    ],
+    "audioUrls": [
+      "https://example.com/rhythm.mp3"
+    ],
+    "duration": 5
+  }
+}'
+```
+
+```bash 参考生视频
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan-3.0",
+  "input": {
+    "prompt": "在第二张图的摄影棚里展示第一张图中的自行车。",
+    "mode": "reference-to-video",
+    "imageUrls": [
+      "https://example.com/product.jpg",
+      "https://example.com/studio.jpg"
+    ],
+    "duration": 5
+  }
+}'
+```
+
+```bash 文生图
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan-2.7-image-pro",
+  "input": {
+    "prompt": "一张陶瓷杯放在石材台面上的编辑风格照片。",
+    "resolution": "4k",
+    "ratio": "16:9"
+  }
+}'
+```
+
+```bash 图生图
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "wan-2.7-image",
+  "input": {
+    "prompt": "保留杯子，把背景换成浅蓝色纸面。",
+    "imageUrls": [
+      "https://example.com/cup.jpg"
+    ],
+    "resolution": "2k"
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad"
+  }
+}
+```
+</ResponseExample>
+
+## 获取结果
+
+提交成功后读取 `data.taskId`，然后[查询任务](/cn/api-reference/query-task)或接收 Webhook。等到 `data.status` 为 `SUCCESS`，从 `data.result.urls[0]` 读取视频或图片地址。遇到 `SUCCESS`、`FAILURE`、`TIMEOUT` 或 `CANCELLED` 时停止轮询。
+
+```bash
+curl "https://api.maxapi.io/api/v1/task/${TASK_ID}" \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}"
+```
+
+## 视频价格（美元/秒）
+
+| 模型 ID | 时长（秒） | 480p | 720p | 1080p |
+| --- | --- | --- | --- | --- |
+| `wan-3.0` | 2–30 | $0.0575 | $0.115 | $0.23 |
+| `wan-3.0-prime` | 2–30 | $0.0782 | $0.161 | $0.322 |
+| `wan-2.7` | 2–15 | — | $0.115 | $0.1725 |
+| `wan-2.6` | 5, 10, 15 | — | $0.115 | $0.1725 |
+| `wan-2.6-flash` | 5, 10, 15 | — | $0.0575 | $0.08625 |
+| `wan-2.5` | 5, 10 | $0.0575 | $0.115 | $0.1725 |
+| `wan-2.6-flash` (静音) | 5, 10, 15 | — | $0.02875 | $0.043125 |
+
+总费用按输出时长计算，并向上取整到整数积分。1 积分为 $0.01。例如，`wan-3.0` 生成 5 秒 720p 视频扣 58 积分。
