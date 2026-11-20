@@ -1,0 +1,136 @@
+---
+title: "Seedance Video"
+api: "POST https://api.maxapi.io/api/v1/task/submit"
+description: "Seedance 2.5, 2.0 and 2.0 Mini request fields, generation modes, examples and pricing"
+---
+
+Send a JSON body to `POST https://api.maxapi.io/api/v1/task/submit` with an [API key](/api-reference/authentication) in the Authorization header.
+
+## Models and limits
+
+| Model | `model` | Output duration | Reference images | Reference videos | Reference audio clips |
+| --- | --- | --- | --- | --- | --- |
+| Seedance 2.5 | `seedance-2.5` | 4–30 s | 30 | 10, 30 s total | 10 |
+| Seedance 2.0 | `seedance-2.0-yike` | 4–15 s | 9 | 3, 15 s total | 3 |
+| Seedance 2.0 Mini | `seedance-2.0-mini` | 4–15 s | 9 | 3, 15 s total | 3 |
+
+Reference limits apply to `reference-to-video`. All three models support 720p and 1080p.
+
+## Request fields
+
+| Field | Type | Required / default | Description |
+| --- | --- | --- | --- |
+| `model` | string | Required | Exact model ID from the table above. |
+| `input` | object | Required | Holds all generation settings below. |
+| `input.prompt` | string | Required | Non-empty prompt describing the action, camera movement and any desired sound. In first/last-frame mode, describe what happens between the two images. |
+| `input.mode` | string | Optional, inferred from media | `text-to-video`, `image-to-video`, `first-last-frame` or `reference-to-video`. See mode rules below. |
+| `input.imageUrls` | string[] | Optional, required for frame modes | One opening image, an ordered pair of start and end images, or reference images, depending on the mode. |
+| `input.videoUrls` | string[] | Optional | Reference mode only. Use MP4 or MOV links. MaxAPI reads the source duration before pricing. |
+| `input.audioUrls` | string[] | Optional | Reference mode only. Include at least one image or video when sending reference audio. |
+| `input.duration` | integer | `5` | Output length in seconds. See the model-specific range above. |
+| `input.resolution` | string | `720p` | `720p` or `1080p`. |
+| `input.ratio` | string | Depends on mode | `16:9`, `9:16`, `4:3`, `3:4`, `1:1`, `21:9` or `adaptive`. When omitted, text mode uses `16:9`, the two frame modes use the opening image’s framing, and reference mode uses the model’s default. |
+| `input.audio` | boolean | `true` | Controls generated audio in the output. Set `false` for a silent video. Pricing is the same. |
+| `callBackUrl` | string | Optional | Top-level URL for [task webhooks](/api-reference/webhook). |
+
+Replace the example media URLs with public HTTP(S) URLs that return the media files directly. Keep the URLs accessible while the task runs.
+
+## Generation modes
+
+| `input.mode` | What to send |
+| --- | --- |
+| `text-to-video` | Prompt only, with no input media. |
+| `image-to-video` | Exactly one URL in `imageUrls`, used as the opening frame. Omit `videoUrls` and `audioUrls`. |
+| `first-last-frame` | Exactly two URLs in `imageUrls`, ordered **opening frame, closing frame**. Omit `videoUrls` and `audioUrls`. |
+| `reference-to-video` | At least one image or video. Audio can be added alongside either. The media guide the generation. |
+
+If you omit `mode`, no media selects text-to-video, a single image by itself selects image-to-video, and other valid media combinations select reference-to-video. **Two images without a mode become references. Always set `mode` to `first-last-frame` to use them as the opening and closing frames.**
+
+### First and last frames
+
+Set `imageUrls[0]` to the opening frame and `imageUrls[1]` to the closing frame. The same input structure works with any of the three model IDs above.
+
+```bash
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "seedance-2.0-yike",
+    "input": {
+      "mode": "first-last-frame",
+      "prompt": "The camera slowly pushes in as the flower opens from a bud to full bloom.",
+      "imageUrls": [
+        "https://example.com/flower-closed.jpg",
+        "https://example.com/flower-open.jpg"
+      ],
+      "duration": 5,
+      "resolution": "720p",
+      "audio": false
+    }
+  }'
+```
+
+### Text to video
+
+```json
+{
+  "model": "seedance-2.5",
+  "input": {
+    "mode": "text-to-video",
+    "prompt": "A paper boat floats down a rain-soaked street at dusk, low tracking shot.",
+    "ratio": "16:9"
+  }
+}
+```
+
+### Image to video
+
+```json
+{
+  "model": "seedance-2.0-mini",
+  "input": {
+    "mode": "image-to-video",
+    "prompt": "The camera pans right as fog drifts across the lake.",
+    "imageUrls": ["https://example.com/lake.jpg"]
+  }
+}
+```
+
+### Reference to video
+
+```json
+{
+  "model": "seedance-2.5",
+  "input": {
+    "mode": "reference-to-video",
+    "prompt": "Show the bicycle from the photo, using the tracking movement from the clip and the rhythm of the audio.",
+    "imageUrls": ["https://example.com/bicycle.jpg"],
+    "videoUrls": ["https://example.com/tracking-shot.mp4"],
+    "audioUrls": ["https://example.com/rhythm.mp3"]
+  }
+}
+```
+
+## Get the result
+
+Read `data.taskId` from the submission response. Poll [Query Task](/api-reference/query-task) or use a [webhook](/api-reference/webhook). When `data.status` is `SUCCESS`, read the video URL from `data.result.urls[0]`. Stop polling on `SUCCESS`, `FAILURE`, `TIMEOUT` or `CANCELLED`.
+
+```bash
+curl "https://api.maxapi.io/api/v1/task/${TASK_ID}" \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}"
+```
+
+## Pricing
+
+Rates are in USD per second. For a request with reference video, use the output rate in the fourth column and add the reference rate multiplied by the total reference video duration. Reference images and audio have no separate charge.
+
+| Model | Resolution | Output rate without reference video | Output rate with reference video | Reference video rate |
+| --- | --- | --- | --- | --- |
+| Seedance 2.5 | 720p | $0.225 | $0.21 | $0.13 |
+| Seedance 2.5 | 1080p | $0.55 | $0.44 | $0.27 |
+| Seedance 2.0 | 720p | $0.147 | $0.13 | $0.05 |
+| Seedance 2.0 | 1080p | $0.365 | $0.30 | $0.15 |
+| Seedance 2.0 Mini | 720p | $0.071 | $0.071 | $0.02 |
+| Seedance 2.0 Mini | 1080p | $0.141 | $0.141 | $0.04 |
+
+One credit is $0.01. Round the total cost up to a whole credit. A 5-second Seedance 2.5 request at 720p with a 5-second reference video costs 170 credits ($1.70).

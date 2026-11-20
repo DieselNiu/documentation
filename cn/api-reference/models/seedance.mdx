@@ -1,0 +1,136 @@
+---
+title: "Seedance 视频"
+api: "POST https://api.maxapi.io/api/v1/task/submit"
+description: "Seedance 2.5、2.0 和 2.0 Mini 的请求字段、首尾帧、多模态参考和计费说明"
+---
+
+使用 [API 密钥](/cn/api-reference/authentication)发送 JSON 请求到 `POST https://api.maxapi.io/api/v1/task/submit`。
+
+## 模型和限制
+
+| 模型 | `model` | 输出时长 | 参考图上限 | 参考视频上限 | 参考音频上限 |
+| --- | --- | --- | --- | --- | --- |
+| Seedance 2.5 | `seedance-2.5` | 4–30 秒 | 30 张 | 10 段，合计 30 秒 | 10 段 |
+| Seedance 2.0 | `seedance-2.0-yike` | 4–15 秒 | 9 张 | 3 段，合计 15 秒 | 3 段 |
+| Seedance 2.0 Mini | `seedance-2.0-mini` | 4–15 秒 | 9 张 | 3 段，合计 15 秒 | 3 段 |
+
+参考素材上限适用于 `reference-to-video`。三个模型都支持 720p 和 1080p。
+
+## 请求字段
+
+| 字段 | 类型 | 必填或默认值 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 必填 | 使用上表中的模型 ID。 |
+| `input` | object | 必填 | 包含以下生成参数。 |
+| `input.prompt` | string | 必填 | 非空提示词，可描述动作、运镜和声音。首尾帧模式可以重点描述两帧之间如何过渡。 |
+| `input.mode` | string | 可选，按素材推断 | `text-to-video`、`image-to-video`、`first-last-frame` 或 `reference-to-video`。 |
+| `input.imageUrls` | string[] | 首帧或首尾帧模式必填 | 根据模式传一张首帧图、按顺序排列的两张首尾帧图，或参考图片。 |
+| `input.videoUrls` | string[] | 可选 | 仅用于参考生视频。传入 MP4 或 MOV 地址，MaxAPI 会读取视频时长并计费。 |
+| `input.audioUrls` | string[] | 可选 | 仅用于参考生视频，需同时提供至少一张参考图或一段参考视频。 |
+| `input.duration` | integer | `5` | 输出时长，单位秒。范围见模型表。 |
+| `input.resolution` | string | `720p` | 支持 `720p`、`1080p`。 |
+| `input.ratio` | string | 取决于模式 | 支持 `16:9`、`9:16`、`4:3`、`3:4`、`1:1`、`21:9`、`adaptive`。省略时，文生视频用 `16:9`，图生视频和首尾帧沿用首帧构图，参考生视频使用模型默认值。 |
+| `input.audio` | boolean | `true` | 控制输出视频是否生成声音。静音可传 `false`，价格相同。 |
+| `callBackUrl` | string | 可选 | 顶层字段，接收[任务 Webhook](/cn/api-reference/webhook)。 |
+
+示例里的素材地址需要替换成可直连文件的公网 HTTP(S) URL，并在任务执行期间保持可访问。
+
+## 生成模式
+
+| `input.mode` | 素材要求 |
+| --- | --- |
+| `text-to-video` | 仅传提示词，省略素材字段。 |
+| `image-to-video` | `imageUrls` 必须恰好一张，作为首帧。省略 `videoUrls` 和 `audioUrls`。 |
+| `first-last-frame` | `imageUrls` 必须恰好两张，按**首帧、尾帧**排序。省略 `videoUrls` 和 `audioUrls`。 |
+| `reference-to-video` | 至少提供一张图或一段视频，也可以搭配参考音频。 |
+
+省略 `mode` 时，无素材会进入文生视频，只有一张图会进入图生视频，其余有效素材组合会进入参考生视频。**只传两张图会进入参考生视频。需要固定首尾帧时，请显式传 `"mode": "first-last-frame"`。**
+
+### 首尾帧
+
+`imageUrls[0]` 是首帧，`imageUrls[1]` 是尾帧。表中的三个模型都可以使用以下请求结构。
+
+```bash
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "seedance-2.0-yike",
+    "input": {
+      "mode": "first-last-frame",
+      "prompt": "镜头缓慢推近，花朵从花苞逐渐绽放。",
+      "imageUrls": [
+        "https://example.com/flower-closed.jpg",
+        "https://example.com/flower-open.jpg"
+      ],
+      "duration": 5,
+      "resolution": "720p",
+      "audio": false
+    }
+  }'
+```
+
+### 文生视频
+
+```json
+{
+  "model": "seedance-2.5",
+  "input": {
+    "mode": "text-to-video",
+    "prompt": "黄昏时，一只纸船漂过雨后的街道，镜头贴近水面跟拍。",
+    "ratio": "16:9"
+  }
+}
+```
+
+### 图生视频
+
+```json
+{
+  "model": "seedance-2.0-mini",
+  "input": {
+    "mode": "image-to-video",
+    "prompt": "镜头向右平移，薄雾掠过湖面。",
+    "imageUrls": ["https://example.com/lake.jpg"]
+  }
+}
+```
+
+### 参考生视频
+
+```json
+{
+  "model": "seedance-2.5",
+  "input": {
+    "mode": "reference-to-video",
+    "prompt": "展示照片里的自行车，参考视频里的跟拍运镜和音频的节奏。",
+    "imageUrls": ["https://example.com/bicycle.jpg"],
+    "videoUrls": ["https://example.com/tracking-shot.mp4"],
+    "audioUrls": ["https://example.com/rhythm.mp3"]
+  }
+}
+```
+
+## 获取结果
+
+从提交响应读取 `data.taskId`，然后[查询任务](/cn/api-reference/query-task)或接收 [Webhook](/cn/api-reference/webhook)。当 `data.status` 为 `SUCCESS` 时，从 `data.result.urls[0]` 读取成片地址。状态为 `SUCCESS`、`FAILURE`、`TIMEOUT` 或 `CANCELLED` 时可停止轮询。
+
+```bash
+curl "https://api.maxapi.io/api/v1/task/${TASK_ID}" \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}"
+```
+
+## 计费
+
+下表金额单位是美元/秒。上传参考视频时，按第四列计算输出费用，再加上第五列单价乘以参考视频总时长。参考图片和参考音频免收素材费用。
+
+| 模型 | 分辨率 | 无参考视频的输出单价 | 有参考视频的输出单价 | 参考视频单价 |
+| --- | --- | --- | --- | --- |
+| Seedance 2.5 | 720p | $0.225 | $0.21 | $0.13 |
+| Seedance 2.5 | 1080p | $0.55 | $0.44 | $0.27 |
+| Seedance 2.0 | 720p | $0.147 | $0.13 | $0.05 |
+| Seedance 2.0 | 1080p | $0.365 | $0.30 | $0.15 |
+| Seedance 2.0 Mini | 720p | $0.071 | $0.071 | $0.02 |
+| Seedance 2.0 Mini | 1080p | $0.141 | $0.141 | $0.04 |
+
+1 积分等于 $0.01。合计费用后向上取整至整积分。例如 Seedance 2.5 在 720p 下输出 5 秒，并使用一段 5 秒参考视频，共计 170 积分（$1.70）。

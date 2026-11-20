@@ -15,6 +15,24 @@
       }
     }
   },
+  "redirects": [
+    {
+      "source": "/api-reference/models/seedance-yike",
+      "destination": "/api-reference/models/seedance"
+    },
+    {
+      "source": "/api-reference/models/seedance-yike.md",
+      "destination": "/api-reference/models/seedance.md"
+    },
+    {
+      "source": "/cn/api-reference/models/seedance-yike",
+      "destination": "/cn/api-reference/models/seedance"
+    },
+    {
+      "source": "/cn/api-reference/models/seedance-yike.md",
+      "destination": "/cn/api-reference/models/seedance.md"
+    }
+  ],
   "navigation": {
     "languages": [
       {
@@ -61,7 +79,7 @@
               {
                 "group": "Seedance Video",
                 "pages": [
-                  "api-reference/models/seedance-yike"
+                  "api-reference/models/seedance"
                 ]
               },
               {
@@ -154,7 +172,7 @@
               {
                 "group": "Seedance 视频",
                 "pages": [
-                  "cn/api-reference/models/seedance-yike"
+                  "cn/api-reference/models/seedance"
                 ]
               },
               {
