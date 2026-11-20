@@ -33,7 +33,27 @@ description: "Seedance 2.5、2.0 和 2.0 Mini 的请求字段、首尾帧、多�
 | `input.audio` | boolean | `true` | 控制输出视频是否生成声音。静音可传 `false`，价格相同。 |
 | `callBackUrl` | string | 可选 | 顶层字段，接收[任务 Webhook](/cn/api-reference/webhook)。 |
 
-示例里的素材地址需要替换成可直连文件的公网 HTTP(S) URL，并在任务执行期间保持可访问。
+## 素材字段
+
+这三个字段都是 JSON 字符串数组。即使只传一个文件，也要写成数组，例如 `"imageUrls": ["https://cdn.example.com/start.jpg"]`。每个地址都应是可直接读取文件的公网 HTTP(S) URL。签名链接可以使用，前提是任务执行期间有效，且下载时无需额外的请求头或 Cookie。本地路径、Base64 数据和网盘预览页无法作为素材地址。调用时请替换示例里的素材 URL。
+
+### `input.imageUrls`
+
+- **图生视频：** 在 `imageUrls[0]` 传恰好一张图，作为首帧。
+- **首尾帧：** 传恰好两张图，`imageUrls[0]` 是首帧，`imageUrls[1]` 是尾帧。显式设置 `mode` 为 `first-last-frame`，并省略 `videoUrls` 和 `audioUrls`。
+- **参考生视频：** 图片可用来参考主体、外观或风格，也可与视频和音频同传。2.5 最多 30 张，2.0 和 Mini 最多 9 张。参考图免收素材费用。
+
+### `input.videoUrls`
+
+- 仅用于 `reference-to-video`，可参考动作、运镜或场景变化。可以只传视频，也可以和图片、音频一起传。
+- 每项传一个可直连的 MP4 或 MOV 文件。2.5 最多 10 段，合计不超过 30 秒。2.0 和 Mini 最多 3 段，合计不超过 15 秒。
+- MaxAPI 会读取每段源视频并按总时长计费。`input.duration` 设置的是成片时长。源视频时长读不到或合计超出限制时，提交会返回 HTTP 400。
+
+### `input.audioUrls`
+
+- 仅用于 `reference-to-video`，可参考音乐、节奏或环境声。同一次请求必须至少有一张图或一段视频。例如，`imageUrls` 传产品图，`audioUrls` 传节奏参考。
+- 2.5 最多 10 段，2.0 和 Mini 最多 3 段。参考音频免收素材费用。
+- `audioUrls` 提供参考素材。`input.audio` 控制成片是否有声音，传 `false` 可生成静音成片。
 
 ## 生成模式
 
@@ -46,70 +66,93 @@ description: "Seedance 2.5、2.0 和 2.0 Mini 的请求字段、首尾帧、多�
 
 省略 `mode` 时，无素材会进入文生视频，只有一张图会进入图生视频，其余有效素材组合会进入参考生视频。**只传两张图会进入参考生视频。需要固定首尾帧时，请显式传 `"mode": "first-last-frame"`。**
 
-### 首尾帧
+请求示例可按模式切换。首尾帧示例适用于表中的三个模型，修改 `model` 即可。
 
-`imageUrls[0]` 是首帧，`imageUrls[1]` 是尾帧。表中的三个模型都可以使用以下请求结构。
-
-```bash
+<RequestExample>
+```bash 首尾帧
 curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
   --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
   --header 'Content-Type: application/json' \
   --data '{
-    "model": "seedance-2.0-yike",
-    "input": {
-      "mode": "first-last-frame",
-      "prompt": "镜头缓慢推近，花朵从花苞逐渐绽放。",
-      "imageUrls": [
-        "https://example.com/flower-closed.jpg",
-        "https://example.com/flower-open.jpg"
-      ],
-      "duration": 5,
-      "resolution": "720p",
-      "audio": false
-    }
-  }'
+  "model": "seedance-2.0-yike",
+  "input": {
+    "mode": "first-last-frame",
+    "prompt": "镜头缓慢推近，花朵从花苞逐渐绽放。",
+    "imageUrls": [
+      "https://example.com/flower-closed.jpg",
+      "https://example.com/flower-open.jpg"
+    ],
+    "duration": 5,
+    "resolution": "720p",
+    "audio": false
+  }
+}'
 ```
 
-### 文生视频
-
-```json
-{
+```bash 文生视频
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
   "model": "seedance-2.5",
   "input": {
     "mode": "text-to-video",
     "prompt": "黄昏时，一只纸船漂过雨后的街道，镜头贴近水面跟拍。",
     "ratio": "16:9"
   }
-}
+}'
 ```
 
-### 图生视频
-
-```json
-{
+```bash 图生视频
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
   "model": "seedance-2.0-mini",
   "input": {
     "mode": "image-to-video",
     "prompt": "镜头向右平移，薄雾掠过湖面。",
-    "imageUrls": ["https://example.com/lake.jpg"]
+    "imageUrls": [
+      "https://example.com/lake.jpg"
+    ]
   }
-}
+}'
 ```
 
-### 参考生视频
-
-```json
-{
+```bash 参考生视频
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
   "model": "seedance-2.5",
   "input": {
     "mode": "reference-to-video",
     "prompt": "展示照片里的自行车，参考视频里的跟拍运镜和音频的节奏。",
-    "imageUrls": ["https://example.com/bicycle.jpg"],
-    "videoUrls": ["https://example.com/tracking-shot.mp4"],
-    "audioUrls": ["https://example.com/rhythm.mp3"]
+    "imageUrls": [
+      "https://example.com/bicycle.jpg"
+    ],
+    "videoUrls": [
+      "https://example.com/tracking-shot.mp4"
+    ],
+    "audioUrls": [
+      "https://example.com/rhythm.mp3"
+    ]
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 提交成功
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad"
   }
 }
 ```
+</ResponseExample>
 
 ## 获取结果
 

@@ -33,7 +33,27 @@ Reference limits apply to `reference-to-video`. All three models support 720p an
 | `input.audio` | boolean | `true` | Controls generated audio in the output. Set `false` for a silent video. Pricing is the same. |
 | `callBackUrl` | string | Optional | Top-level URL for [task webhooks](/api-reference/webhook). |
 
-Replace the example media URLs with public HTTP(S) URLs that return the media files directly. Keep the URLs accessible while the task runs.
+## Media inputs
+
+Pass each field as a JSON array of URL strings, even for a single file. For example, use `"imageUrls": ["https://cdn.example.com/start.jpg"]`. Each URL must point directly to a media file that MaxAPI can fetch over HTTP(S). Replace the sample URLs with your own. A signed URL can be used if it stays valid for the duration of the task and can be fetched without extra headers or cookies. Local paths, Base64 data URLs and file-sharing preview pages do not work as media links.
+
+### `input.imageUrls`
+
+- **Image to video:** Pass exactly one image in `imageUrls[0]`. It becomes the opening frame.
+- **First and last frames:** Pass exactly two images. `imageUrls[0]` is the opening frame and `imageUrls[1]` is the closing frame. Set `mode` to `first-last-frame` and omit `videoUrls` and `audioUrls`.
+- **Reference to video:** Use images to guide the subject, appearance or style. You can combine them with reference video and audio. The limit is 30 images for 2.5 and 9 for 2.0 or Mini. Reference images have no separate charge.
+
+### `input.videoUrls`
+
+- Use in `reference-to-video` to guide motion, camera movement or scene action. A video can be the only reference, or you can combine it with images and audio.
+- Send direct MP4 or MOV links. For 2.5, use up to 10 clips with a combined duration of at most 30 seconds. For 2.0 or Mini, use up to 3 clips totaling at most 15 seconds.
+- MaxAPI reads each source file to get its duration. The reference-video charge uses the sum of source durations. `input.duration` still sets the output length. If the durations cannot be read or their sum exceeds the limit, the submission returns HTTP 400.
+
+### `input.audioUrls`
+
+- Use in `reference-to-video` for an audio reference such as music, rhythm or ambience. Provide at least one image or video in the same request. For example, `imageUrls` can hold a product photo and `audioUrls` can hold a link to a rhythm track.
+- Pass up to 10 audio URLs for 2.5 or up to 3 for 2.0 or Mini. Reference audio has no separate charge.
+- `audioUrls` supplies source material. `input.audio` controls whether the generated video contains audio. Set `input.audio` to `false` for a silent output.
 
 ## Generation modes
 
@@ -46,70 +66,93 @@ Replace the example media URLs with public HTTP(S) URLs that return the media fi
 
 If you omit `mode`, no media selects text-to-video, a single image by itself selects image-to-video, and other valid media combinations select reference-to-video. **Two images without a mode become references. Always set `mode` to `first-last-frame` to use them as the opening and closing frames.**
 
-### First and last frames
+Switch between modes in the request examples. To use the first and last frames example with another Seedance model, change `model` to its ID from the table above.
 
-Set `imageUrls[0]` to the opening frame and `imageUrls[1]` to the closing frame. The same input structure works with any of the three model IDs above.
-
-```bash
+<RequestExample>
+```bash First and last frames
 curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
   --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
   --header 'Content-Type: application/json' \
   --data '{
-    "model": "seedance-2.0-yike",
-    "input": {
-      "mode": "first-last-frame",
-      "prompt": "The camera slowly pushes in as the flower opens from a bud to full bloom.",
-      "imageUrls": [
-        "https://example.com/flower-closed.jpg",
-        "https://example.com/flower-open.jpg"
-      ],
-      "duration": 5,
-      "resolution": "720p",
-      "audio": false
-    }
-  }'
+  "model": "seedance-2.0-yike",
+  "input": {
+    "mode": "first-last-frame",
+    "prompt": "The camera slowly pushes in as the flower opens from a bud to full bloom.",
+    "imageUrls": [
+      "https://example.com/flower-closed.jpg",
+      "https://example.com/flower-open.jpg"
+    ],
+    "duration": 5,
+    "resolution": "720p",
+    "audio": false
+  }
+}'
 ```
 
-### Text to video
-
-```json
-{
+```bash Text to video
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
   "model": "seedance-2.5",
   "input": {
     "mode": "text-to-video",
     "prompt": "A paper boat floats down a rain-soaked street at dusk, low tracking shot.",
     "ratio": "16:9"
   }
-}
+}'
 ```
 
-### Image to video
-
-```json
-{
+```bash Image to video
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
   "model": "seedance-2.0-mini",
   "input": {
     "mode": "image-to-video",
     "prompt": "The camera pans right as fog drifts across the lake.",
-    "imageUrls": ["https://example.com/lake.jpg"]
+    "imageUrls": [
+      "https://example.com/lake.jpg"
+    ]
   }
-}
+}'
 ```
 
-### Reference to video
-
-```json
-{
+```bash Reference to video
+curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
+  --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
+  --header 'Content-Type: application/json' \
+  --data '{
   "model": "seedance-2.5",
   "input": {
     "mode": "reference-to-video",
     "prompt": "Show the bicycle from the photo, using the tracking movement from the clip and the rhythm of the audio.",
-    "imageUrls": ["https://example.com/bicycle.jpg"],
-    "videoUrls": ["https://example.com/tracking-shot.mp4"],
-    "audioUrls": ["https://example.com/rhythm.mp3"]
+    "imageUrls": [
+      "https://example.com/bicycle.jpg"
+    ],
+    "videoUrls": [
+      "https://example.com/tracking-shot.mp4"
+    ],
+    "audioUrls": [
+      "https://example.com/rhythm.mp3"
+    ]
+  }
+}'
+```
+</RequestExample>
+
+<ResponseExample>
+```json 200 Task submitted
+{
+  "code": 0,
+  "msg": "ok",
+  "data": {
+    "taskId": "9db7d1ed-d1e5-4d11-9f3a-61f653b905ad"
   }
 }
 ```
+</ResponseExample>
 
 ## Get the result
 
