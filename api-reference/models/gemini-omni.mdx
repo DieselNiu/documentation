@@ -1,0 +1,42 @@
+---
+title: "Gemini Omni 1.2 Flash Ext"
+api: "POST /api/v1/task/submit"
+description: "Gemini Omni text and image-to-video inputs and pricing"
+---
+
+Set up [API authentication](/api-reference/authentication). Use the returned `data.taskId` to [query the task](/api-reference/query-task).
+
+## Parameters
+
+The API model ID is `gemini-omni-1.2-flash-ext`.
+
+- `input.prompt` is required, with a limit of 5,000 characters.
+- `input.duration` accepts whole seconds from 3 to 15, default 5. The first-and-last-frame mode supports up to 10 seconds.
+- `input.resolution` accepts `360p`, `720p`, `1080p`, and `4k`, default `720p`. The 1080p and 4K tiers are upscaled. 4K output may omit audio.
+- `input.ratio` accepts `16:9` and `9:16`, default `16:9`.
+- `input.mode` accepts `text-to-video`, `image-to-video`, `reference-to-video`, and `first-last-frame`. Pass public image URLs in `input.imageUrls`. Use one for image-to-video, two in order for first and last frames, or up to 10 for image references. If you omit the mode, the image count selects text, single-image, or image-reference generation.
+
+## Pricing
+
+| Resolution | USD per second | Credits charged for 5 seconds |
+| --- | --- | --- |
+| 360p | $0.0207 | 11 |
+| 720p | $0.063 | 32 |
+| 1080p | $0.0936 | 47 |
+| 4k | $0.1881 | 95 |
+
+Multiply by the output duration and round the total up to a whole credit. One credit is $0.01.
+
+## Example request
+
+```json
+{
+  "model": "gemini-omni-1.2-flash-ext",
+  "input": {
+    "prompt": "A slow orbit around a blue ceramic cup in morning light.",
+    "duration": 5,
+    "resolution": "720p",
+    "ratio": "16:9"
+  }
+}
+```

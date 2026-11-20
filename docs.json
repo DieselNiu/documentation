@@ -65,6 +65,13 @@
                 ]
               },
               {
+                "group": "Wan and Gemini Omni",
+                "pages": [
+                  "api-reference/models/wan-dashscope",
+                  "api-reference/models/gemini-omni"
+                ]
+              },
+              {
                 "group": "Kling Video",
                 "pages": [
                   "api-reference/models/kling-4-0"
@@ -148,6 +155,13 @@
                 "group": "Seedance 视频",
                 "pages": [
                   "cn/api-reference/models/seedance-yike"
+                ]
+              },
+              {
+                "group": "万相 Wan 与 Gemini Omni",
+                "pages": [
+                  "cn/api-reference/models/wan-dashscope",
+                  "cn/api-reference/models/gemini-omni"
                 ]
               },
               {

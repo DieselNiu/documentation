@@ -1,0 +1,42 @@
+---
+title: "Gemini Omni 1.2 Flash Ext"
+api: "POST /api/v1/task/submit"
+description: "Gemini Omni 文生视频、图生视频、参数与价格"
+---
+
+先配置 [API 鉴权](/cn/api-reference/authentication)。提交后用返回的 `data.taskId` [查询任务](/cn/api-reference/query-task)。
+
+## 参数
+
+API 模型 ID 为 `gemini-omni-1.2-flash-ext`。
+
+- `input.prompt` 必填，最多 5,000 字符。
+- `input.duration` 为 3–15 的整数，默认 5 秒。首尾帧最长 10 秒。
+- `input.resolution` 可填 `360p`、`720p`、`1080p`、`4k`，默认 `720p`。1080p 和 4K 为放大输出，4K 可能没有音轨。
+- `input.ratio` 可填 `16:9` 或 `9:16`，默认 `16:9`。
+- `input.mode` 可填 `text-to-video`、`image-to-video`、`reference-to-video` 或 `first-last-frame`。通过 `input.imageUrls` 传入公开图片 URL。单图转视频用 1 张，首尾帧用 2 张且按顺序传入，参考图模式最多 10 张。省略模式时，根据图片数量推断文生视频、单图转视频或参考图模式。
+
+## 价格
+
+| 分辨率 | 美元/秒 | 5 秒实际扣分 |
+| --- | --- | --- |
+| 360p | $0.0207 | 11 |
+| 720p | $0.063 | 32 |
+| 1080p | $0.0936 | 47 |
+| 4k | $0.1881 | 95 |
+
+按输出时长计费，总费用向上取整到整数积分。1 积分为 $0.01。
+
+## 请求示例
+
+```json
+{
+  "model": "gemini-omni-1.2-flash-ext",
+  "input": {
+    "prompt": "镜头绕着晨光下的蓝色陶瓷杯缓慢移动。",
+    "duration": 5,
+    "resolution": "720p",
+    "ratio": "16:9"
+  }
+}
+```
