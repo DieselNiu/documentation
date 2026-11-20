@@ -59,8 +59,15 @@
                 ]
               },
               {
+                "group": "Kling Video",
+                "pages": [
+                  "api-reference/models/kling-4-0"
+                ]
+              },
+              {
                 "group": "Seedream Image",
                 "pages": [
+                  "api-reference/models/seedream-5-5",
                   "api-reference/seedream-image/text-to-image",
                   "api-reference/seedream-image/image-to-image",
                   "api-reference/query-task",
@@ -132,8 +139,15 @@
                 ]
               },
               {
+                "group": "Kling 视频",
+                "pages": [
+                  "cn/api-reference/models/kling-4-0"
+                ]
+              },
+              {
                 "group": "Seedream 图片",
                 "pages": [
+                  "cn/api-reference/models/seedream-5-5",
                   "cn/api-reference/seedream-image/text-to-image",
                   "cn/api-reference/seedream-image/image-to-image",
                   "cn/api-reference/query-task",

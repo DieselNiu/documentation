@@ -1,0 +1,39 @@
+---
+title: "Kling 4.0"
+api: "POST /api/v1/task/submit"
+description: "Kling 4.0 的请求参数、扣费和示例"
+---
+
+使用 MaxAPI 的 [API 密钥](/cn/api-reference/authentication)提交任务。
+
+| 字段 | 取值 |
+| --- | --- |
+| `model` | `kling-4.0` |
+| `input.prompt` | 必填，1–5000 字符 |
+| `input.duration` | 整数 3–30 秒，默认 5 秒 |
+| `input.resolution` | `720p` 或 `1080p`，默认 `720p` |
+| `input.ratio` | `16:9`、`9:16`、`1:1`、`21:9`，默认 `16:9` |
+| `input.mode` | `text-to-video`、`image-to-video`、`reference-to-video` 或 `first-last-frame` |
+| `input.imageUrls` | 可公开访问的 HTTP(S) 图片 URL，最多 10 张 |
+
+文生视频传 0 张图片，图生视频传 1 张，首尾帧传 2 张，参考图模式传 1–10 张。省略 `mode` 时，按 0 张、1 张、多张分别推断为文生视频、图生视频、参考图模式。当前支持文字和图片输入。
+
+| 分辨率 | 每秒售价 | 10 秒实际扣分 |
+| --- | ---: | ---: |
+| 720p | $0.155 | 155 积分 |
+| 1080p | $0.233 | 233 积分 |
+
+按秒计算总价后向上取整到整积分，1 积分等于 $0.01。比如 5 秒 720p 扣 78 积分。
+
+```json
+{
+  "model": "kling-4.0",
+  "input": {
+    "prompt": "一只纸船在清晨的池塘上漂动，镜头缓慢向前",
+    "resolution": "720p",
+    "duration": 5
+  }
+}
+```
+
+提交成功后用返回的 `data.taskId` [查询状态](/cn/api-reference/query-task)，或设置 [Webhook](/cn/api-reference/webhook)。确认失败后按网关规则退款，内容审核失败可能计入审核附加费。提交超时请先查任务状态。

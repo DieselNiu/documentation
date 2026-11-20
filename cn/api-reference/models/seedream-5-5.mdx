@@ -1,0 +1,42 @@
+---
+title: "Seedream 5.5"
+api: "POST /api/v1/task/submit"
+description: "Seedream 5.5 的请求参数、扣费和示例"
+---
+
+使用 MaxAPI 的 [API 密钥](/cn/api-reference/authentication)提交图片生成或编辑任务。每个请求生成 1 张图。
+
+| 字段 | 取值 |
+| --- | --- |
+| `model` | `seedream-5-5` |
+| `input.prompt` | 必填 |
+| `input.imageUrls` | 可公开访问的 HTTP(S) 参考图 URL，最多 10 张 |
+| `input.resolution` | `1k`、`1.5k` 或 `2k`，默认 `2k` |
+| `input.ratio` | `1:1`、`4:3`、`3:4`、`16:9`、`9:16`、`3:2`、`2:3` 或 `21:9` |
+| `input.n` | 固定为 `1`，可省略 |
+| `input.output_format` | `png` 或 `jpeg`，默认 `png` |
+| `input.background` | `auto`、`transparent` 或 `opaque`。透明背景须使用 PNG |
+| `input.watermark` | 可选，布尔值 |
+| `input.nsfw_check` | 可省略或传 `false` |
+| `input.optimize_prompt_options` | 可选，仅接受 `{"mode":"standard"}` |
+
+| 计费项 | 售价 | 积分 |
+| --- | ---: | ---: |
+| 1K / 1.5K 输出 | $0.0184/张 | 1.84/张 |
+| 2K 输出 | $0.0322/张 | 3.22/张 |
+| 参考图 | $0.00736/张 | 0.736/张 |
+
+输出图和每张参考图相加后保留小数积分。比如 2K 输出加 1 张参考图扣 3.956 积分。
+
+```json
+{
+  "model": "seedream-5-5",
+  "input": {
+    "prompt": "一杯放在浅色桌面上的陶瓷咖啡杯，暖色自然光",
+    "resolution": "2k",
+    "ratio": "1:1"
+  }
+}
+```
+
+提交成功后用返回的 `data.taskId` [查询状态](/cn/api-reference/query-task)，或设置 [Webhook](/cn/api-reference/webhook)。确认失败后按网关规则退款，内容审核失败可能计入审核附加费。提交超时请先查任务状态。
