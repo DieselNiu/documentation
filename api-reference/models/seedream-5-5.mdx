@@ -28,7 +28,7 @@ Send `model` and `input` in the JSON body. `input.prompt` is required. Image-to-
 | `input.background` | string | auto &#124; transparent &#124; opaque | Optional, default auto. Transparent PNG works with or without references. |
 | `input.watermark` | boolean | true &#124; false | Optional upstream AI watermark; default false. |
 | `input.nsfw_check` | boolean | false | Optional. Omit or send false; separately billed upstream moderation is unavailable. |
-| `input.optimize_prompt_options` | object | {"mode":"standard"} | Optional. Standard optimization is always enabled; it cannot be disabled. |
+| `input.optimize_prompt_options` | object | `{"mode":"standard"}` | Optional. Standard optimization is always enabled; it cannot be disabled. |
 | `callBackUrl` | string | URL | Optional webhook called when the task finishes. |
 
 Use public HTTP(S) media URLs that the generation service can fetch. Replace all example media URLs with your own files. Mode-specific requirements and provider limits below still apply after local validation.
