@@ -11,7 +11,7 @@ description: "Seedance 2.5、2.0 和 2.0 Mini 的请求字段、首尾帧、多�
 | 模型 | `model` | 输出时长 | 参考图上限 | 参考视频上限 | 参考音频上限 |
 | --- | --- | --- | --- | --- | --- |
 | Seedance 2.5 | `seedance-2.5` | 4–30 秒 | 30 张 | 10 段，合计 30 秒 | 10 段 |
-| Seedance 2.0 | `seedance-2.0-yike` | 4–15 秒 | 9 张 | 3 段，合计 15 秒 | 3 段 |
+| Seedance 2.0 | `seedance-2.0` | 4–15 秒 | 9 张 | 3 段，合计 15 秒 | 3 段 |
 | Seedance 2.0 Mini | `seedance-2.0-mini` | 4–15 秒 | 9 张 | 3 段，合计 15 秒 | 3 段 |
 
 参考素材上限适用于 `reference-to-video`。三个模型都支持 720p 和 1080p。
@@ -74,7 +74,7 @@ curl --request POST 'https://api.maxapi.io/api/v1/task/submit' \
   --header "Authorization: Bearer ${MAXAPI_API_KEY}" \
   --header 'Content-Type: application/json' \
   --data '{
-  "model": "seedance-2.0-yike",
+  "model": "seedance-2.0",
   "input": {
     "mode": "first-last-frame",
     "prompt": "镜头缓慢推近，花朵从花苞逐渐绽放。",
