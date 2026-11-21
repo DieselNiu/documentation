@@ -20,7 +20,7 @@ Use Google Veo 3.1 to generate high-quality videos from text descriptions. Suppo
     Optimized for speed. Ideal for time-sensitive scenarios.
   </Accordion>
   <Accordion title="Lite Mode — veo3_lite">
-    Lightweight variant at 720p output. Lowest cost per video, ideal for drafts and high-volume use. Does not support 4K/1080p upscaling — `resolution` is ignored if provided.
+    Lightweight variant for text-to-video. Lowest cost per video, ideal for drafts and high-volume use. Text-to-video only: it does not accept input images.
   </Accordion>
 </AccordionGroup>
 
@@ -41,16 +41,12 @@ Use Google Veo 3.1 to generate high-quality videos from text descriptions. Suppo
       Video aspect ratio. Options: `16:9`, `9:16`. Default: `16:9`.
     </ParamField>
     <ParamField body="resolution" type="string">
-      Resolution upscale. Options: `1080p`, `4k`. Default: standard resolution (no upscale).
+      Output resolution. Options: `720p`, `1080p`, `4k`. Default: `720p`. All tiers support `1080p` and `4k`; `4k` has a separate price.
     </ParamField>
     <ParamField body="duration" type="integer">
-      Video length in seconds. Options: `4`, `6`, `8`. Default: `8`.
+      Video length in seconds. Only `8` is supported, which is also the default. Other values are rejected before charging.
 
-      Credits scale linearly with duration: a 4-second video costs half of an 8-second video at the same resolution and mode. See pricing page for the exact rate per tier.
-
-      Notes:
-      - `r2v` mode supports only `8` seconds (4/6 will silently fall back to 8 with a warning).
-      - `i2v` (single-image) Quality tier supports only `8` seconds; pick `i2v-fl` (first+last frame) if you need 4s/6s at Quality.
+      Veo 3.1 is billed per video, not per second.
     </ParamField>
   </Expandable>
 </ParamField>
@@ -88,7 +84,7 @@ curl --request POST \
 }'
 ```
 
-```bash Lite Mode (720p only)
+```bash Lite Mode
 curl --request POST \
   --url https://api.maxapi.io/api/v1/task/submit \
   --header 'Authorization: Bearer <token>' \
@@ -148,5 +144,5 @@ Retrieve the generation result via the [Query Task](/api-reference/query-task) e
 ```
 
 <Note>
-  Veo 3 returns 1 video per generation. The video typically lasts 5-8 seconds. No `mode` parameter needed — the system auto-detects based on image count.
+  Veo 3.1 returns 1 video per generation, 8 seconds long. No `mode` parameter needed: the system infers it from the image count. To animate images, see [Image to Video](/api-reference/veo-video/image-to-video).
 </Note>

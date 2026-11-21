@@ -8,7 +8,11 @@ Use Google Veo 3.1 to create videos from images. Supports three modes based on t
 
 ### Available Models
 
-`veo3` · `veo3_fast` · `veo3_lite`
+`veo3` · `veo3_fast`
+
+<Note>
+  `veo3_lite` is text-to-video only and does not accept `imageUrls`. Reference mode (R2V) requires `veo3_fast`.
+</Note>
 
 ### Generation Modes
 
@@ -19,7 +23,7 @@ Use Google Veo 3.1 to create videos from images. Supports three modes based on t
   <Accordion title="First + Last Frame (I2V-FL) — 2 images">
     Create a smooth transition video between a start frame and an end frame.
   </Accordion>
-  <Accordion title="Reference Images (R2V) — 1-3 images">
+  <Accordion title="Reference Images (R2V) — 1-3 images, veo3_fast only">
     Generate a video using 1-3 reference images for style transfer or creative inspiration.
   </Accordion>
 </AccordionGroup>
@@ -35,7 +39,7 @@ Use Google Veo 3.1 to create videos from images. Supports three modes based on t
 </Note>
 
 <ParamField body="model" type="string" required>
-  Model name, e.g. `veo3`, `veo3_fast`, `veo3_lite`.
+  Model name: `veo3` or `veo3_fast`.
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -51,24 +55,21 @@ Use Google Veo 3.1 to create videos from images. Supports three modes based on t
       Video aspect ratio. Options: `16:9`, `9:16`. Default: `16:9`.
     </ParamField>
     <ParamField body="mode" type="string">
-      Explicitly specify generation mode: `i2v`, `i2v-fl`, or `r2v`. Optional — system auto-infers from image count if not provided. Use this when you want to override auto-inference (e.g., `mode: "r2v"` with 1 image for style reference).
+      Explicitly specify generation mode: `i2v`, `i2v-fl`, or `r2v`. Optional — system auto-infers from image count if not provided. Use this when you want to override auto-inference (e.g., `mode: "r2v"` with 1 image for style reference). `r2v` requires `veo3_fast`.
     </ParamField>
     <ParamField body="resolution" type="string">
-      Resolution upscale. Options: `1080p`, `4k`. Default: standard resolution (no upscale). Note: I2V (single image) mode does not support resolution upscale — the parameter will be ignored.
+      Output resolution. Options: `720p`, `1080p`, `4k`. Default: `720p`. Supported in every mode; `4k` has a separate price.
     </ParamField>
     <ParamField body="duration" type="integer">
-      Video length in seconds. Options: `4`, `6`, `8`. Default: `8`.
+      Video length in seconds. Only `8` is supported, which is also the default. Other values are rejected before charging.
 
-      Credits scale linearly with duration. Mode/tier support:
-      - `i2v-fl` (first+last frame): all tiers (Quality, Fast, Lite) support 4/6/8.
-      - `i2v` (single image): only Lite supports 4/6/8; Quality/Fast silently fall back to 8s.
-      - `r2v` (multi-image reference): only `8` supported; 4/6 silently fall back to 8.
+      Veo 3.1 is billed per video, not per second.
     </ParamField>
     <ParamField body="imageUrls" type="array" required>
       Array of image URLs. Must contain **1, 2, or 3 images**:
       - **1 image**: Single image animation (I2V) or style reference (R2V with explicit mode)
       - **2 images**: First + last frame transition (I2V-FL) or style reference (R2V with explicit mode)
-      - **3 images**: Reference-based video generation (R2V)
+      - **3 images**: Reference-based video generation (R2V, `veo3_fast` only)
     </ParamField>
   </Expandable>
 </ParamField>
@@ -116,7 +117,7 @@ curl --request POST \
   --header 'Authorization: Bearer <token>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "model": "veo3",
+  "model": "veo3_fast",
   "callBackUrl": "https://example.com/webhook",
   "input": {
     "prompt": "Create a video inspired by this artistic style",
@@ -180,6 +181,6 @@ curl --request POST \
 
 <Note>
   **Speed Mode Limitations:**
-  - **R2V mode (3 images)**: Does not support Quality mode. If you use `veo3` model, it will automatically fall back to Fast mode. We recommend explicitly using `veo3_fast` for R2V.
-  - **Lite mode (`veo3_lite`)**: Supports I2V (single image, fixed at 720p) and I2V-FL (first+last frame) only. Does not support R2V — requests with 3 images will fail. The `resolution` parameter is ignored.
+  - **R2V mode**: Requires `veo3_fast`. `veo3` (Quality) rejects R2V requests (3 images, or `mode: "r2v"`) before charging; tiers are never switched automatically.
+  - **Lite mode (`veo3_lite`)**: Text-to-video only. Requests with `imageUrls` are rejected before charging.
 </Note>
