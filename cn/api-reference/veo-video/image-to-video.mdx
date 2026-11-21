@@ -8,7 +8,11 @@ description: "Veo 3 图片生成视频 — 为图片添加动画或从图片参�
 
 ### 可用模型
 
-`veo3` · `veo3_fast` · `veo3_lite`
+`veo3` · `veo3_fast`
+
+<Note>
+  `veo3_lite` 仅支持文生视频，不接受 `imageUrls`。参考图模式（R2V）需使用 `veo3_fast`。
+</Note>
 
 ### 生成模式
 
@@ -19,7 +23,7 @@ description: "Veo 3 图片生成视频 — 为图片添加动画或从图片参�
   <Accordion title="首尾帧视频（I2V-FL）— 2 张图片">
     创建起始帧和结束帧之间的平滑过渡视频。
   </Accordion>
-  <Accordion title="参考图生成（R2V）— 1-3 张图片">
+  <Accordion title="参考图生成（R2V）— 1-3 张图片，仅 veo3_fast">
     使用 1-3 张参考图片生成视频，可用于风格迁移或创意灵感。
   </Accordion>
 </AccordionGroup>
@@ -35,7 +39,7 @@ description: "Veo 3 图片生成视频 — 为图片添加动画或从图片参�
 </Note>
 
 <ParamField body="model" type="string" required>
-  模型名称，如 `veo3`、`veo3_fast`、`veo3_lite`。
+  模型名称：`veo3` 或 `veo3_fast`。
 </ParamField>
 
 <ParamField body="callBackUrl" type="string">
@@ -51,24 +55,21 @@ description: "Veo 3 图片生成视频 — 为图片添加动画或从图片参�
       视频宽高比。可选值：`16:9`、`9:16`。默认值：`16:9`。
     </ParamField>
     <ParamField body="mode" type="string">
-      显式指定生成模式：`i2v`、`i2v-fl` 或 `r2v`。可选 — 不提供时系统会根据图片数量自动推断。当需要覆盖自动推断时使用（例如：使用 1 张图片时指定 `mode: "r2v"` 作为风格参考）。
+      显式指定生成模式：`i2v`、`i2v-fl` 或 `r2v`。可选 — 不提供时系统会根据图片数量自动推断。当需要覆盖自动推断时使用（例如：使用 1 张图片时指定 `mode: "r2v"` 作为风格参考）。`r2v` 需使用 `veo3_fast`。
     </ParamField>
     <ParamField body="resolution" type="string">
-      分辨率放大。可选值：`1080p`、`4k`。不传则为默认分辨率（不放大）。注意：I2V 单图模式不支持分辨率放大，传入会被忽略。
+      输出分辨率。可选值：`720p`、`1080p`、`4k`。默认值：`720p`。所有模式都支持，`4k` 单独计价。
     </ParamField>
     <ParamField body="duration" type="integer">
-      视频时长（秒）。可选值：`4`、`6`、`8`。默认值：`8`。
+      视频时长（秒）。仅支持 `8`，也是默认值。传其他值会在扣费前被拒绝。
 
-      Credits 按时长线性折扣。各模式/等级支持情况：
-      - `i2v-fl`（首尾帧）：所有等级（Quality/Fast/Lite）均支持 4/6/8。
-      - `i2v`（单图）：仅 Lite 支持 4/6/8；Quality/Fast 会静默回退到 8 秒。
-      - `r2v`（多图参考）：仅支持 `8` 秒；传 4/6 会静默回退到 8 秒。
+      Veo 3.1 按次计费，与时长无关。
     </ParamField>
     <ParamField body="imageUrls" type="array" required>
       图片 URL 数组。必须包含 **1、2 或 3 张图片**：
       - **1 张图片**：单图动画（I2V）或风格参考（显式指定 R2V 模式）
       - **2 张图片**：首尾帧过渡（I2V-FL）或风格参考（显式指定 R2V 模式）
-      - **3 张图片**：参考图生成（R2V）
+      - **3 张图片**：参考图生成（R2V，仅 `veo3_fast`）
     </ParamField>
   </Expandable>
 </ParamField>
@@ -116,7 +117,7 @@ curl --request POST \
   --header 'Authorization: Bearer <token>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "model": "veo3",
+  "model": "veo3_fast",
   "callBackUrl": "https://example.com/webhook",
   "input": {
     "prompt": "创建一个受中国水墨画风格启发的视频",
@@ -180,6 +181,6 @@ curl --request POST \
 
 <Note>
   **速度模式限制：**
-  - **R2V 模式（3 张图片）**：不支持 Quality 质量模式。如果使用 `veo3` 模型，将自动回退到 Fast 模式。建议明确使用 `veo3_fast`。
-  - **Lite 模式（`veo3_lite`）**：仅支持 I2V（单图，固定 720p）和 I2V-FL（首尾帧）。不支持 R2V — 传 3 张图片会直接报错。`resolution` 参数会被忽略。
+  - **R2V 模式**：需使用 `veo3_fast`。`veo3`（Quality）的 R2V 请求（3 张图片或 `mode: "r2v"`）会在扣费前被拒绝，不会自动切换等级。
+  - **Lite 模式（`veo3_lite`）**：仅支持文生视频，带 `imageUrls` 的请求会在扣费前被拒绝。
 </Note>

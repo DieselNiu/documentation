@@ -20,7 +20,7 @@ description: "Veo 3 文本生成视频 — 从文本描述生成高质量视频"
     速度优先。适合对时效性要求高的场景。
   </Accordion>
   <Accordion title="Lite 轻量模式 — veo3_lite">
-    轻量版本，固定 720p 输出。单价最低，适合草稿和大批量生成。不支持 4K/1080p 放大 — 传 `resolution` 会被自动忽略。
+    轻量版本，仅支持文生视频。单价最低，适合草稿和大批量生成。不接受输入图片。
   </Accordion>
 </AccordionGroup>
 
@@ -41,16 +41,12 @@ description: "Veo 3 文本生成视频 — 从文本描述生成高质量视频"
       视频宽高比。可选值：`16:9`、`9:16`。默认值：`16:9`。
     </ParamField>
     <ParamField body="resolution" type="string">
-      分辨率放大。可选值：`1080p`、`4k`。不传则为默认分辨率（不放大）。
+      输出分辨率。可选值：`720p`、`1080p`、`4k`。默认值：`720p`。所有等级都支持 `1080p` 和 `4k`，`4k` 单独计价。
     </ParamField>
     <ParamField body="duration" type="integer">
-      视频时长（秒）。可选值：`4`、`6`、`8`。默认值：`8`。
+      视频时长（秒）。仅支持 `8`，也是默认值。传其他值会在扣费前被拒绝。
 
-      Credits 按时长线性折扣：相同模式与分辨率下，4 秒视频费用为 8 秒视频的一半。具体费率见定价页。
-
-      注意：
-      - `r2v` 模式仅支持 `8` 秒；传 4/6 会回退到 8 秒并打 warn 日志。
-      - `i2v`（单张图片）Quality 等级仅支持 `8` 秒；如需 4s/6s 请选 `i2v-fl`（首尾帧）。
+      Veo 3.1 按次计费，与时长无关。
     </ParamField>
   </Expandable>
 </ParamField>
@@ -88,7 +84,7 @@ curl --request POST \
 }'
 ```
 
-```bash 轻量模式（仅 720p）
+```bash 轻量模式
 curl --request POST \
   --url https://api.maxapi.io/api/v1/task/submit \
   --header 'Authorization: Bearer <token>' \
@@ -148,5 +144,5 @@ curl --request POST \
 ```
 
 <Note>
-  Veo 3 每次生成返回 1 个视频。视频时长通常为 5-8 秒。无需指定 `mode` 参数 — 系统会根据图片数量自动识别生成模式。
+  Veo 3.1 每次生成返回 1 个视频，时长 8 秒。无需指定 `mode` 参数，系统会根据图片数量自动识别生成模式。图生视频见[图生视频](/cn/api-reference/veo-video/image-to-video)。
 </Note>
