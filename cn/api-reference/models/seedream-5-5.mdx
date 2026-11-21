@@ -39,4 +39,4 @@ description: "Seedream 5.5 的请求参数、扣费和示例"
 }
 ```
 
-提交成功后用返回的 `data.taskId` [查询状态](/cn/api-reference/query-task)，或设置 [Webhook](/cn/api-reference/webhook)。确认失败后按网关规则退款，内容审核失败可能计入审核附加费。提交超时请先查任务状态。
+提交成功后用返回的 `data.taskId` [查询状态](/cn/api-reference/query-task)，或设置 [Webhook](/cn/api-reference/webhook)。确认失败（包括内容审核未通过）会全额退款。提交超时请先查任务状态。
